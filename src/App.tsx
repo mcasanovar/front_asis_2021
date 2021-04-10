@@ -11,10 +11,16 @@ import { PieChartOutlined, AppstoreOutlined, MailOutlined } from "@ant-design/ic
 
 import GiView from "./views/Gi/gi.view";
 import RequestsView from "./views/Requests/requests.view";
-import Employees from "./views/Employees/employees.view";
-import Reservation from "./views/Reservation/reservation.view";
-import Evaluation from "./views/Evaluations/evaluations.view";
-import Results from "./views/Results/results.view";
+import EmployeesView from "./views/Employees/employees.view";
+import ReservationView from "./views/Reservation/reservation.view";
+import EvaluationView from "./views/Evaluations/evaluations.view";
+import ResultsView from "./views/Results/results.view";
+import InvoicesView from "./views/Invoices/invoices.view";
+import PaymentsView from "./views/Payments/payments.view";
+import RequestsPaymentView from "./views/RequestsPayment/requestsPayments";
+import ExpensesInputsView from "./views/ExpensesInputs/expensesInputs";
+import OutputsView from "./views/outputs/outputs.view";
+import ExistenceView from "./views/Existence/existence.view";
 
 import TopBarComponent from "./component/TopBar/TopBar";
 
@@ -38,7 +44,7 @@ function App(): JSX.Element {
     {
       path: "/employees",
       sidebar: () => <div>Empleados</div>,
-      main: () => <Employees />
+      main: () => <EmployeesView />
     },
     {
       path: "/solicitudes",
@@ -48,17 +54,47 @@ function App(): JSX.Element {
     {
       path: "/reservas",
       sidebar: () => <div>Reservas</div>,
-      main: () => <Reservation />
+      main: () => <ReservationView />
     },
     {
       path: "/evaluaciones",
       sidebar: () => <div>Evaluaciones</div>,
-      main: () => <Evaluation />
+      main: () => <EvaluationView />
     },
     {
       path: "/resultados",
       sidebar: () => <div>Resultados</div>,
-      main: () => <Results />
+      main: () => <ResultsView />
+    },
+    {
+      path: "/facturaciones",
+      sidebar: () => <div>Facturaciones</div>,
+      main: () => <InvoicesView />
+    },
+    {
+      path: "/pagos",
+      sidebar: () => <div>Pagos</div>,
+      main: () => <PaymentsView />
+    },
+    {
+      path: "/cobranzas",
+      sidebar: () => <div>Cobranzas</div>,
+      main: () => <RequestsPaymentView />
+    },
+    {
+      path: "/gastos_entradas",
+      sidebar: () => <div>Gastos/Entradas</div>,
+      main: () => <ExpensesInputsView/>
+    },
+    {
+      path: "/salidas",
+      sidebar: () => <div>Salidas</div>,
+      main: () => <OutputsView/>
+    },
+    {
+      path: "/existencia",
+      sidebar: () => <div>Existencia</div>,
+      main: () => <ExistenceView/>
     },
   ];
 
@@ -107,14 +143,26 @@ function App(): JSX.Element {
               </SubMenu>
               <SubMenu key="4" icon={<AppstoreOutlined />} title="Finanzas">
                 <SubMenu key="sub8" title="Ingresos">
-                  <Menu.Item key="facturaciones">Facturaciones</Menu.Item>
-                  <Menu.Item key="pagos">Pagos</Menu.Item>
-                  <Menu.Item key="cobranza">Cobranza</Menu.Item>
+                  <Menu.Item key="facturaciones">
+                    <Link to='/facturaciones'>Facturaciones</Link>
+                  </Menu.Item>
+                  <Menu.Item key="pagos">
+                    <Link to='/pagos'>Pagos</Link>
+                  </Menu.Item>
+                  <Menu.Item key="cobranza">
+                    <Link to='/cobranzas'>Cobranza</Link>
+                  </Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub9" title="Egresos">
-                  <Menu.Item key="gas_ent">Gastos / Entradas</Menu.Item>
-                  <Menu.Item key="salidas">Salidas</Menu.Item>
-                  <Menu.Item key="existencia">Existencia</Menu.Item>
+                  <Menu.Item key="gas_ent">
+                    <Link to='/gastos_entradas'>Gastos / Entradas</Link>
+                  </Menu.Item>
+                  <Menu.Item key="salidas">
+                    <Link to='/salidas'>Salidas</Link>
+                  </Menu.Item>
+                  <Menu.Item key="existencia">
+                    <Link to='/existencia'>Existencia</Link>
+                  </Menu.Item>
                 </SubMenu>
               </SubMenu>
             </Menu>

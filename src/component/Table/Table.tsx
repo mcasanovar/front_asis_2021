@@ -15,7 +15,10 @@ import {
   DownloadOutlined,
   FileDoneOutlined,
   FilePdfOutlined,
-  MailOutlined
+  MailOutlined,
+  CreditCardOutlined,
+  DollarOutlined,
+  FolderOpenOutlined
 } from "@ant-design/icons";
 
 interface ITableComponentProps {
@@ -32,7 +35,12 @@ interface ITableComponentProps {
   showGenerateExam?: boolean,
   showDownloadExam?: boolean,
   showConfirmExam?: boolean,
-  showSendMail?: boolean
+  showSendMail?: boolean,
+  showInvoice?: boolean,
+  showUploadOC?: boolean,
+  showManagmentPayments?: boolean,
+  showGeneratePayment?: boolean,
+  showRequestPaymentCard?: boolean
 }
 
 const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
@@ -49,7 +57,12 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
   showDownloadExam = false,
   showConfirmExam = false,
   showUploadResult = false,
-  showSendMail = false
+  showSendMail = false,
+  showInvoice = false,
+  showUploadOC = false,
+  showManagmentPayments = false,
+  showGeneratePayment = false,
+  showRequestPaymentCard = false
 }) => {
 
   const columns = [
@@ -184,6 +197,46 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
               <Button
                 onClick={() => { }}
                 style={{ backgroundColor: '#0E27B0' }}
+                icon={<MailOutlined style={{ fontSize: '1.1rem', color: 'white' }}/>} />
+            </Tooltip>
+          }
+          {showInvoice &&
+            <Tooltip title='Factura' color={'#50ACF5'} key={'#50ACF5'}>
+              <Button
+                onClick={() => { }}
+                style={{ backgroundColor: 'white' }}
+                icon={<CreditCardOutlined style={{ fontSize: '1.1rem', color: '#50ACF5' }}/>} />
+            </Tooltip>
+          }
+          {showUploadOC &&
+            <Tooltip title='Subir OC' color={'#50ACF5'} key={'#50ACF5'}>
+              <Button
+                onClick={() => { }}
+                style={{ backgroundColor: '#50ACF5' }}
+                icon={<FilePdfOutlined style={{ fontSize: '1.1rem', color: 'white' }}/>} />
+            </Tooltip>
+          }
+          {showManagmentPayments &&
+            <Tooltip title='Gestión de Pagos' color={'#870989'} key={'#870989'}>
+              <Button
+                onClick={() => { }}
+                style={{ backgroundColor: '#870989' }}
+                icon={<FolderOpenOutlined style={{ fontSize: '1.1rem', color: 'white' }}/>} />
+            </Tooltip>
+          }
+          {showGeneratePayment &&
+            <Tooltip title='Realizar Pago' color={'#35A20C'} key={'#35A20C'}>
+              <Button
+                onClick={() => { }}
+                style={{ backgroundColor: 'white' }}
+                icon={<DollarOutlined style={{ fontSize: '1.1rem', color: '#35A20C' }}/>} />
+            </Tooltip>
+          }
+          {showRequestPaymentCard &&
+            <Tooltip title='Carta Cobranza' color={'#50ACF5'} key={'#50ACF5'}>
+              <Button
+                onClick={() => { }}
+                style={{ backgroundColor: '#50ACF5' }}
                 icon={<MailOutlined style={{ fontSize: '1.1rem', color: 'white' }}/>} />
             </Tooltip>
           }
