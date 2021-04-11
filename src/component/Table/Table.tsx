@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Table, Button, Tooltip } from "antd";
+import React, { useState } from 'react';
+import { Table, Button, Tooltip, Popover } from "antd";
 
 import {
   LockOutlined,
@@ -20,8 +20,12 @@ import {
   DollarOutlined,
   FolderOpenOutlined
 } from "@ant-design/icons";
+import { ITableDeleteObject } from '../../models/index.models';
 
 interface ITableComponentProps {
+  onClickAction: (id: string) => string | void,
+  onClickDelete: (id: string) => string | void,
+  useStyle?: boolean,
   showConfiguration?: boolean,
   showDetails?: boolean,
   showEdit?: boolean,
@@ -44,6 +48,9 @@ interface ITableComponentProps {
 }
 
 const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
+  onClickAction,
+  onClickDelete,
+  useStyle = true,
   showConfiguration = false,
   showDetails = false,
   showEdit = false,
@@ -64,6 +71,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
   showGeneratePayment = false,
   showRequestPaymentCard = false
 }) => {
+  const [deleteConfirmation, setDeleteConfirmation] = useState<ITableDeleteObject>({ _id: '', show: false });
 
   const columns = [
     {
@@ -85,21 +93,21 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
       title: 'Actions',
       dataIndex: 'actions',
       key: 'actions',
-      render: () => (
+      render: (text: string, record: any, index: any) => (
         <>
           {showConfiguration &&
             <Tooltip title="Configuración" color={'#546E7A'} key={'#546E7A'}>
               <Button
-                onClick={() => { }}
+                onClick={() => onClickAction('configurationGi')}
                 style={{ backgroundColor: '#546E7A' }}
                 icon={<LockOutlined style={{ fontSize: '1.1rem', color: 'white' }} />}
               />
-            </Tooltip>}
-
+            </Tooltip>
+          }
           {showDetails &&
             <Tooltip title='Detalle' color={'#50ACF5'} key={'#50ACF5'}>
               <Button
-                onClick={() => { }}
+                onClick={() => onClickAction('details')}
                 style={{ backgroundColor: '#50ACF5' }}
                 icon={<EyeOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
@@ -107,23 +115,31 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
           {showEdit &&
             <Tooltip title='Editar' color={'#F68923'} key={'#F68923'}>
               <Button
-                onClick={() => { }}
+                onClick={() => onClickAction('edit')}
                 style={{ backgroundColor: '#F68923' }}
                 icon={<EditOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
           {showDelete &&
-            <Tooltip title='Eliminar' color={'#F72F2F'} key={'#F72F2F'}>
-              <Button
-                onClick={() => { }}
-                style={{ backgroundColor: '#F72F2F' }}
-                icon={<DeleteOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
-            </Tooltip>
+            <Popover
+              content={<Button style={{ backgroundColor: '#E6100D', color: 'white' }} onClick={() => onClickDelete(record._id)}>
+                Confirmar eliminación</Button>}
+              title="¿Seguro que desea eliminar este registro?"
+              trigger="click"
+              visible={(deleteConfirmation._id === record._id && deleteConfirmation.show === true) ? true : false}
+              onVisibleChange={() => setDeleteConfirmation({ _id: record._id, show: !deleteConfirmation.show })}
+            >
+              <Button 
+               onClick={() => setDeleteConfirmation({ _id: record._id, show: true })}
+               style={{ backgroundColor: '#E6100D' }}
+               icon={<DeleteOutlined style={{ fontSize: '1.1rem', color: 'white' }} />}
+              />
+            </Popover>
           }
           {showAbsence &&
             <Tooltip title='Ausencias' color={'#4DE13E'} key={'#4DE13E'}>
               <Button
-                onClick={() => { }}
+                onClick={() => onClickAction('absense')}
                 style={{ backgroundColor: '#4DE13E' }}
                 icon={<ClockCircleOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
@@ -149,7 +165,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
               <Button
                 onClick={() => { }}
                 style={{ backgroundColor: '#4CAF50' }}
-                icon={<ScheduleOutlined style={{ fontSize: '1.1rem', color: 'white' }}/>} />
+                icon={<ScheduleOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
           {showUploadExam &&
@@ -157,7 +173,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
               <Button
                 onClick={() => { }}
                 style={{ backgroundColor: '#1073B5' }}
-                icon={<CloudUploadOutlined style={{ fontSize: '1.1rem', color: 'white' }}/>} />
+                icon={<CloudUploadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
           {showGenerateExam &&
@@ -165,7 +181,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
               <Button
                 onClick={() => { }}
                 style={{ backgroundColor: '#69DF43' }}
-                icon={<ContainerOutlined style={{ fontSize: '1.1rem', color: 'white' }}/>} />
+                icon={<ContainerOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
           {showDownloadExam &&
@@ -173,7 +189,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
               <Button
                 onClick={() => { }}
                 style={{ backgroundColor: '#1A9D02' }}
-                icon={<DownloadOutlined style={{ fontSize: '1.1rem', color: 'white' }}/>} />
+                icon={<DownloadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
           {showConfirmExam &&
@@ -181,7 +197,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
               <Button
                 onClick={() => { }}
                 style={{ backgroundColor: '#18BBC3' }}
-                icon={<FileDoneOutlined style={{ fontSize: '1.1rem', color: 'white' }}/>} />
+                icon={<FileDoneOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
           {showUploadResult &&
@@ -189,7 +205,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
               <Button
                 onClick={() => { }}
                 style={{ backgroundColor: '#0EB0A1' }}
-                icon={<FilePdfOutlined style={{ fontSize: '1.1rem', color: 'white' }}/>} />
+                icon={<FilePdfOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
           {showSendMail &&
@@ -197,7 +213,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
               <Button
                 onClick={() => { }}
                 style={{ backgroundColor: '#0E27B0' }}
-                icon={<MailOutlined style={{ fontSize: '1.1rem', color: 'white' }}/>} />
+                icon={<MailOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
           {showInvoice &&
@@ -205,7 +221,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
               <Button
                 onClick={() => { }}
                 style={{ backgroundColor: 'white' }}
-                icon={<CreditCardOutlined style={{ fontSize: '1.1rem', color: '#50ACF5' }}/>} />
+                icon={<CreditCardOutlined style={{ fontSize: '1.1rem', color: '#50ACF5' }} />} />
             </Tooltip>
           }
           {showUploadOC &&
@@ -213,7 +229,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
               <Button
                 onClick={() => { }}
                 style={{ backgroundColor: '#50ACF5' }}
-                icon={<FilePdfOutlined style={{ fontSize: '1.1rem', color: 'white' }}/>} />
+                icon={<FilePdfOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
           {showManagmentPayments &&
@@ -221,7 +237,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
               <Button
                 onClick={() => { }}
                 style={{ backgroundColor: '#870989' }}
-                icon={<FolderOpenOutlined style={{ fontSize: '1.1rem', color: 'white' }}/>} />
+                icon={<FolderOpenOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
           {showGeneratePayment &&
@@ -229,7 +245,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
               <Button
                 onClick={() => { }}
                 style={{ backgroundColor: 'white' }}
-                icon={<DollarOutlined style={{ fontSize: '1.1rem', color: '#35A20C' }}/>} />
+                icon={<DollarOutlined style={{ fontSize: '1.1rem', color: '#35A20C' }} />} />
             </Tooltip>
           }
           {showRequestPaymentCard &&
@@ -237,7 +253,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
               <Button
                 onClick={() => { }}
                 style={{ backgroundColor: '#50ACF5' }}
-                icon={<MailOutlined style={{ fontSize: '1.1rem', color: 'white' }}/>} />
+                icon={<MailOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
         </>
@@ -247,19 +263,19 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
 
   const data: any = [
     {
-      key: '1',
+      _id: '736767wgdy3gd',
       name: 'John Brown',
       age: 32,
       address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
     },
     {
-      key: '2',
+      _id: 'sssssdd873e3e',
       name: 'Jim Green',
       age: 42,
       address: 'London No. 2 Lake Park, London No. 2 Lake Park',
     },
     {
-      key: '3',
+      _id: 'sduishdwudw6666',
       name: 'Joe Black',
       age: 32,
       address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
@@ -270,7 +286,8 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
     <Table
       columns={columns}
       dataSource={data}
-      style={{ width: '94%', marginTop: '10.7rem' }}
+      style={useStyle ? { width: '94%', marginTop: '10.7rem' } : {}}
+      rowKey={'key'}
     />
   );
 };

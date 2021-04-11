@@ -33,6 +33,8 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = (props) => {
         onClick={(button) => handleClickButton(button)}
       />
       <TableComponent
+        onClickAction={(id: string) => { }}
+        onClickDelete={() => {}}
         showDetails
         showNullify
         showDownloadExam
@@ -47,6 +49,7 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = (props) => {
           title={ActualModal.title}
           width={1200}
           onClose={() => setOpenModal(false)}
+          showButtons={[]}
         >
 
         </ModalComponent>}

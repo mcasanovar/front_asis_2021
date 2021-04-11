@@ -11,7 +11,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = (props) => {
   const { Option } = Select;
 
   const handle = (e: FormEvent<HTMLInputElement>) => {
-
+    alert(e.currentTarget.value)
   }
 
   //---------RENDERS

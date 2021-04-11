@@ -16,7 +16,9 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = (props) => {
     {
       _id: 'newoutput',
       title: 'NUEVA SALIDA',
-      size: 'small'
+      size: 'small',
+      widthModal: 1200,
+      showButtons: []
     },
   ];
 
@@ -38,7 +40,8 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = (props) => {
         onClick={(button) => handleClickButton(button)}
       />
       <TableComponent
-        
+        onClickAction={(id: string) => { }}
+        onClickDelete={() => {}}
       />
       {/* modal */}
       {buttons.length > 0 &&
@@ -47,6 +50,7 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = (props) => {
           title={ActualModal.title}
           width={1200}
           onClose={() => setOpenModal(false)}
+          showButtons={[]}
         >
 
         </ModalComponent>

@@ -32,7 +32,8 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = (props) => {
         onClick={(button) => handleClickButton(button)}
       />
       <TableComponent
-
+        onClickAction={(id: string) => { }}
+        onClickDelete={() => {}}
       />
       {/* modal */}
       {buttons.length > 0 &&
@@ -41,6 +42,7 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = (props) => {
           title={ActualModal.title}
           width={1200}
           onClose={() => setOpenModal(false)}
+          showButtons={[]}
         >
 
         </ModalComponent>

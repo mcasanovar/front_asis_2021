@@ -16,7 +16,9 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = (p
     {
       _id: 'newexpense',
       title: 'NUEVO GASTO',
-      size: 'small'
+      size: 'small',
+      widthModal: 1200,
+      showButtons: []
     },
   ];
 
@@ -38,6 +40,8 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = (p
         onClick={(button) => handleClickButton(button)}
       />
       <TableComponent
+        onClickAction={(id: string) => { }}
+        onClickDelete={() => {}}
         showDetails
         showDelete
       />
@@ -48,6 +52,7 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = (p
           title={ActualModal.title}
           width={1200}
           onClose={() => setOpenModal(false)}
+          showButtons={[]}
         >
 
         </ModalComponent>

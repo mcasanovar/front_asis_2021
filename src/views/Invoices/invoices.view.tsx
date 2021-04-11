@@ -33,6 +33,8 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = (props) => {
         showInvoicesOptions
       />
       <TableComponent
+        onClickAction={(id: string) => { }}
+        onClickDelete={() => {}}
         showDetails
         showInvoice
         showUploadOC
@@ -44,6 +46,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = (props) => {
           title={ActualModal.title}
           width={1200}
           onClose={() => setOpenModal(false)}
+          showButtons={[]}
         >
 
         </ModalComponent>

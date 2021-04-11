@@ -6,6 +6,9 @@ import HeaderTableComponent from "../../component/HeaderTable/HeaderTable";
 import ModalComponent from "../../component/Modal/Modal";
 import TableComponent from "../../component/Table/Table";
 
+import CreateRequestView from "./createrequest.view";
+import { CANCEL, CONFIRM } from '../../constants/var';
+
 interface IRequestViewProps {
 }
 
@@ -15,12 +18,16 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = (props) => {
     {
       _id: 'newrequest',
       title: 'NUEVA SOLICITUD',
-      size: 'small'
+      size: 'small',
+      widthModal: 1200,
+      showButtons: [{ _id: CANCEL },{ _id: CONFIRM }]
     },
     {
       _id: 'confirm',
       title: 'CONFIRMAR',
-      size: 'small'
+      size: 'small',
+      widthModal: 1200,
+      showButtons: []
     }
   ];
 
@@ -30,6 +37,10 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = (props) => {
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
     setOpenModal(true);
+  };
+
+  const handleCLickActionTable = (id: string) => {
+
   };
 
   return (
@@ -42,20 +53,23 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = (props) => {
         showDateFilter
         onClick={(button) => handleClickButton(button)}
       />
-      <TableComponent 
+      <TableComponent
+        onClickAction={(id: string) => handleCLickActionTable(id)}
+        onClickDelete={() => {}}
         showDetails
         showEdit
         showNullify
-        showSchedule
+        // showSchedule
       />
       {/* modal */}
       <ModalComponent
         visible={OpenModal}
         title={ActualModal.title}
-        width={1200}
+        width={ActualModal.widthModal || 500}
         onClose={() => setOpenModal(false)}
+        showButtons={ActualModal.showButtons || []}
       >
-        
+        {ActualModal._id === 'newrequest' && <CreateRequestView />}
       </ModalComponent>
     </div>
   );

@@ -15,7 +15,9 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
     {
       _id: 'consolidatereport',
       title: 'INFORME CONSOLIDADO',
-      size: 'small'
+      size: 'small',
+      widthModal: 1200,
+      showButtons: []
     },
   ];
 
@@ -37,6 +39,8 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
         onClick={(button) => handleClickButton(button)}
       />
       <TableComponent
+        onClickAction={(id: string) => { }}
+        onClickDelete={() => {}}
         showDetails
         showRequestPaymentCard
       />
@@ -47,6 +51,7 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
           title={ActualModal.title}
           width={1200}
           onClose={() => setOpenModal(false)}
+          showButtons={[]}
         >
 
         </ModalComponent>

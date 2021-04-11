@@ -16,7 +16,9 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = (props) => {
     {
       _id: 'grouppayment',
       title: 'PAGO GRUPAL',
-      size: 'small'
+      size: 'small',
+      widthModal: 1200,
+      showButtons: []
     },
   ];
 
@@ -40,6 +42,8 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = (props) => {
         showInvoicesOptions
       />
       <TableComponent
+        onClickAction={(id: string) => { }}
+        onClickDelete={() => {}}
         showDetails
         showManagmentPayments
         showGeneratePayment
@@ -50,6 +54,7 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = (props) => {
         title={ActualModal.title}
         width={1200}
         onClose={() => setOpenModal(false)}
+        showButtons={[]}
       >
 
       </ModalComponent>

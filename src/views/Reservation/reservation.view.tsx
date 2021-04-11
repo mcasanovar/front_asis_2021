@@ -16,7 +16,9 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = (props) 
     {
       _id: 'confirm',
       title: 'CONFIRMAR',
-      size: 'small'
+      size: 'small',
+      widthModal: 1200,
+      showButtons: []
     },
   ];
 
@@ -38,7 +40,9 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = (props) 
         showDateFilter
         onClick={(button) => handleClickButton(button)}
       />
-      <TableComponent 
+      <TableComponent
+        onClickAction={(id: string) => { }}
+        onClickDelete={() => {}}
         showDetails
         showEdit
         showNullify
@@ -50,8 +54,9 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = (props) 
         title={ActualModal.title}
         width={1200}
         onClose={() => setOpenModal(false)}
+        showButtons={[]}
       >
-        
+
       </ModalComponent>
     </div>
   );

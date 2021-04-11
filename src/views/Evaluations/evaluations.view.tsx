@@ -33,6 +33,8 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = (props) 
         onClick={(button) => handleClickButton(button)}
       />
       <TableComponent
+        onClickAction={(id: string) => { }}
+        onClickDelete={() => {}}
         showDetails
         showNullify
         showUploadExam
@@ -47,6 +49,7 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = (props) 
           title={ActualModal.title}
           width={1200}
           onClose={() => setOpenModal(false)}
+          showButtons={[]}
         >
 
         </ModalComponent>}

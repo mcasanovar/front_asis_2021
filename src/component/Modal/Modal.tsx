@@ -1,11 +1,14 @@
 import * as React from 'react';
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
+import { IShowButtonModals } from '../../models/index.models';
+import { CANCEL, CONFIRM, EDIT, OK } from '../../constants/var';
 
 interface IModalProps {
   title: string,
   visible: boolean,
   width?: number,
-  onClose: () => void
+  onClose: () => void,
+  showButtons?: IShowButtonModals[]
 }
 
 const ModalComponent: React.FunctionComponent<IModalProps> = ({
@@ -13,20 +16,65 @@ const ModalComponent: React.FunctionComponent<IModalProps> = ({
   visible,
   width = 500,
   children,
-  onClose
+  onClose,
+  showButtons = []
 }) => {
+
+  //--------renders
+  const renderButtonsModal = (selected: IShowButtonModals, index: number) => {
+    if (selected._id === CANCEL)
+      return <Button
+        key={index}
+        onClick={() => onClose()}
+        style={{ backgroundColor: '#E10D17', color: 'white' }}
+      >
+        Cancelar
+      </Button>
+
+    if (selected._id === CONFIRM)
+      return <Button
+        key={index}
+        onClick={() => onClose()}
+        style={{ backgroundColor: 'green', borderColor: 'green', color: 'white' }}
+      >
+        Confirmar
+      </Button>
+
+    if (selected._id === OK)
+      return <Button
+        key={index}
+        onClick={() => onClose()}
+        style={{ backgroundColor: '#1073B5', borderColor: '#1073B5', color: 'white' }}
+      >
+        Ok
+      </Button>
+
+    if (selected._id === EDIT)
+      return <Button
+        key={index}
+        onClick={() => onClose()}
+        style={{ backgroundColor: '#F68923', borderColor: '#F68923', color: 'white' }}
+      >
+        Guardar
+      </Button>
+  };
+
   return (
     <Modal
       title={title}
       centered
       visible={visible}
-      okButtonProps={{ style: { backgroundColor: 'green', borderColor: 'green' }}}
-      okText='Confirmar'
-      onOk={() => onClose()}
       cancelButtonProps={{ style: { backgroundColor: '#E10D17', color: 'white' } }}
       cancelText='Cancelar'
       onCancel={() => onClose()}
       width={width}
+      destroyOnClose={true}
+      footer={showButtons.length > 0 ?
+        [
+          <>
+            {showButtons.map((selected: IShowButtonModals, index) => renderButtonsModal(selected, index))}
+          </>
+        ] : []}
     >
       {children}
     </Modal>
