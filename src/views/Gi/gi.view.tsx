@@ -93,6 +93,7 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
         subtitle='Tabla de información'
         buttons={buttons}
         onClick={(button) => handleClickButton(button)}
+        onClickGrupal={() => {}}
       />
       <TableComponent
         onClickAction={(id: string) => handleCLickActionTable(id)}

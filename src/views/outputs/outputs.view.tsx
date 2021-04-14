@@ -38,6 +38,7 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = (props) => {
         subtitle='Tabla de información'
         buttons={buttons}
         onClick={(button) => handleClickButton(button)}
+        onClickGrupal={() => {}}
       />
       <TableComponent
         onClickAction={(id: string) => { }}

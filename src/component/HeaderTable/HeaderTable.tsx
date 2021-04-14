@@ -12,6 +12,7 @@ interface IHeaderTableProps {
   showDateFilter?: boolean,
   onClick: (button: IButtonsProps) => IButtonsProps | void,
   showInvoicesOptions?: boolean
+  onClickGrupal: (value: string) => void
 }
 
 const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
@@ -20,7 +21,8 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
   buttons = [],
   showDateFilter = false,
   onClick,
-  showInvoicesOptions = false
+  showInvoicesOptions = false,
+  onClickGrupal
 }) => {
 
   const { Option } = Select;
@@ -70,11 +72,11 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
             />
           ))}
           {showInvoicesOptions &&
-            <Select placeholder='Pago Grupal...' style={{ width: 160 }} onChange={() => { }}>
-              <Option value="cargaoc">Carga OC grupal</Option>
-              <Option value="valdaoc">Validar OC grupal</Option>
-              <Option value="cargafactura">Carga factura grupal</Option>
-              <Option value="validafactura">Validar factura grupal</Option>
+            <Select placeholder='Pago Grupal...' style={{ width: 160 }} onChange={onClickGrupal}>
+              <Option value="uploadgroupoc">Carga OC grupal</Option>
+              <Option value="validategroupoc">Validar OC grupal</Option>
+              <Option value="uploadgroupinvoice">Carga factura grupal</Option>
+              <Option value="validategroupinvoice">Validar factura grupal</Option>
             </Select>}
         </div>
       </div>

@@ -135,3 +135,8 @@ h4 {
   justify-content: space-evenly;
   padding-right: 2rem;
 }
+
+th.column-money{          
+  background-color: #1073B5 !important;
+  color: white !important; 
+}

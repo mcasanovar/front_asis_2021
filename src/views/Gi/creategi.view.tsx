@@ -1,4 +1,4 @@
-import React, { FunctionComponent, FormEvent } from 'react';
+import { FunctionComponent, FormEvent } from 'react';
 
 import { Collapse, Input, Row, Col, Select, DatePicker, Upload } from "antd";
 import { PhoneOutlined, MailOutlined, InboxOutlined } from '@ant-design/icons';

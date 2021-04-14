@@ -5,6 +5,7 @@ import { CANCEL, CONFIRM, EDIT, OK } from '../../constants/var';
 
 interface IModalProps {
   title: string,
+  customTitle?: string,
   visible: boolean,
   width?: number,
   onClose: () => void,
@@ -13,6 +14,7 @@ interface IModalProps {
 
 const ModalComponent: React.FunctionComponent<IModalProps> = ({
   title,
+  customTitle = '',
   visible,
   width = 500,
   children,
@@ -61,14 +63,15 @@ const ModalComponent: React.FunctionComponent<IModalProps> = ({
 
   return (
     <Modal
-      title={title}
+      title={customTitle !== '' ? customTitle : title}
       centered
       visible={visible}
       cancelButtonProps={{ style: { backgroundColor: '#E10D17', color: 'white' } }}
       cancelText='Cancelar'
+      maskClosable={false}
       onCancel={() => onClose()}
-      width={width}
       destroyOnClose={true}
+      width={width}
       footer={showButtons.length > 0 ?
         [
           <>

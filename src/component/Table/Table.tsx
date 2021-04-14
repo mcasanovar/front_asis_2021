@@ -18,13 +18,17 @@ import {
   MailOutlined,
   CreditCardOutlined,
   DollarOutlined,
-  FolderOpenOutlined
+  CloudDownloadOutlined,
+  FileSearchOutlined
 } from "@ant-design/icons";
 import { ITableDeleteObject } from '../../models/index.models';
 
 interface ITableComponentProps {
   onClickAction: (id: string) => string | void,
   onClickDelete: (id: string) => string | void,
+  headerWithColor?: boolean,
+  enableRowSelection?: boolean,
+  enablePagination?: boolean,
   useStyle?: boolean,
   showConfiguration?: boolean,
   showDetails?: boolean,
@@ -33,7 +37,7 @@ interface ITableComponentProps {
   showAbsence?: boolean,
   showNullify?: boolean,
   showSchedule?: boolean,
-  showReservacion?: boolean,
+  showReservation?: boolean,
   showUploadExam?: boolean,
   showUploadResult?: boolean,
   showGenerateExam?: boolean,
@@ -42,6 +46,10 @@ interface ITableComponentProps {
   showSendMail?: boolean,
   showInvoice?: boolean,
   showUploadOC?: boolean,
+  showConfirmOC?: boolean,
+  showDownloadOc?: boolean,
+  showDownloadInvoice?: boolean,
+  showValidateInvoice?: boolean,
   showManagmentPayments?: boolean,
   showGeneratePayment?: boolean,
   showRequestPaymentCard?: boolean
@@ -50,6 +58,9 @@ interface ITableComponentProps {
 const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
   onClickAction,
   onClickDelete,
+  headerWithColor = false,
+  enableRowSelection = false,
+  enablePagination = true,
   useStyle = true,
   showConfiguration = false,
   showDetails = false,
@@ -58,7 +69,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
   showAbsence = false,
   showNullify = false,
   showSchedule = false,
-  showReservacion = false,
+  showReservation = false,
   showUploadExam = false,
   showGenerateExam = false,
   showDownloadExam = false,
@@ -67,36 +78,54 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
   showSendMail = false,
   showInvoice = false,
   showUploadOC = false,
+  showConfirmOC = false,
+  showDownloadOc = false,
+  showDownloadInvoice = false,
+  showValidateInvoice = false,
   showManagmentPayments = false,
   showGeneratePayment = false,
   showRequestPaymentCard = false
 }) => {
   const [deleteConfirmation, setDeleteConfirmation] = useState<ITableDeleteObject>({ _id: '', show: false });
+  const [selectionType] = useState<'checkbox' | 'radio'>('checkbox');
+
+  const rowSelection = {
+    // onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+    //   console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    // },
+    onChange: (selectedRowKeys: any, selectedRows: any) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    },
+  };
 
   const columns = [
     {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      className: headerWithColor ? 'column-money' : ''
     },
     {
       title: 'Age',
       dataIndex: 'age',
       key: 'age',
+      className: headerWithColor ? 'column-money' : ''
     },
     {
       title: 'Address',
       dataIndex: 'address',
       key: 'address',
+      className: headerWithColor ? 'column-money' : ''
     },
     {
       title: 'Actions',
       dataIndex: 'actions',
       key: 'actions',
+      className: headerWithColor ? 'column-money' : '',
       render: (text: string, record: any, index: any) => (
         <>
           {showConfiguration &&
-            <Tooltip title="Configuración" color={'#546E7A'} key={'#546E7A'}>
+            <Tooltip title="Configuración" color={'#546E7A'}>
               <Button
                 onClick={() => onClickAction('configurationGi')}
                 style={{ backgroundColor: '#546E7A' }}
@@ -105,7 +134,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
             </Tooltip>
           }
           {showDetails &&
-            <Tooltip title='Detalle' color={'#50ACF5'} key={'#50ACF5'}>
+            <Tooltip title='Detalle' color={'#50ACF5'}>
               <Button
                 onClick={() => onClickAction('details')}
                 style={{ backgroundColor: '#50ACF5' }}
@@ -113,7 +142,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
             </Tooltip>
           }
           {showEdit &&
-            <Tooltip title='Editar' color={'#F68923'} key={'#F68923'}>
+            <Tooltip title='Editar' color={'#F68923'}>
               <Button
                 onClick={() => onClickAction('edit')}
                 style={{ backgroundColor: '#F68923' }}
@@ -129,15 +158,15 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
               visible={(deleteConfirmation._id === record._id && deleteConfirmation.show === true) ? true : false}
               onVisibleChange={() => setDeleteConfirmation({ _id: record._id, show: !deleteConfirmation.show })}
             >
-              <Button 
-               onClick={() => setDeleteConfirmation({ _id: record._id, show: true })}
-               style={{ backgroundColor: '#E6100D' }}
-               icon={<DeleteOutlined style={{ fontSize: '1.1rem', color: 'white' }} />}
+              <Button
+                onClick={() => setDeleteConfirmation({ _id: record._id, show: true })}
+                style={{ backgroundColor: '#E6100D' }}
+                icon={<DeleteOutlined style={{ fontSize: '1.1rem', color: 'white' }} />}
               />
             </Popover>
           }
           {showAbsence &&
-            <Tooltip title='Ausencias' color={'#4DE13E'} key={'#4DE13E'}>
+            <Tooltip title='Ausencias' color={'#4DE13E'}>
               <Button
                 onClick={() => onClickAction('absense')}
                 style={{ backgroundColor: '#4DE13E' }}
@@ -145,47 +174,55 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
             </Tooltip>
           }
           {showNullify &&
-            <Tooltip title='Anular' color={'#FE5151'} key={'#FE5151'}>
+            <Popover
+              content={<Button style={{ backgroundColor: '#E6100D', color: 'white' }} onClick={() => onClickDelete(record._id)}>
+                Confirmar anulación</Button>}
+              title="¿Seguro que desea anular este registro?"
+              trigger="click"
+              visible={(deleteConfirmation._id === record._id && deleteConfirmation.show === true) ? true : false}
+              onVisibleChange={() => setDeleteConfirmation({ _id: record._id, show: !deleteConfirmation.show })}
+            >
               <Button
-                onClick={() => { }}
-                style={{ backgroundColor: 'white' }}
-                icon={<MinusCircleOutlined style={{ fontSize: '1.1rem', color: '#FE5151' }} />} />
-            </Tooltip>
+                onClick={() => setDeleteConfirmation({ _id: record._id, show: true })}
+                style={{ backgroundColor: '#E6100D' }}
+                icon={<MinusCircleOutlined style={{ fontSize: '1.1rem', color: 'white' }} />}
+              />
+            </Popover>
           }
           {showSchedule &&
-            <Tooltip title='Agendar' color={'#50ACF5'} key={'#50ACF5'}>
+            <Tooltip title='Agendar' color={'#50ACF5'}>
               <Button
-                onClick={() => { }}
+                onClick={() => onClickAction('schedule')}
                 style={{ backgroundColor: '#50ACF5' }}
                 icon={<CalendarOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showReservacion &&
-            <Tooltip title='Reservar' color={'#4CAF50'} key={'#4CAF50'}>
+          {showReservation &&
+            <Tooltip title='Reservar' color={'#4CAF50'}>
               <Button
-                onClick={() => { }}
+                onClick={() => onClickAction('reservation')}
                 style={{ backgroundColor: '#4CAF50' }}
                 icon={<ScheduleOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
           {showUploadExam &&
-            <Tooltip title='Subir Examen' color={'#1073B5'} key={'#1073B5'}>
+            <Tooltip title='Subir Examen' color={'#1073B5'}>
               <Button
-                onClick={() => { }}
+                onClick={() => onClickAction('uploadexam')}
                 style={{ backgroundColor: '#1073B5' }}
                 icon={<CloudUploadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
           {showGenerateExam &&
-            <Tooltip title='Generar Examen' color={'#69DF43'} key={'#69DF43'}>
+            <Tooltip title='Generar Examen' color={'#69DF43'}>
               <Button
-                onClick={() => { }}
+                onClick={() => onClickAction('generateexam')}
                 style={{ backgroundColor: '#69DF43' }}
                 icon={<ContainerOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
           {showDownloadExam &&
-            <Tooltip title='Descargar Examen' color={'#1A9D02'} key={'#1A9D02'}>
+            <Tooltip title='Descargar Examen' color={'#1A9D02'}>
               <Button
                 onClick={() => { }}
                 style={{ backgroundColor: '#1A9D02' }}
@@ -193,15 +230,15 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
             </Tooltip>
           }
           {showConfirmExam &&
-            <Tooltip title='Confirmar Examen' color={'#18BBC3'} key={'#18BBC3'}>
+            <Tooltip title='Confirmar Examen' color={'#18BBC3'}>
               <Button
-                onClick={() => { }}
+                onClick={() => onClickAction('confirmexam')}
                 style={{ backgroundColor: '#18BBC3' }}
                 icon={<FileDoneOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
           {showUploadResult &&
-            <Tooltip title='Subir Resultado' color={'#0EB0A1'} key={'#0EB0A1'}>
+            <Tooltip title='Subir Resultado' color={'#0EB0A1'}>
               <Button
                 onClick={() => { }}
                 style={{ backgroundColor: '#0EB0A1' }}
@@ -209,49 +246,81 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
             </Tooltip>
           }
           {showSendMail &&
-            <Tooltip title='Enviar Email' color={'#0E27B0'} key={'#0E27B0'}>
+            <Tooltip title='Enviar Email' color={'#0E27B0'}>
               <Button
                 onClick={() => { }}
                 style={{ backgroundColor: '#0E27B0' }}
                 icon={<MailOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showInvoice &&
-            <Tooltip title='Factura' color={'#50ACF5'} key={'#50ACF5'}>
-              <Button
-                onClick={() => { }}
-                style={{ backgroundColor: 'white' }}
-                icon={<CreditCardOutlined style={{ fontSize: '1.1rem', color: '#50ACF5' }} />} />
-            </Tooltip>
-          }
           {showUploadOC &&
-            <Tooltip title='Subir OC' color={'#50ACF5'} key={'#50ACF5'}>
+            <Tooltip title='Subir OC' color={'#50ACF5'}>
               <Button
-                onClick={() => { }}
+                onClick={() => onClickAction('uploadoc')}
                 style={{ backgroundColor: '#50ACF5' }}
                 icon={<FilePdfOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showManagmentPayments &&
-            <Tooltip title='Gestión de Pagos' color={'#870989'} key={'#870989'}>
+          {showConfirmOC &&
+            <Tooltip title='Confirmar OC' color={'#39AE16'}>
               <Button
-                onClick={() => { }}
-                style={{ backgroundColor: '#870989' }}
-                icon={<FolderOpenOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
+                onClick={() => onClickAction('confirmoc')}
+                style={{ backgroundColor: '#39AE16' }}
+                icon={<FilePdfOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
+            </Tooltip>
+          }
+          {showDownloadOc &&
+            <Tooltip title='Descargar OC' color={'#39AE16'}>
+              <Button
+                onClick={() => onClickAction('')}
+                style={{ backgroundColor: '#39AE16' }}
+                icon={<CloudDownloadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
+            </Tooltip>
+          }
+          {showDownloadInvoice &&
+            <Tooltip title='Descargar factura' color={'#39AE16'}>
+              <Button
+                onClick={() => onClickAction('')}
+                style={{ backgroundColor: '#39AE16' }}
+                icon={<DownloadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
+            </Tooltip>
+          }
+          {showInvoice &&
+            <Tooltip title='Factura' color={'#50ACF5'}>
+              <Button
+                onClick={() => onClickAction('generateinvoice')}
+                style={{ backgroundColor: 'white' }}
+                icon={<CreditCardOutlined style={{ fontSize: '1.1rem', color: '#50ACF5' }} />} />
+            </Tooltip>
+          }
+          {showValidateInvoice &&
+            <Tooltip title='Validar factura' color={'#39AE16'}>
+              <Button
+                onClick={() => onClickAction('validateinvoice')}
+                style={{ backgroundColor: 'white' }}
+                icon={<FileSearchOutlined style={{ fontSize: '1.1rem', color: '#39AE16' }} />} />
+            </Tooltip>
+          }
+          {showManagmentPayments &&
+            <Tooltip title='Gestión de Pagos' color={'#870989'}>
+              <Button
+                onClick={() => onClickAction('managepayment')}
+                style={{ backgroundColor: 'white' }}
+                icon={<DollarOutlined style={{ fontSize: '1.1rem', color: '#870989' }} />} />
             </Tooltip>
           }
           {showGeneratePayment &&
-            <Tooltip title='Realizar Pago' color={'#35A20C'} key={'#35A20C'}>
+            <Tooltip title='Realizar Pago' color={'#35A20C'}>
               <Button
-                onClick={() => { }}
+                onClick={() => onClickAction('generatepayment')}
                 style={{ backgroundColor: 'white' }}
                 icon={<DollarOutlined style={{ fontSize: '1.1rem', color: '#35A20C' }} />} />
             </Tooltip>
           }
           {showRequestPaymentCard &&
-            <Tooltip title='Carta Cobranza' color={'#50ACF5'} key={'#50ACF5'}>
+            <Tooltip title='Carta Cobranza' color={'#50ACF5'}>
               <Button
-                onClick={() => { }}
+                onClick={() => onClickAction('requestpaymentcard')}
                 style={{ backgroundColor: '#50ACF5' }}
                 icon={<MailOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
@@ -286,8 +355,13 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
     <Table
       columns={columns}
       dataSource={data}
-      style={useStyle ? { width: '94%', marginTop: '10.7rem' } : {}}
+      rowSelection={enableRowSelection ? {
+        type: selectionType,
+        ...rowSelection
+      } : undefined}
+      style={useStyle ? { width: '94%', marginTop: '10.7rem' } : { width: '100%' }}
       rowKey={'key'}
+      pagination={enablePagination ? { position: ['bottomCenter'] } : false}
     />
   );
 };

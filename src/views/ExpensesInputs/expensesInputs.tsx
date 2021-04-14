@@ -38,6 +38,7 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = (p
         subtitle='Tabla de información'
         buttons={buttons}
         onClick={(button) => handleClickButton(button)}
+        onClickGrupal={() => {}}
       />
       <TableComponent
         onClickAction={(id: string) => { }}
