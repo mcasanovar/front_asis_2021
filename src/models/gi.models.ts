@@ -1,14 +1,29 @@
 //--- GI MODEL
+export interface IActivity {
+  codigo: string,
+  actividad: string,
+  rubro: string
+};
+
+export interface IFaena {
+  name: string,
+}
+
+export interface IContract {
+  nro_contrato: string,
+  faenas: IFaena[]
+}
 
 export interface GiModel {
   _id: string,
   codigo: string,
+  rut: string,
   razon_social: string,
   nombre_fantasia: string,
   rubro_principal: string,
-  actividad_principal: string,
+  actividad_principal: IActivity,
   rubro_secundario: string,
-  actividad_secundaria: string,
+  actividad_secundaria: IActivity,
   grupo_interes: string,
   categoria: string,
   categoria_empresa: string,
@@ -29,15 +44,49 @@ export interface GiModel {
   nacionalidad: string,
   pais_origen: string,
   grado_formalizacion: string,
-  nro_contrato: any,
   credito: string,
+  cargo?: string,
+  genero?: string,
+  estado_civil?: string,
+  grupo_sanguineo?: string,
+  usa_lente_optico?: string,
+  usa_lente_contacto?: string,
+  usa_audifonos?: string,
+  fecha_vencimiento_ci?: string,
+  fecha_venc_licencia?: string,
+  usa_pc?: string,
   dias_credito: number,
   orden_compra: string,
   url_file_adjunto: any,
-  activo_inactivo: boolean,
-  contrato_faenas?: any,
+  contrato_faenas: IContract[],
   imagen_perfil_gi?: string,
   licencia_conduccion?: string,
+  clase_licencia?: string[],
+  ley_aplicable?: number,
+  estado_licencia?: string,
+  nro_contrato?: string,
+  faena?: string,
   nivel_educacional?: string,
-  rol: string
+  id_GI_org_perteneciente?: string,
+  razon_social_org_perteneciente?: string,
+  activo_inactivo: boolean,
+  rol: string,
+}
+
+export interface IResponseGI {
+  err: any,
+  res: any
+};
+
+export interface IReponseAllGIs {
+  total_items: number,
+  pagina_actual: number,
+  nro_paginas: 0,
+  gis: GiModel[],
+  err?: string
+};
+
+export interface IFiltersGI {
+  key: number,
+  value: string
 }

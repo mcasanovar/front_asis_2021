@@ -4,6 +4,7 @@ import { Select, Input, DatePicker } from 'antd';
 import { IButtonsProps } from '../../models/index.models';
 
 import ButtonComponent from "../Button/Button";
+import { IFiltersGI } from '../../models/gi.models';
 
 interface IHeaderTableProps {
   title: string,
@@ -11,8 +12,13 @@ interface IHeaderTableProps {
   buttons?: IButtonsProps[],
   showDateFilter?: boolean,
   onClick: (button: IButtonsProps) => IButtonsProps | void,
+  onClickSearch: () => void,
   showInvoicesOptions?: boolean
   onClickGrupal: (value: string) => void
+  dataFilter?: IFiltersGI[],
+  filterText?: string,
+  setFilterText: React.Dispatch<React.SetStateAction<string>>
+  setOptionFilter: React.Dispatch<React.SetStateAction<number>>
 }
 
 const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
@@ -22,10 +28,16 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
   showDateFilter = false,
   onClick,
   showInvoicesOptions = false,
-  onClickGrupal
+  onClickGrupal,
+  dataFilter = [],
+  filterText = '',
+  setFilterText,
+  onClickSearch,
+  setOptionFilter
 }) => {
 
   const { Option } = Select;
+  const { Search } = Input;
 
   return (
     <div className="container-header-table">
@@ -42,21 +54,24 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
           }
           <Select
             showSearch
-            style={{ width: 160 }}
-            placeholder="Search to Select"
+            style={{ width: 160, paddingRight: 5 }}
+            placeholder="Filtro"
             optionFilterProp="children"
+            onSelect={(e) => setOptionFilter(parseInt(e.toString()))}
           >
-            <Option value="1">Not Identified</Option>
-            <Option value="2">Closed</Option>
-            <Option value="3">Communicated</Option>
-            <Option value="4">Identified</Option>
-            <Option value="5">Resolved</Option>
-            <Option value="6">Cancelled</Option>
+            {dataFilter.length > 0 && dataFilter.map((item) => (
+              <Option value={item.key}>{item.value}</Option>
+            ))}
           </Select>
-          <Input.Search
-            allowClear
-            placeholder='Ingrese texto...'
-            style={{ width: 500, height: '2rem', paddingLeft: '1rem' }}
+          <Search 
+            placeholder="Buscar..." 
+            enterButton="Buscar" 
+            size="middle" 
+            loading={false}
+            style={{ width: 600, height: '2rem', marginLeft: 0 }}
+            onChange={(e) => setFilterText(e.currentTarget.value)}
+            onSearch={() => onClickSearch()}
+            value={filterText}
           />
         </div>
         <div></div>

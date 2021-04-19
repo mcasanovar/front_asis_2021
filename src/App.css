@@ -73,6 +73,13 @@ h4 {
   width: 100%;
 }
 
+.spin {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
 .container-subbar {
   height: 50px;
   width: 100%;

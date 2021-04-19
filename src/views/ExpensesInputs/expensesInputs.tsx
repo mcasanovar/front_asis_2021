@@ -24,6 +24,8 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = (p
 
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
   const [OpenModal, setOpenModal] = useState<boolean>(false);
+  const [filterText, setFilterText] = useState<string>('');
+  const [optionFilter, setOptionFilter] = useState<number>(0);
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -39,6 +41,11 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = (p
         buttons={buttons}
         onClick={(button) => handleClickButton(button)}
         onClickGrupal={() => {}}
+        filterText={''}
+        setFilterText={setFilterText}
+        onClickSearch={() => {}}
+        setOptionFilter={setOptionFilter}
+        
       />
       <TableComponent
         onClickAction={(id: string) => { }}
@@ -53,6 +60,7 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = (p
           title={ActualModal.title}
           width={1200}
           onClose={() => setOpenModal(false)}
+          onClickConfirm={(id) => {}}
           showButtons={[]}
         >
 

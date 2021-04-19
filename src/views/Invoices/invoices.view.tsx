@@ -28,6 +28,8 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = (props) => {
 
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
   const [OpenModal, setOpenModal] = useState<boolean>(false);
+  const [filterText, setFilterText] = useState<string>('');
+  const [optionFilter, setOptionFilter] = useState<number>(0);
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -149,6 +151,11 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = (props) => {
         onClick={(button) => handleClickButton(button)}
         showInvoicesOptions
         onClickGrupal={(value) => handleClickGrupalSelection(value)}
+        filterText={''}
+        setFilterText={setFilterText}
+        onClickSearch={() => {}}
+        setOptionFilter={setOptionFilter}
+        
       />
       <TableComponent
         onClickAction={(id: string) => handleCLickActionTable(id)}
@@ -168,6 +175,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = (props) => {
           title={ActualModal.title}
           width={ActualModal.widthModal || 500}
           onClose={() => setOpenModal(false)}
+          onClickConfirm={(id) => {}}
           showButtons={ActualModal.showButtons || []}
         >
           {ActualModal._id === 'details' && <DetailsInvoceView />}

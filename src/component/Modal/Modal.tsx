@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Button, Modal } from "antd";
+import { Modal } from "antd";
 import { IShowButtonModals } from '../../models/index.models';
-import { CANCEL, CONFIRM, EDIT, OK } from '../../constants/var';
+// import { CANCEL, CONFIRM, EDIT, OK } from '../../constants/var';
 
 interface IModalProps {
   title: string,
@@ -9,7 +9,10 @@ interface IModalProps {
   visible: boolean,
   width?: number,
   onClose: () => void,
+  onClickConfirm: (id: string) => void,
   showButtons?: IShowButtonModals[]
+  disabledCancel?: boolean,
+  disabledConfirm?: boolean
 }
 
 const ModalComponent: React.FunctionComponent<IModalProps> = ({
@@ -19,47 +22,52 @@ const ModalComponent: React.FunctionComponent<IModalProps> = ({
   width = 500,
   children,
   onClose,
-  showButtons = []
+  onClickConfirm,
+  showButtons = [],
+  disabledCancel = false,
+  disabledConfirm = false
 }) => {
 
   //--------renders
-  const renderButtonsModal = (selected: IShowButtonModals, index: number) => {
-    if (selected._id === CANCEL)
-      return <Button
-        key={index}
-        onClick={() => onClose()}
-        style={{ backgroundColor: '#E10D17', color: 'white' }}
-      >
-        Cancelar
-      </Button>
+  // const renderButtonsModal = (selected: IShowButtonModals, index: number) => {
+  //   if (selected._id === CANCEL)
+  //     return <Button
+  //       key={index}
+  //       onClick={() => onClose()}
+  //       disabled={disabledCancel}
+  //       style={!disabledCancel ? { backgroundColor: '#E10D17', color: 'white' } : { backgroundColor: 'grey', color: 'white' }}
+  //     >
+  //       Cancelar
+  //     </Button>
 
-    if (selected._id === CONFIRM)
-      return <Button
-        key={index}
-        onClick={() => onClose()}
-        style={{ backgroundColor: 'green', borderColor: 'green', color: 'white' }}
-      >
-        Confirmar
-      </Button>
+  //   if (selected._id === CONFIRM)
+  //     return <Button
+  //       key={index}
+  //       onClick={() => onClickConfirm(selected._id)}
+  //       disabled={disabledConfirm}
+  //       style={!disabledConfirm ? { backgroundColor: 'green', borderColor: 'green', color: 'white' } : { backgroundColor: 'grey', borderColor: 'grey', color: 'white' }}
+  //     >
+  //       Confirmar
+  //     </Button>
 
-    if (selected._id === OK)
-      return <Button
-        key={index}
-        onClick={() => onClose()}
-        style={{ backgroundColor: '#1073B5', borderColor: '#1073B5', color: 'white' }}
-      >
-        Ok
-      </Button>
+  //   if (selected._id === OK)
+  //     return <Button
+  //       key={index}
+  //       onClick={() => onClose()}
+  //       style={{ backgroundColor: '#1073B5', borderColor: '#1073B5', color: 'white' }}
+  //     >
+  //       Ok
+  //     </Button>
 
-    if (selected._id === EDIT)
-      return <Button
-        key={index}
-        onClick={() => onClose()}
-        style={{ backgroundColor: '#F68923', borderColor: '#F68923', color: 'white' }}
-      >
-        Guardar
-      </Button>
-  };
+  //   if (selected._id === EDIT)
+  //     return <Button
+  //       key={index}
+  //       onClick={() => onClose()}
+  //       style={{ backgroundColor: '#F68923', borderColor: '#F68923', color: 'white' }}
+  //     >
+  //       Guardar
+  //     </Button>
+  // };
 
   return (
     <Modal
@@ -72,12 +80,14 @@ const ModalComponent: React.FunctionComponent<IModalProps> = ({
       onCancel={() => onClose()}
       destroyOnClose={true}
       width={width}
-      footer={showButtons.length > 0 ?
-        [
-          <>
-            {showButtons.map((selected: IShowButtonModals, index) => renderButtonsModal(selected, index))}
-          </>
-        ] : []}
+      closable={true}
+      footer={false}
+      // footer={showButtons.length > 0 ?
+      //   [
+      //     <>
+      //       {showButtons.map((selected: IShowButtonModals, index) => renderButtonsModal(selected, index))}
+      //     </>
+      //   ] : []}
     >
       {children}
     </Modal>

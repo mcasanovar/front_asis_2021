@@ -26,6 +26,7 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
         title='Ingredo de Ausencia para fecha -dd-mm-yyyy-'
         width={800}
         onClose={() => setOpenNewAbsense(false)}
+        onClickConfirm={(id) => {}}
         showButtons={[{ _id: CANCEL },{ _id: CONFIRM }]}
       >
         <Input.Group>

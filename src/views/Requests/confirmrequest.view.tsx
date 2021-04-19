@@ -52,7 +52,7 @@ const ConfirmRequestView: React.FunctionComponent<IConfirmRequestViewProps> = (p
         </Col>
       </Row>
       <br />
-      <Row>
+      {/* <Row>
         <Col span={24}>
           <Upload.Dragger name="files" action="/upload.do">
             <p className="ant-upload-drag-icon">
@@ -62,7 +62,7 @@ const ConfirmRequestView: React.FunctionComponent<IConfirmRequestViewProps> = (p
             <p className="ant-upload-hint">10mb max.</p>
           </Upload.Dragger>
         </Col>
-      </Row>
+      </Row> */}
     </Input.Group>
   );
 };

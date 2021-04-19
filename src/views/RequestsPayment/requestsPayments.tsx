@@ -28,6 +28,8 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
 
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
   const [OpenModal, setOpenModal] = useState<boolean>(false);
+  const [filterText, setFilterText] = useState<string>('');
+  const [optionFilter, setOptionFilter] = useState<number>(0);
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -70,6 +72,11 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
         buttons={buttons}
         onClick={(button) => handleClickButton(button)}
         onClickGrupal={() => { }}
+        filterText={''}
+        setFilterText={setFilterText}
+        onClickSearch={() => {}}
+        setOptionFilter={setOptionFilter}
+        
       />
       <TableComponent
         onClickAction={(id: string) => handleCLickActionTable(id)}
@@ -84,6 +91,7 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
           title={ActualModal.title}
           width={ActualModal.widthModal || 500}
           onClose={() => setOpenModal(false)}
+          onClickConfirm={(id) => {}}
           showButtons={ActualModal.showButtons || []}
         >
           {ActualModal._id === 'details' && <DetailsRequestPaymentView />}

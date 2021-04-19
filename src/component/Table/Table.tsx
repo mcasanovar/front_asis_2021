@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Button, Tooltip, Popover } from "antd";
+import { Table, Button, Tooltip, Popover, Tag } from "antd";
 
 import {
   LockOutlined,
@@ -21,11 +21,16 @@ import {
   CloudDownloadOutlined,
   FileSearchOutlined
 } from "@ant-design/icons";
-import { ITableDeleteObject } from '../../models/index.models';
+import { IColumnTable, ITableDeleteObject } from '../../models/index.models';
+import { GiModel } from '../../models/gi.models';
+import { RequestModel } from '../../models/request.models';
 
 interface ITableComponentProps {
-  onClickAction: (id: string) => string | void,
-  onClickDelete: (id: string) => string | void,
+  data?: GiModel[] | RequestModel[] | undefined,
+  columns?: IColumnTable[],
+  onClickAction: (id: string, _id?: string) => (string | void) | (string | undefined),
+  onClickDelete: (id: string, _id: string) => string | void,
+  loading?: boolean,
   headerWithColor?: boolean,
   enableRowSelection?: boolean,
   enablePagination?: boolean,
@@ -56,8 +61,11 @@ interface ITableComponentProps {
 }
 
 const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
+  data = undefined,
+  columns = [],
   onClickAction,
   onClickDelete,
+  loading = false,
   headerWithColor = false,
   enableRowSelection = false,
   enablePagination = true,
@@ -98,25 +106,25 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
     },
   };
 
-  const columns = [
+  const processStates = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      className: headerWithColor ? 'column-money' : ''
-    },
-    {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-      className: headerWithColor ? 'column-money' : ''
-    },
-    {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-      className: headerWithColor ? 'column-money' : ''
-    },
+      title: 'Estado proceso',
+      dataIndex: 'estado_proceso',
+      key: 'estado_proceso',
+      render: (_: string, record: any) => (
+        <>
+          {record.estado === 'Ingresado' &&
+            <Tag style={{ textAlign: 'center' }} color="#2db7f5">Ingresado</Tag>
+          }
+          {record.estado === 'Cnfirmado' &&
+            <Tag style={{ textAlign: 'center' }} color="#4CAF50">Ingresado</Tag>
+          }
+        </>
+      )
+    }
+  ];
+
+  const defaultColumns = [
     {
       title: 'Actions',
       dataIndex: 'actions',
@@ -136,7 +144,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
           {showDetails &&
             <Tooltip title='Detalle' color={'#50ACF5'}>
               <Button
-                onClick={() => onClickAction('details')}
+                onClick={() => onClickAction('details', record._id)}
                 style={{ backgroundColor: '#50ACF5' }}
                 icon={<EyeOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
@@ -144,14 +152,15 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
           {showEdit &&
             <Tooltip title='Editar' color={'#F68923'}>
               <Button
-                onClick={() => onClickAction('edit')}
+                onClick={() => onClickAction('edit', record._id)}
                 style={{ backgroundColor: '#F68923' }}
                 icon={<EditOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
           {showDelete &&
             <Popover
-              content={<Button style={{ backgroundColor: '#E6100D', color: 'white' }} onClick={() => onClickDelete(record._id)}>
+              content={<Button style={{ backgroundColor: '#E6100D', color: 'white' }}
+                onClick={() => onClickDelete('delete', record._id)}>
                 Confirmar eliminación</Button>}
               title="¿Seguro que desea eliminar este registro?"
               trigger="click"
@@ -175,7 +184,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
           }
           {showNullify &&
             <Popover
-              content={<Button style={{ backgroundColor: '#E6100D', color: 'white' }} onClick={() => onClickDelete(record._id)}>
+              content={<Button style={{ backgroundColor: '#E6100D', color: 'white' }} onClick={() => onClickDelete('nullify', record._id)}>
                 Confirmar anulación</Button>}
               title="¿Seguro que desea anular este registro?"
               trigger="click"
@@ -330,7 +339,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
     },
   ];
 
-  const data: any = [
+  const defaultData: any = [
     {
       _id: '736767wgdy3gd',
       name: 'John Brown',
@@ -353,8 +362,9 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
 
   return (
     <Table
-      columns={columns}
-      dataSource={data}
+      columns={[...processStates, ...columns, ...defaultColumns]}
+      dataSource={data || defaultData}
+      loading={loading}
       rowSelection={enableRowSelection ? {
         type: selectionType,
         ...rowSelection

@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { IButtonsProps } from '../../models/index.models';
-import { CANCEL, CONFIRM, EDIT, OK } from '../../constants/var';
+import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
+import { CANCEL, CONFIRM, EDIT, FILTERS_GI, GIS_COLUMNS_TABLE, N_PER_PAGE, OK } from '../../constants/var';
+
 
 import SubBarComponent from "../../component/Subbar/SubBar";
 import HeaderTableComponent from "../../component/HeaderTable/HeaderTable";
 import ModalComponent from "../../component/Modal/Modal";
 import TableComponent from "../../component/Table/Table";
+import AlertComponent from "../../component/Alert/Alert";
 
-import CreateGiView from "./creategi.view";
+import { GiModel, IReponseAllGIs, IResponseGI } from '../../models/gi.models';
+import { deleteOneGiService, filterGisService, getAllGIService } from '../../services';
+
+import CreateEditGiView from "./createEditgi.view";
+import DetailsGIView from "./detailsgi.view";
 import ConfigurationView from "./configurationGi.view";
 
 interface IGiViewProps {
@@ -40,68 +46,177 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
     }
   ];
 
+  const [loading, setLoading] = useState<boolean>(false);
+  const [GIs, setGIs] = useState<GiModel[]>([]);
+  const [idSelectedGI, setIdSelectedGI] = useState<string>('');
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
   const [OpenModal, setOpenModal] = useState<boolean>(false);
+  const [disabledCancel, setDisabledCancel] = useState<boolean>(false);
+  const [disabledConfirm, setdIsabledConfirm] = useState<boolean>(true);
+  const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
+  const [filterText, setFilterText] = useState<string>('');
+  const [optionFilter, setOptionFilter] = useState<number>(0);
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
     setOpenModal(true);
   };
 
-  const handleCLickActionTable = (id: string) => {
+  const handleCLickActionTable = (id: string, idregister: string | undefined) => {
+    // console.log(_id)
     switch (id) {
       case 'configurationGi':
-        setActualModal({ 
-          _id: id, 
-          title: 'Configuración de -nombre-', 
-          size: 'small', 
+        setActualModal({
+          _id: id,
+          title: 'Configuración de -nombre-',
+          size: 'small',
           widthModal: 600,
-          showButtons: [{ _id: CANCEL }, { _id: CONFIRM }] 
+          showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
         })
         setOpenModal(true);
         break;
       case 'details':
-        setActualModal({ 
-          _id: id, 
-          title: 'Ver detalle de GI', 
-          size: 'small', 
+        setActualModal({
+          _id: id,
+          title: 'Ver detalle de GI',
+          size: 'small',
           widthModal: 1200,
-          showButtons: [{ _id: OK }] 
+          showButtons: [{ _id: OK }]
         })
         setOpenModal(true);
+        idregister && setIdSelectedGI(idregister)
         break;
       case 'edit':
-        setActualModal({ 
-          _id: id, 
-          title: 'Editar Gi', 
-          size: 'small', 
+        setActualModal({
+          _id: id,
+          title: 'Editar Gi',
+          size: 'small',
           widthModal: 1200,
-          showButtons: [{ _id: CANCEL }, { _id: EDIT }] 
+          showButtons: [{ _id: CANCEL }, { _id: EDIT }]
         })
         setOpenModal(true);
+        idregister && setIdSelectedGI(idregister)
+        break;
+      case 'delete':
+        idregister && setIdSelectedGI(idregister)
+        setActualModal({
+          _id: id,
+          title: '',
+          size: 'small',
+          widthModal: 0,
+          showButtons: [{ _id: CANCEL }, { _id: EDIT }]
+        })
         break;
       default:
         return setActualModal(buttons[0])
     }
   };
 
+  const handleCloseModal = (value: string, message: string) => {
+    setOpenModal(false)
+    if (value === '') return
+    setMessageAlert({ message, type: 'success', show: true });
+    if (value === 'reload') {
+      //reload gi
+      getGis();
+    }
+  };
+
+  const handleClickSearch = async () => {
+    setLoading(true)
+    console.log([optionFilter, filterText, N_PER_PAGE])
+    const response: IReponseAllGIs = await filterGisService(
+      optionFilter,
+      filterText,
+      1,
+      N_PER_PAGE
+    );
+
+    if (response?.err) {
+      setMessageAlert({ message: response.err, type: 'error', show: true });
+      return;
+    };
+
+    setGIs(response.gis);
+    setLoading(false)
+  };
+
+  async function getGis() {
+    const aux: IReponseAllGIs = await getAllGIService(1, N_PER_PAGE);
+    setGIs(aux.gis);
+  };
+
+  async function hanbleDeleteGI(id: string) {
+    const aux: IResponseGI = await deleteOneGiService(id);
+    if(aux.err === null){
+      setMessageAlert({ message: aux.res, type: 'success', show: true });
+      getGis();
+      return setLoading(false);
+    }
+    return setMessageAlert({ message: aux.res, type: 'error', show: true });
+  };
+
+  //--------------USEEFECT
+  useEffect(() => {
+    if (messageAlert.show) {
+      setTimeout(() => {
+        setMessageAlert({ ...messageAlert, show: false });
+      }, 2500);
+    }
+  }, [messageAlert]);
+
+  useEffect(() => {
+    setLoading(true)
+    getGis();
+  }, []);
+
+  useEffect(() => {
+    if (GIs.length > 0) {
+      setLoading(false)
+    };
+    // eslint-disable-next-line
+  }, [GIs]);
+
+  useEffect(() => {
+    if(ActualModal._id === 'delete'){
+      setLoading(true);
+      hanbleDeleteGI(idSelectedGI);
+    }
+  }, [ActualModal]);
+
   return (
     <div className='container-gi'>
       <SubBarComponent title='Grupo de Interes' />
+      {messageAlert.show &&
+        <AlertComponent
+          message={messageAlert.message}
+          type={messageAlert.type}
+          customStyle={{ width: '60%', height: 50, fontSize: 18, fontWeight: 'bold' }}
+          showIcon
+        />
+      }
       <HeaderTableComponent
         title='Grupo de Interes ASIS'
         subtitle='Tabla de información'
         buttons={buttons}
         onClick={(button) => handleClickButton(button)}
-        onClickGrupal={() => {}}
+        onClickGrupal={() => { }}
+        dataFilter={FILTERS_GI}
+        filterText={filterText}
+        setFilterText={setFilterText}
+        onClickSearch={() => handleClickSearch()}
+        setOptionFilter={setOptionFilter}
       />
       <TableComponent
-        onClickAction={(id: string) => handleCLickActionTable(id)}
-        onClickDelete={() => {}}
+        data={GIs}
+        columns={GIS_COLUMNS_TABLE}
+        onClickAction={(id: string, _id?: string) => handleCLickActionTable(id, _id)}
+        onClickDelete={(id, _id) => handleCLickActionTable(id, _id)}
         showConfiguration
         showEdit
         showDetails
         showDelete
+        loading={loading}
       />
       {/* modal */}
       <ModalComponent
@@ -109,12 +224,31 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
         title={ActualModal.title}
         width={ActualModal.widthModal || 500}
         onClose={() => setOpenModal(false)}
+        onClickConfirm={() => { }}
         showButtons={ActualModal.showButtons || []}
+        disabledCancel={disabledCancel}
+        disabledConfirm={disabledConfirm}
       >
-        {ActualModal._id === 'newgi' && <CreateGiView/>}
-        {ActualModal._id === 'configurationGi' && <ConfigurationView/>}
-        {ActualModal._id === 'details' && <CreateGiView/>}
-        {ActualModal._id === 'edit' && <CreateGiView/>}
+        {ActualModal._id === 'newgi' &&
+          <CreateEditGiView
+            onCloseModal={(value, message) => handleCloseModal(value, message)}
+            type='insert'
+          />
+        }
+        {/* {ActualModal._id === 'configurationGi' && <ConfigurationView/>} */}
+        {ActualModal._id === 'details' &&
+          <DetailsGIView
+            onCloseModal={(value, message) => handleCloseModal(value, message)}
+            _id={idSelectedGI}
+          />
+        }
+        {ActualModal._id === 'edit' &&
+          <CreateEditGiView
+            onCloseModal={(value, message) => handleCloseModal(value, message)}
+            type='edit'
+            _id={idSelectedGI}
+          />
+        }
       </ModalComponent>
     </div>
   );

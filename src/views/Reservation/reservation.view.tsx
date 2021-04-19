@@ -30,6 +30,8 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = (props) 
 
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
   const [OpenModal, setOpenModal] = useState<boolean>(false);
+  const [filterText, setFilterText] = useState<string>('');
+  const [optionFilter, setOptionFilter] = useState<number>(0);
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -83,6 +85,11 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = (props) 
         showDateFilter
         onClick={(button) => handleClickButton(button)}
         onClickGrupal={() => {}}
+        filterText={''}
+        setFilterText={setFilterText}
+        onClickSearch={() => {}}
+        setOptionFilter={setOptionFilter}
+        
       />
       <TableComponent
         onClickAction={(id: string) => handleCLickActionTable(id)}
@@ -98,6 +105,7 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = (props) 
         title={ActualModal.title}
         width={1200}
         onClose={() => setOpenModal(false)}
+        onClickConfirm={(id) => {}}
         showButtons={ActualModal.showButtons || []}
       >
         {ActualModal._id === 'confirm' && <GroupConfirmReservationView />}

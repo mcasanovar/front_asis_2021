@@ -23,6 +23,8 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = (props) 
 
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
   const [OpenModal, setOpenModal] = useState<boolean>(false);
+  const [filterText, setFilterText] = useState<string>('');
+  const [optionFilter, setOptionFilter] = useState<number>(0);
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -86,6 +88,10 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = (props) 
         showDateFilter
         onClick={(button) => handleClickButton(button)}
         onClickGrupal={() => {}}
+        filterText={''}
+        setFilterText={setFilterText}
+        onClickSearch={() => {}}
+        setOptionFilter={setOptionFilter}
       />
       <TableComponent
         onClickAction={(id: string) => handleCLickActionTable(id)}
@@ -104,6 +110,7 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = (props) 
           title={ActualModal.title}
           width={ActualModal.widthModal || 500}
           onClose={() => setOpenModal(false)}
+          onClickConfirm={(id) => {}}
           showButtons={ActualModal.showButtons || []}
         >
           {ActualModal._id === 'details' && <DetailsEvaluationView />}
