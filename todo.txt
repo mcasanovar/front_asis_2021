@@ -1,0 +1,5 @@
+//----------- 21-04-2021 miercoles
+1.- falta el examen psico y aversion generarlo desde cero en el front
+2.- falta tambien generar la descarga del examen en evaluaciones
+3.- faltan los filtros de fecha y filtro selectivo en evaluaciones
+

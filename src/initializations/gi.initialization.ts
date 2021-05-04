@@ -1,5 +1,32 @@
 import { GiModel } from "../models/gi.models";
 
+export const EmployeesInitialization = {
+  tipo_contrato: '',
+  estado_contrato: '',
+  fecha_inicio_contrato: '',
+  fecha_fin_contrato: '',
+  sueldo_bruto: 0,
+  sueldo_bruto_string: '',
+  afp: '',
+  isapre: '',
+  seguridad_laboral: '',
+  dias_vacaciones: '',
+  comentarios: '',
+  detalle_empleado: {
+    dias_acumulados: 0,
+    dias_recuperados: 0,
+    dias_total_ausencias: 0,
+    dias_pendientes: 0,
+    enfermedad_cant: 0,
+    maternidad_cant: 0,
+    mediodia_cant: 0,
+    tramites_cant: 0,
+    vacaciones_cant: 0,
+    recuperados_cant: 0,
+    mediodia_recuperados_cant: 0
+  }
+}
+
 export const GiInitializationData: GiModel = {
   _id: '',
   codigo: '',
@@ -56,5 +83,5 @@ export const GiInitializationData: GiModel = {
   ley_aplicable: undefined,
   estado_licencia: '',
   nivel_educacional: '',
-  rol: ''
+  rol: '',
 }

@@ -5,5 +5,5 @@ export const MilesFormat = (number: number) => {
     let arr = number.toString().split(".");
     arr[0] = arr[0].replace(exp, rep);
     return arr[1] ? arr.join(".") : arr[0];
-  } else return 0;
+  } else return '0';
 };

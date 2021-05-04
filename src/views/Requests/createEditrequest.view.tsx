@@ -56,16 +56,18 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
   async function getGIByRut(rut: string, typeRequest: number) {
     setLoading(true);
     const aux: IResponseGI = await getGIByRutService(rut, typeRequest)
-    if (aux.err !== null) {
-      setMessageAlert({ message: 'No se ha encontrado ningun GI con el rut ingresado', type: 'error', show: true });
+    if (aux.err !== null && aux.err !== 98) {
+      setMessageAlert({ message: aux.err, type: 'error', show: true });
       setLoading(false);
       return
     }
-    if (!aux.res) {
-      setMessageAlert({ message: 'Formato de rut no válido (Ej: 9876543-2)', type: 'error', show: true });
+
+    if (aux.err === 98) {
+      setMessageAlert({ message: 'No se ha encontrado ningun GI', type: 'error', show: true });
       setLoading(false);
       return
     }
+
     if (type === 'edit') {
       setLoading(false);
       if (typeRequest === 1) {
@@ -78,7 +80,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
     };
 
     if (typeRequest === 1) {
-      setNewRequestData({ ...newRequestData, razon_social_CP: aux.res.razon_social, id_GI_Principal: aux.res._id });
+      setNewRequestData({ ...newRequestData, razon_social_CP: aux.res.razon_social, rut_CP: aux.res.rut, id_GI_Principal: aux.res._id });
       setPrimaryClient(aux.res);
     }
     else {
@@ -264,12 +266,20 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
     if (newRequestData.nombre_servicio !== ''
       && newRequestData.id_GI_PersonalAsignado !== ''
       && newRequestData.id_GI_Principal
-      && newRequestData.id_GI_Secundario !== '') {
+      && newRequestData.id_GI_Secundario !== ''
+      && newRequestData.nro_contrato_seleccionado_cp !== ''
+      && newRequestData.faena_seleccionada_cp !== '') {
 
       setDisabledConfirm(false)
     }
     // eslint-disable-next-line
-  }, [newRequestData.nombre_servicio, newRequestData.id_GI_PersonalAsignado, newRequestData.id_GI_Principal, newRequestData.id_GI_Secundario]);
+  }, [newRequestData.nombre_servicio,
+  newRequestData.id_GI_PersonalAsignado,
+  newRequestData.id_GI_Principal,
+  newRequestData.id_GI_Secundario,
+  newRequestData.nro_contrato_seleccionado_cp,
+  newRequestData.faena_seleccionada_cp
+  ]);
 
   console.log(primaryClient);
 
@@ -620,12 +630,15 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
           <Row gutter={8}>
             <Col span={6}>
               <Form.Item
+                validateStatus={newRequestData.nro_contrato_seleccionado_cp !== '' ? 'success' : 'error'}
+                help={newRequestData.nro_contrato_seleccionado_cp !== '' ? '' : 'Formato de rut incorrecto'}
                 label='Contrato'
               >
                 <Select
                   style={{ width: '100%' }}
                   onChange={(e) => handleSetContractNumber(e.toString())}
                   value={newRequestData.nro_contrato_seleccionado_cp}
+                  id='error'
                 >
                   {primaryClient?.contrato_faenas && primaryClient.contrato_faenas.map((contract) => (
                     <Option value={contract.nro_contrato}>{contract.nro_contrato}</Option>
@@ -635,6 +648,8 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
             </Col>
             <Col span={6}>
               <Form.Item
+                validateStatus={newRequestData.faena_seleccionada_cp !== '' ? 'success' : 'error'}
+                help={newRequestData.faena_seleccionada_cp !== '' ? '' : 'Formato de rut incorrecto'}
                 label='Seleccione faena'
               >
                 <Select

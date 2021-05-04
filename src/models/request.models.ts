@@ -68,6 +68,11 @@ export interface RequestModel {
   jornada: string,
   estado: string,
   isActive: boolean,
+  fecha_confirmacion?: string,
+  hora_confirmacion?: string,
+  medio_confirmacion?: string,
+  email_gi?: string,
+  url_file_adjunto_confirm?: object
 };
 
 export interface IResponseRequest {
@@ -82,4 +87,10 @@ export interface IResponseAllRequests {
   nro_paginas: 0,
   solicitudes: RequestModel[],
   err?: string
+};
+
+export interface IFiltersRequest {
+  key: number,
+  value: string,
+  name: string
 }

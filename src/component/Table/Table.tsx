@@ -24,9 +24,29 @@ import {
 import { IColumnTable, ITableDeleteObject } from '../../models/index.models';
 import { GiModel } from '../../models/gi.models';
 import { RequestModel } from '../../models/request.models';
+import { ReservationModel } from '../../models/reservation.models';
+import { EvaluationModel } from '../../models/evaluations.models';
+import { ResultModel } from '../../models/results.model';
+import { InvoicesModel } from '../../models/invoices.models';
+import { PaymentModel } from '../../models/payments.models';
+import { RequestPaymentModel } from '../../models/requestpayment.models';
+import { ExpensesModel } from '../../models/expenses.models';
+import { OutputModel } from '../../models/outputs.models';
+import { ExistenceModel } from '../../models/existence.models';
 
 interface ITableComponentProps {
-  data?: GiModel[] | RequestModel[] | undefined,
+  data?: GiModel[] 
+    | RequestModel[] 
+    | ReservationModel[] 
+    | EvaluationModel[] 
+    | ResultModel[]
+    | InvoicesModel[]
+    | PaymentModel[]
+    | RequestPaymentModel[]
+    | ExpensesModel[]
+    | OutputModel[]
+    | ExistenceModel[]
+    | undefined,
   columns?: IColumnTable[],
   onClickAction: (id: string, _id?: string) => (string | void) | (string | undefined),
   onClickDelete: (id: string, _id: string) => string | void,
@@ -35,6 +55,8 @@ interface ITableComponentProps {
   enableRowSelection?: boolean,
   enablePagination?: boolean,
   useStyle?: boolean,
+  showFileState?: boolean,
+  showProcessState?: boolean,
   showConfiguration?: boolean,
   showDetails?: boolean,
   showEdit?: boolean,
@@ -47,7 +69,9 @@ interface ITableComponentProps {
   showUploadResult?: boolean,
   showGenerateExam?: boolean,
   showDownloadExam?: boolean,
+  showDownloadResult?: boolean,
   showConfirmExam?: boolean,
+  showConfirmResult?: boolean,
   showSendMail?: boolean,
   showInvoice?: boolean,
   showUploadOC?: boolean,
@@ -57,7 +81,9 @@ interface ITableComponentProps {
   showValidateInvoice?: boolean,
   showManagmentPayments?: boolean,
   showGeneratePayment?: boolean,
-  showRequestPaymentCard?: boolean
+  showRequestPaymentCard?: boolean,
+  ShowDownloadExpense?: boolean,
+  ShowEntries?: boolean
 }
 
 const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
@@ -70,6 +96,8 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
   enableRowSelection = false,
   enablePagination = true,
   useStyle = true,
+  showFileState = false,
+  showProcessState = false,
   showConfiguration = false,
   showDetails = false,
   showEdit = false,
@@ -81,8 +109,10 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
   showUploadExam = false,
   showGenerateExam = false,
   showDownloadExam = false,
+  showDownloadResult = false,
   showConfirmExam = false,
   showUploadResult = false,
+  showConfirmResult = false,
   showSendMail = false,
   showInvoice = false,
   showUploadOC = false,
@@ -92,7 +122,9 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
   showValidateInvoice = false,
   showManagmentPayments = false,
   showGeneratePayment = false,
-  showRequestPaymentCard = false
+  showRequestPaymentCard = false,
+  ShowDownloadExpense = false,
+  ShowEntries = false
 }) => {
   const [deleteConfirmation, setDeleteConfirmation] = useState<ITableDeleteObject>({ _id: '', show: false });
   const [selectionType] = useState<'checkbox' | 'radio'>('checkbox');
@@ -106,7 +138,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
     },
   };
 
-  const processStates = [
+  const processStates = showProcessState ? [
     {
       title: 'Estado proceso',
       dataIndex: 'estado_proceso',
@@ -116,13 +148,76 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
           {record.estado === 'Ingresado' &&
             <Tag style={{ textAlign: 'center' }} color="#2db7f5">Ingresado</Tag>
           }
-          {record.estado === 'Cnfirmado' &&
-            <Tag style={{ textAlign: 'center' }} color="#4CAF50">Ingresado</Tag>
+          {record.estado === 'Confirmado' &&
+            <Tag style={{ textAlign: 'center' }} color="#4CAF50">Confirmado</Tag>
+          }
+          {record.estado === 'Reservado' &&
+            <Tag style={{ textAlign: 'center' }} color="#4CAF50">Reservado</Tag>
+          }
+          {record.estado === 'En Evaluacion' &&
+            <Tag style={{ textAlign: 'center' }} color="#FC9410">En Evaluación</Tag>
+          }
+          {record.estado === 'Evaluado' &&
+            <Tag style={{ textAlign: 'center' }} color="#0CC220">Evaluado</Tag>
+          }
+          {record.estado === 'En Revisión' &&
+            <Tag style={{ textAlign: 'center' }} color="#FC9410">En Revisión</Tag>
+          }
+          {record.estado === 'Revisado' &&
+            <Tag style={{ textAlign: 'center' }} color="#4CAF50">Revisado</Tag>
+          }
+          {record.estado === 'En Facturacion' &&
+            <Tag style={{ textAlign: 'center' }} color="#FC9410">En Facturación</Tag>
+          }
+          {record.estado === 'Facturado' &&
+            <Tag style={{ textAlign: 'center' }} color="#4CAF50">Facturado</Tag>
+          }
+          {record.estado === 'No Pagado' &&
+            <Tag style={{ textAlign: 'center' }} color="#E41B0E">No Pagado</Tag>
+          }
+          {record.estado === 'Pago Parcial' &&
+            <Tag style={{ textAlign: 'center' }} color="#FC9410">Pago Parcial</Tag>
+          }
+          {record.estado === 'Vencido' &&
+            <Tag style={{ textAlign: 'center' }} color="#E41B0E">Vencido</Tag>
+          }
+          {record.estado === 'Sin Stock' &&
+            <Tag style={{ textAlign: 'center' }} color="#E41B0E">Sin Stock</Tag>
+          }
+          {record.estado === 'Adquirir Stock' &&
+            <Tag style={{ textAlign: 'center' }} color="#FC9410">Adquirir Stock</Tag>
+          }
+          {record.estado === 'Stock al Día' &&
+            <Tag style={{ textAlign: 'center' }} color="#4CAF50">Stock al Día</Tag>
           }
         </>
       )
     }
-  ];
+  ] : [];
+
+  const processFile = showFileState ? [
+    {
+      title: 'Estado archivo',
+      dataIndex: 'estado_archivo',
+      key: 'estado_archivo',
+      render: (_: string, record: any) => (
+        <>
+          {record.estado_archivo === 'Sin Documento' &&
+            <Tag style={{ textAlign: 'center' }} color="grey">Sin Documento</Tag>
+          }
+          {record.estado_archivo === 'Cargado' &&
+            <Tag style={{ textAlign: 'center' }} color="#116FEF">Cargado</Tag>
+          }
+          {record.estado_archivo === 'Rechazado' &&
+            <Tag style={{ textAlign: 'center' }} color="#E41B0E">Rechazado</Tag>
+          }
+          {record.estado_archivo === 'Aprobado' &&
+            <Tag style={{ textAlign: 'center' }} color="#4CAF50">Aprobado</Tag>
+          }
+        </>
+      )
+    }
+  ] : [];
 
   const defaultColumns = [
     {
@@ -149,7 +244,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<EyeOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showEdit &&
+          {showEdit && (record.estado === 'Ingresado' || record.grupo_interes === 'Empleados') &&
             <Tooltip title='Editar' color={'#F68923'}>
               <Button
                 onClick={() => onClickAction('edit', record._id)}
@@ -177,7 +272,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
           {showAbsence &&
             <Tooltip title='Ausencias' color={'#4DE13E'}>
               <Button
-                onClick={() => onClickAction('absense')}
+                onClick={() => onClickAction('absense', record._id)}
                 style={{ backgroundColor: '#4DE13E' }}
                 icon={<ClockCircleOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
@@ -198,63 +293,89 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
               />
             </Popover>
           }
-          {showSchedule &&
+          {showSchedule && record.estado === 'Ingresado' &&
             <Tooltip title='Agendar' color={'#50ACF5'}>
               <Button
-                onClick={() => onClickAction('schedule')}
+                onClick={() => onClickAction('schedule', record._id)}
                 style={{ backgroundColor: '#50ACF5' }}
                 icon={<CalendarOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showReservation &&
+          {showReservation && record.estado === 'Ingresado' &&
             <Tooltip title='Reservar' color={'#4CAF50'}>
               <Button
-                onClick={() => onClickAction('reservation')}
+                onClick={() => onClickAction('reservation', record._id)}
                 style={{ backgroundColor: '#4CAF50' }}
                 icon={<ScheduleOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showUploadExam &&
+          {showUploadExam
+            && record.estado === 'Ingresado'
+            && (record.estado_archivo === 'Sin Documento' || record.estado_archivo === 'Rechazado')
+            && showFileState &&
             <Tooltip title='Subir Examen' color={'#1073B5'}>
               <Button
-                onClick={() => onClickAction('uploadexam')}
+                onClick={() => onClickAction('uploadexam', record._id)}
                 style={{ backgroundColor: '#1073B5' }}
                 icon={<CloudUploadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showGenerateExam &&
+          {showGenerateExam
+            && record.estado === 'Ingresado'
+            && (record.estado_archivo === 'Sin Documento' || record.estado_archivo === 'Rechazado')
+            && (record.nombre_servicio === 'Psicosensotécnico Riguroso' || record.nombre_servicio === 'Aversión al Riesgo') &&
             <Tooltip title='Generar Examen' color={'#69DF43'}>
               <Button
-                onClick={() => onClickAction('generateexam')}
+                onClick={() => onClickAction('generateexam', record._id)}
                 style={{ backgroundColor: '#69DF43' }}
                 icon={<ContainerOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showDownloadExam &&
+          {showDownloadExam
+            && record.estado === 'En Evaluacion'
+            && record.estado_archivo === 'Cargado'
+            && (record.nombre_servicio === 'Psicosensotécnico Riguroso' || record.nombre_servicio === 'Aversión al Riesgo') &&
             <Tooltip title='Descargar Examen' color={'#1A9D02'}>
               <Button
-                onClick={() => { }}
+                onClick={() => onClickAction('downloadexam', record._id)}
                 style={{ backgroundColor: '#1A9D02' }}
                 icon={<DownloadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showConfirmExam &&
+          {showConfirmExam && record.estado === 'En Evaluacion' && record.estado_archivo === 'Cargado' &&
             <Tooltip title='Confirmar Examen' color={'#18BBC3'}>
               <Button
-                onClick={() => onClickAction('confirmexam')}
+                onClick={() => onClickAction('confirmexam', record._id)}
                 style={{ backgroundColor: '#18BBC3' }}
                 icon={<FileDoneOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showUploadResult &&
+          {showUploadResult && record.estado === 'En Revisión' 
+            && (record.estado_archivo === 'Sin Documento' || record.estado_archivo === 'Rechazado') &&
             <Tooltip title='Subir Resultado' color={'#0EB0A1'}>
               <Button
-                onClick={() => { }}
+                onClick={() => onClickAction('uploadresult', record._id)}
                 style={{ backgroundColor: '#0EB0A1' }}
                 icon={<FilePdfOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showSendMail &&
+          {showDownloadResult && record.estado === 'En Revisión' && record.estado_archivo === 'Cargado' &&
+            <Tooltip title='Descargar resultado' color={'#1A9D02'}>
+              <Button
+                onClick={() => onClickAction('downloadresult', record._id)}
+                style={{ backgroundColor: '#1A9D02' }}
+                icon={<DownloadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
+            </Tooltip>
+          }
+          {showConfirmResult && record.estado === 'En Revisión' && record.estado_archivo === 'Cargado' &&
+            <Tooltip title='Confirmar resultado' color={'#116FEF'}>
+              <Button
+                onClick={() => onClickAction('confirmresult', record._id)}
+                style={{ backgroundColor: '#116FEF' }}
+                icon={<FileDoneOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
+            </Tooltip>
+          }
+          {showSendMail && record.estado === 'Revisado' && record.estado_archivo === 'Aprobado' &&
             <Tooltip title='Enviar Email' color={'#0E27B0'}>
               <Button
                 onClick={() => { }}
@@ -262,50 +383,54 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<MailOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showUploadOC &&
+          {showUploadOC && record.estado === 'Ingresado' 
+            && (record.estado_archivo === 'Sin Documento' || record.estado_archivo === 'Rechazado')
+            && record.oc === 'Si' &&  
             <Tooltip title='Subir OC' color={'#50ACF5'}>
               <Button
-                onClick={() => onClickAction('uploadoc')}
+                onClick={() => onClickAction('uploadoc', record._id)}
                 style={{ backgroundColor: '#50ACF5' }}
                 icon={<FilePdfOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showConfirmOC &&
+          {showConfirmOC && record.estado === 'En Revisión' && record.estado_archivo === 'Cargado' &&
             <Tooltip title='Confirmar OC' color={'#39AE16'}>
               <Button
-                onClick={() => onClickAction('confirmoc')}
+                onClick={() => onClickAction('confirmoc', record._id)}
                 style={{ backgroundColor: '#39AE16' }}
                 icon={<FilePdfOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showDownloadOc &&
-            <Tooltip title='Descargar OC' color={'#39AE16'}>
+          {showDownloadOc && record.estado === 'En Revisión' && record.estado_archivo === 'Cargado' &&
+            <Tooltip title='Descargar OC' color={'#1A9D02'}>
               <Button
-                onClick={() => onClickAction('')}
-                style={{ backgroundColor: '#39AE16' }}
+                onClick={() => onClickAction('downloadoc', record._id)}
+                style={{ backgroundColor: '#1A9D02' }}
                 icon={<CloudDownloadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showDownloadInvoice &&
-            <Tooltip title='Descargar factura' color={'#39AE16'}>
+          {showDownloadInvoice && record.estado === 'En Facturacion' && record.estado_archivo === 'Cargado' &&
+            <Tooltip title='Descargar factura' color={'#1A9D02'}>
               <Button
-                onClick={() => onClickAction('')}
+                onClick={() => onClickAction('downloadinvoice', record._id)}
                 style={{ backgroundColor: '#39AE16' }}
                 icon={<DownloadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showInvoice &&
+          {showInvoice && record.estado === 'En Facturacion' 
+            && (record.estado_archivo === 'Sin Documento' || record.estado_archivo === 'Aprobado' || record.estado_archivo === 'Rechazado')
+            && 
             <Tooltip title='Factura' color={'#50ACF5'}>
               <Button
-                onClick={() => onClickAction('generateinvoice')}
+                onClick={() => onClickAction('generateinvoice', record._id)}
                 style={{ backgroundColor: 'white' }}
                 icon={<CreditCardOutlined style={{ fontSize: '1.1rem', color: '#50ACF5' }} />} />
             </Tooltip>
           }
-          {showValidateInvoice &&
+          {showValidateInvoice && record.estado === 'En Facturacion' && record.estado_archivo === 'Cargado' &&
             <Tooltip title='Validar factura' color={'#39AE16'}>
               <Button
-                onClick={() => onClickAction('validateinvoice')}
+                onClick={() => onClickAction('validateinvoice', record._id)}
                 style={{ backgroundColor: 'white' }}
                 icon={<FileSearchOutlined style={{ fontSize: '1.1rem', color: '#39AE16' }} />} />
             </Tooltip>
@@ -313,7 +438,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
           {showManagmentPayments &&
             <Tooltip title='Gestión de Pagos' color={'#870989'}>
               <Button
-                onClick={() => onClickAction('managepayment')}
+                onClick={() => onClickAction('managepayment', record._id)}
                 style={{ backgroundColor: 'white' }}
                 icon={<DollarOutlined style={{ fontSize: '1.1rem', color: '#870989' }} />} />
             </Tooltip>
@@ -321,7 +446,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
           {showGeneratePayment &&
             <Tooltip title='Realizar Pago' color={'#35A20C'}>
               <Button
-                onClick={() => onClickAction('generatepayment')}
+                onClick={() => onClickAction('generatepayment', record._id)}
                 style={{ backgroundColor: 'white' }}
                 icon={<DollarOutlined style={{ fontSize: '1.1rem', color: '#35A20C' }} />} />
             </Tooltip>
@@ -329,9 +454,25 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
           {showRequestPaymentCard &&
             <Tooltip title='Carta Cobranza' color={'#50ACF5'}>
               <Button
-                onClick={() => onClickAction('requestpaymentcard')}
+                onClick={() => onClickAction('requestpaymentcard', record._id)}
                 style={{ backgroundColor: '#50ACF5' }}
                 icon={<MailOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
+            </Tooltip>
+          }
+          {ShowDownloadExpense &&
+            <Tooltip title='Descargar gasto' color={'#1A9D02'}>
+              <Button
+                onClick={() => onClickAction('downloadexpense', record._id)}
+                style={{ backgroundColor: '#39AE16' }}
+                icon={<DownloadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
+            </Tooltip>
+          }
+          {ShowEntries && record.inventario === 'Si' && 
+            <Tooltip title='Entradas' color={'#55D515'}>
+              <Button
+                onClick={() => onClickAction('entries', record._id)}
+                style={{ backgroundColor: '#55D515' }}
+                icon={<DollarOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
         </>
@@ -339,30 +480,11 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
     },
   ];
 
-  const defaultData: any = [
-    {
-      _id: '736767wgdy3gd',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    },
-    {
-      _id: 'sssssdd873e3e',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 2 Lake Park, London No. 2 Lake Park',
-    },
-    {
-      _id: 'sduishdwudw6666',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
-    },
-  ];
+  const defaultData: any = [];
 
   return (
     <Table
-      columns={[...processStates, ...columns, ...defaultColumns]}
+      columns={[...processStates, ...processFile, ...columns, ...defaultColumns]}
       dataSource={data || defaultData}
       loading={loading}
       rowSelection={enableRowSelection ? {

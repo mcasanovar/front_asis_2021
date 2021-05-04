@@ -1150,8 +1150,6 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
     );
   };
 
-  console.log('gi to edit', newGiData)
-
   return (
     <>
       <Spin spinning={loading} size='large' tip='Cargando...'>

@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
 
-import { CANCEL, CONFIRM, EDIT, N_PER_PAGE, OK, REQUESTS_COLUMNS_TABLE } from '../../constants/var';
+import { CANCEL, CONFIRM, EDIT, FILTERS_REQUEST, N_PER_PAGE, OK, REQUESTS_COLUMNS_TABLE } from '../../constants/var';
 import { IResponseAllRequests, IResponseRequest, RequestModel } from '../../models/request.models';
 
-import { deleteOneRequestService, getAllRequestsService } from '../../services';
+import { deleteOneRequestService, filterRequestsService, getAllRequestsService } from '../../services';
+
+import AlertComponent from "../../component/Alert/Alert";
 
 import SubBarComponent from "../../component/Subbar/SubBar";
 import HeaderTableComponent from "../../component/HeaderTable/HeaderTable";
 import ModalComponent from "../../component/Modal/Modal";
 import TableComponent from "../../component/Table/Table";
+import PaginationComponent from '../../component/Pagination/Pagination';
 
 import CreateEditRequestView from "./createEditrequest.view";
 import DetailsRequestView from "./detailsrequest.view";
-import GroupConfirmationView from "./groupconfirmation.view";
+// import GroupConfirmationView from "./groupconfirmation.view";
 import ConfirmRequestView from "./confirmrequest.view";
 
 interface IRequestViewProps {
@@ -47,6 +50,8 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = (props) => {
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [filterText, setFilterText] = useState<string>('');
   const [optionFilter, setOptionFilter] = useState<number>(0);
+  const [actualPage, setActualPage] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(1);
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -54,7 +59,6 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = (props) => {
   };
 
   const handleCLickActionTable = (id: string, idregister: string | undefined) => {
-    console.log(id)
     switch (id) {
       case 'details':
         setActualModal({
@@ -83,10 +87,11 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = (props) => {
           _id: id,
           title: 'Confirmar solicitud',
           size: 'small',
-          widthModal: 700,
+          widthModal: 900,
           showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
         })
         setOpenModal(true);
+        idregister && setIdSelectedRequest(idregister)
         break;
       case 'nullify':
         idregister && setIdSelectedRequest(idregister)
@@ -109,25 +114,65 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = (props) => {
     setMessageAlert({ message, type: 'success', show: true });
     if (value === 'reload') {
       //reload gi
-      getRequests();
+      getRequests(1);
     }
   };
 
-  async function getRequests() {
-    const aux: IResponseAllRequests = await getAllRequestsService(1, N_PER_PAGE);
-    console.log(aux)
-    !aux.err && setRequests(aux.solicitudes);
+  const handleFilterByDate = (date: string) => {
+    setLoading(true);
+    filterRequests(date, 'fecha_solicitud')
+  };
+
+  const handleClickSearch = async () => {
+    setLoading(true)
+    const headfilter = FILTERS_REQUEST.find((element) => element.key === optionFilter);
+    if(!headfilter) return
+    filterRequests(filterText, headfilter.name)
+  };
+
+  const handleChangePagination = (newpage: number) => {
+    setLoading(true);
+    getRequests(newpage);
+    setLoading(false)
+  };
+
+  async function getRequests(pagenumber: number) {
+    const aux: IResponseAllRequests = await getAllRequestsService(pagenumber, N_PER_PAGE);
+    if(!aux.err){
+      setRequests(aux.solicitudes);
+      setActualPage(aux.pagina_actual);
+      setTotalItems(aux.total_items);
+    }
   };
 
   async function hanbleDeleteRequest(id: string) {
     const aux: IResponseRequest = await deleteOneRequestService(id);
     if (aux.err === null) {
       setMessageAlert({ message: aux.res, type: 'success', show: true });
-      getRequests();
+      getRequests(1);
       return setLoading(false);
     }
     return setMessageAlert({ message: aux.msg, type: 'error', show: true });
   };
+
+  async function filterRequests(date: string, headFilter: string) {
+    const aux: IResponseAllRequests = await filterRequestsService(
+      2,
+      date,
+      headFilter,
+      1,
+      N_PER_PAGE
+    );
+
+    if (!aux.err) {
+      setRequests(aux.solicitudes);
+    }
+    if (aux.err) {
+      setMessageAlert({ message: aux.err, type: 'error', show: true });
+    }
+
+    setLoading(false)
+  }
 
   //--------------USEEFECT
   useEffect(() => {
@@ -140,7 +185,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = (props) => {
 
   useEffect(() => {
     setLoading(true)
-    getRequests();
+    getRequests(1);
   }, []);
 
   useEffect(() => {
@@ -151,7 +196,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = (props) => {
   }, [requests]);
 
   useEffect(() => {
-    if (ActualModal._id === 'nullify') {
+    if (ActualModal && ActualModal._id === 'nullify') {
       setLoading(true);
       hanbleDeleteRequest(idSelectedRequest);
     }
@@ -160,6 +205,14 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = (props) => {
   return (
     <div className='container-gi'>
       <SubBarComponent title='Solicitudes' />
+      {messageAlert.show &&
+        <AlertComponent
+          message={messageAlert.message}
+          type={messageAlert.type}
+          customStyle={{ width: '60%', height: 50, fontSize: 18, fontWeight: 'bold' }}
+          showIcon
+        />
+      }
       <HeaderTableComponent
         title='Solicitudes ASIS'
         subtitle='Tabla de información'
@@ -167,9 +220,11 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = (props) => {
         showDateFilter
         onClick={(button) => handleClickButton(button)}
         onClickGrupal={() => { }}
-        filterText={''}
+        dataFilter={FILTERS_REQUEST}
+        filterText={filterText}
         setFilterText={setFilterText}
-        onClickSearch={() => { }}
+        onClickSearch={() => handleClickSearch()}
+        onClickDateFilter={(date) => handleFilterByDate(date)}
         setOptionFilter={setOptionFilter}
       />
       <TableComponent
@@ -177,10 +232,20 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = (props) => {
         columns={REQUESTS_COLUMNS_TABLE}
         onClickAction={(id: string, _id?: string) => handleCLickActionTable(id, _id)}
         onClickDelete={(id, _id) => handleCLickActionTable(id, _id)}
+        loading={loading}
+        showProcessState
         showDetails
         showEdit
         showNullify
         showSchedule
+        enablePagination={false}
+      />
+      <br/>
+      <PaginationComponent
+        actualPage={actualPage}
+        onChange={(newpage: number) => handleChangePagination(newpage)}
+        totalItems={totalItems}
+        pageSize={N_PER_PAGE}
       />
       {/* modal */}
       <ModalComponent
@@ -213,7 +278,8 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = (props) => {
         }
         {ActualModal._id === 'schedule' &&
           <ConfirmRequestView
-
+            onCloseModal={(value, message) => handleCloseModal(value, message)}
+            _id={idSelectedRequest}
           />
         }
       </ModalComponent>

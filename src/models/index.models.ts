@@ -1,6 +1,3 @@
-import * as giModel from  './gi.models';
-import * as requestModel from './request.models';
-
 import { SizeType } from 'antd/lib/config-provider/SizeContext';
 
 export interface IShowButtonModals {
@@ -25,6 +22,7 @@ export interface IExamPsicoExtras {
   label: string,
   value: string,
   key: string,
+  name_exam: string,
 };
 
 export interface IAlertMessageContent {

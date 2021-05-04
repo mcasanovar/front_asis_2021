@@ -2,21 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Collapse, Input, Row, Col, Select, Spin, Typography, Form, Button } from "antd";
 import { IAlertMessageContent } from '../../models/index.models';
 
-import { editRequestService, getGIByRutService, getOneRequestService, getWorkersGIService, insertRequestService } from "../../services/index";
+import { getGIByRutService, getOneRequestService, getWorkersGIService } from "../../services/index";
 
 import AlertComponent from "../../component/Alert/Alert";
 
-import { IResponseRequest, RequestModel } from '../../models/request.models';
+import { RequestModel } from '../../models/request.models';
 import { RequestInitialization } from '../../initializations/request.initialization';
-import { CATEGORIES_REQUESTS, FORMAT_DATE } from '../../constants/var';
-import { capitalize } from '../../libs/capitalize';
 import { MilesFormat } from "../../libs/formattedPesos";
 import { CalculateIVA } from "../../libs/calculateIVA";
 
 
-import { GiModel, IContract, IFaena, IResponseGI } from '../../models/gi.models';
-import { FormatingRut } from '../../functions/validators/index.validators';
-import { MapRequestToInsert } from '../../functions/mappers';
+import { GiModel, IFaena, IResponseGI } from '../../models/gi.models';
 
 interface ICreateRequestViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -45,17 +41,12 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
   const { Title } = Typography;
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [disabledConfirm, setDisabledConfirm] = useState<boolean>(true);
-  const [disabledCancel, setDisabledCancel] = useState<boolean>(false);
   const [newRequestData, setNewRequestData] = useState<RequestModel>(RequestInitialization);
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
-  const [selectionsCategories, setSelectionsCategories] = useState<ISelectedCategories>({ level_1: 0, level_2: 0, level_3: 0 });
   const [workers, setWorkers] = useState<GiModel[]>([]);
-  const [isRutOk, setIsRutOk] = useState<boolean>(true);
-  const [faenasSelected, setFaenasSelected] = useState<IFaena[]>([]);
   const [primaryClient, setPrimaryClient] = useState<GiModel>();
   const [secondaryClient, setSecondaryClient] = useState<GiModel>();
-  const [workerSelected, setWorkerSelected] = useState<GiModel>();
+  const [workerSelected, _] = useState<GiModel>();
 
   async function getGIByRut(rut: string, typeRequest: number) {
     setLoading(true);
@@ -125,19 +116,6 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
       }, 3000);
     }
   }, [messageAlert]);
-
-  useEffect(() => {
-    if (newRequestData.nombre_servicio !== ''
-      && newRequestData.id_GI_PersonalAsignado !== ''
-      && newRequestData.id_GI_Principal
-      && newRequestData.id_GI_Secundario !== '') {
-
-      setDisabledConfirm(false)
-    }
-    // eslint-disable-next-line
-  }, [newRequestData.nombre_servicio, newRequestData.id_GI_PersonalAsignado, newRequestData.id_GI_Principal, newRequestData.id_GI_Secundario]);
-
-  console.log(newRequestData)
 
   //---RENDERS
   const renderServiceInformation = () => {
@@ -416,8 +394,6 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
           <Row gutter={8}>
             <Col span={4}>
               <Form.Item
-                validateStatus={isRutOk ? 'success' : 'error'}
-                help={isRutOk ? '' : 'Formato de rut incorrecto'}
                 label='Rut'
               >
                 <Input

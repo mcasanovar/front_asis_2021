@@ -3,19 +3,19 @@ import React, { useState, useEffect } from 'react';
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
 import { CANCEL, CONFIRM, EDIT, FILTERS_GI, GIS_COLUMNS_TABLE, N_PER_PAGE, OK } from '../../constants/var';
 
-
 import SubBarComponent from "../../component/Subbar/SubBar";
 import HeaderTableComponent from "../../component/HeaderTable/HeaderTable";
 import ModalComponent from "../../component/Modal/Modal";
 import TableComponent from "../../component/Table/Table";
 import AlertComponent from "../../component/Alert/Alert";
+import PaginationComponent from '../../component/Pagination/Pagination';
 
 import { GiModel, IReponseAllGIs, IResponseGI } from '../../models/gi.models';
 import { deleteOneGiService, filterGisService, getAllGIService } from '../../services';
 
 import CreateEditGiView from "./createEditgi.view";
 import DetailsGIView from "./detailsgi.view";
-import ConfigurationView from "./configurationGi.view";
+// import ConfigurationView from "./configurationGi.view";
 
 interface IGiViewProps {
 }
@@ -51,11 +51,13 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
   const [idSelectedGI, setIdSelectedGI] = useState<string>('');
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
   const [OpenModal, setOpenModal] = useState<boolean>(false);
-  const [disabledCancel, setDisabledCancel] = useState<boolean>(false);
-  const [disabledConfirm, setdIsabledConfirm] = useState<boolean>(true);
+  const [disabledCancel, _] = useState<boolean>(false);
+  const [disabledConfirm, __] = useState<boolean>(true);
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [filterText, setFilterText] = useState<string>('');
   const [optionFilter, setOptionFilter] = useState<number>(0);
+  const [actualPage, setActualPage] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(1);
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -118,13 +120,12 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
     setMessageAlert({ message, type: 'success', show: true });
     if (value === 'reload') {
       //reload gi
-      getGis();
+      getGis(1);
     }
   };
 
   const handleClickSearch = async () => {
     setLoading(true)
-    console.log([optionFilter, filterText, N_PER_PAGE])
     const response: IReponseAllGIs = await filterGisService(
       optionFilter,
       filterText,
@@ -141,16 +142,28 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
     setLoading(false)
   };
 
-  async function getGis() {
-    const aux: IReponseAllGIs = await getAllGIService(1, N_PER_PAGE);
-    setGIs(aux.gis);
+  const handleChangePagination = (newpage: number) => {
+    setLoading(true);
+    getGis(newpage);
+    setLoading(false)
+  };
+
+  async function getGis(pagenumber: number) {
+    const aux: IReponseAllGIs = await getAllGIService(pagenumber, N_PER_PAGE);
+    if(!aux.err){
+      setGIs(aux.gis);
+      setActualPage(aux.pagina_actual);
+      setTotalItems(aux.total_items);
+      return
+    }
+    return setMessageAlert({ message: 'No se ha podido cargar los GIs', type: 'error', show: true });
   };
 
   async function hanbleDeleteGI(id: string) {
     const aux: IResponseGI = await deleteOneGiService(id);
     if(aux.err === null){
       setMessageAlert({ message: aux.res, type: 'success', show: true });
-      getGis();
+      getGis(1);
       return setLoading(false);
     }
     return setMessageAlert({ message: aux.res, type: 'error', show: true });
@@ -167,7 +180,7 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
 
   useEffect(() => {
     setLoading(true)
-    getGis();
+    getGis(1);
   }, []);
 
   useEffect(() => {
@@ -178,7 +191,7 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
   }, [GIs]);
 
   useEffect(() => {
-    if(ActualModal._id === 'delete'){
+    if(ActualModal && ActualModal._id === 'delete'){
       setLoading(true);
       hanbleDeleteGI(idSelectedGI);
     }
@@ -201,6 +214,7 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
         buttons={buttons}
         onClick={(button) => handleClickButton(button)}
         onClickGrupal={() => { }}
+        onClickDateFilter={() => {}}
         dataFilter={FILTERS_GI}
         filterText={filterText}
         setFilterText={setFilterText}
@@ -217,6 +231,14 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
         showDetails
         showDelete
         loading={loading}
+        enablePagination={false}
+      />
+      <br/>
+      <PaginationComponent
+        actualPage={actualPage}
+        onChange={(newpage: number) => handleChangePagination(newpage)}
+        totalItems={totalItems}
+        pageSize={N_PER_PAGE}
       />
       {/* modal */}
       <ModalComponent

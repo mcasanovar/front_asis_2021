@@ -14,6 +14,20 @@ export interface IContract {
   faenas: IFaena[]
 }
 
+export interface IDetailsEmployees {
+  dias_acumulados: number,
+  dias_recuperados: number,
+  dias_total_ausencias: number,
+  dias_pendientes: number,
+  enfermedad_cant: number,
+  maternidad_cant: number,
+  mediodia_cant: number,
+  tramites_cant: number,
+  vacaciones_cant: number,
+  recuperados_cant: number,
+  mediodia_recuperados_cant: number 
+}
+
 export interface GiModel {
   _id: string,
   codigo: string,
@@ -71,11 +85,30 @@ export interface GiModel {
   razon_social_org_perteneciente?: string,
   activo_inactivo: boolean,
   rol: string,
+  //employees data
+  tipo_contrato?: string,
+  estado_contrato?: string,
+  fecha_inicio_contrato?: string,
+  fecha_fin_contrato?: string,
+  sueldo_bruto?: number,
+  sueldo_bruto_string?: string,
+  afp?: string,
+  isapre?: string,
+  seguridad_laboral?: string,
+  dias_vacaciones?: string,
+  comentarios?: string,
+  detalle_empleado?: IDetailsEmployees
 }
 
 export interface IResponseGI {
   err: any,
   res: any
+};
+
+export interface IResponseEmployees {
+  err: any,
+  msg: string,
+  res: any,
 };
 
 export interface IReponseAllGIs {
@@ -86,7 +119,21 @@ export interface IReponseAllGIs {
   err?: string
 };
 
+export interface IReponseAllEmployees {
+  total_items: number,
+  pagina_actual: number,
+  nro_paginas: 0,
+  empleados: GiModel[],
+  err?: string
+};
+
 export interface IFiltersGI {
   key: number,
-  value: string
+  value: string,
+}
+
+export interface IFiltersEmployees {
+  key: number,
+  value: string,
+  name: string
 }

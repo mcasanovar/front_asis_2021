@@ -1,5 +1,12 @@
-import { IFiltersGI } from "../models/gi.models";
-import { ICategory1 } from "../models/request.models";
+import { IFiltersExistence } from "../models/existence.models";
+import { IFiltersExpenses } from "../models/expenses.models";
+import { IFiltersEmployees, IFiltersGI } from "../models/gi.models";
+import { IFiltersInvoices } from "../models/invoices.models";
+import { IFiltersOutputs } from "../models/outputs.models";
+import { ICategory1, IFiltersRequest } from "../models/request.models";
+import { IFiltersRequestPayment } from "../models/requestpayment.models";
+import { IFiltersReservation } from "../models/reservation.models";
+import { IFiltersResults } from "../models/results.model";
 
 export const CANCEL = 'cancel';
 export const CONFIRM = 'confirm';
@@ -8,6 +15,32 @@ export const EDIT = 'edit';
 export const FORMAT_DATE = 'YYYY-MM-DD';
 
 export const N_PER_PAGE = 20;
+
+export const DEFAULT_PERCENTAGE_IVA = 19;
+
+export const PAYMENT_METHODS = [
+  'Efectivo',
+  'Débito',
+  'Crédito',
+  'Transferencia bancaria'
+];
+
+export const BANKING_INSTITUTION = [
+  "Banco De Chile",
+  "Banco Internacional",
+  "Scotiabank Chile",
+  "Banco De Crédito E Inversiones",
+  "Banco BICE",
+  "HSBC Bank",
+  "Banco Santander-Chile",
+  "ITAÚ Corpbanca",
+  "Banco Security",
+  "Banco Falabella",
+  "Banco Ripley",
+  "Banco Consorcio",
+  "Scotiabank Azul",
+  "Banco BTG Pactual Chile",
+]
 
 //+++++++++++++++++++++++++++++++++++++ GI +++++++++++++++++++++++++
 export const PREFIX_GIS = '/gi';
@@ -4905,6 +4938,44 @@ export const API_COUNTRIES = 'https://restcountries.eu/rest/v2/all';
 //+++++++++++++++++++++++++++++++++++++ REQUEST +++++++++++++++++++++++++
 export const PREFIX_REQUEST = '/solicitudes';
 
+export const FILTERS_REQUEST: IFiltersRequest[] = [
+  {
+    key: 1,
+    value: 'Rut CP',
+    name: 'rut_CP'
+  },
+  {
+    key: 2,
+    value: 'Rut CS',
+    name: 'rut_cs'
+  },
+  {
+    key: 3,
+    value: 'Razon Social CP',
+    name: 'razon_social_CP'
+  },
+  {
+    key: 4,
+    value: 'Razon Social CS',
+    name: 'razon_social_cs'
+  },
+  {
+    key: 5,
+    value: 'Sucursal',
+    name: 'sucursal'
+  },
+  {
+    key: 6,
+    value: 'Estado Proceso',
+    name: 'estado'
+  },
+  {
+    key: 7,
+    value: 'Nombre Servicio',
+    name: 'nombre_servicio'
+  }
+]
+
 export const CATEGORIES_REQUESTS: ICategory1[] = [
   {
     id: 1,
@@ -5364,6 +5435,13 @@ export const CATEGORIES_REQUESTS: ICategory1[] = [
   },
 ];
 
+export const CONFIRMATION_DATA = [
+  'Presencial',
+  'Teléfono',
+  'Correo electrónico',
+  'Fax'
+]
+
 export const REQUESTS_COLUMNS_TABLE = [
   {
     title: 'Codigo solicitud',
@@ -5415,4 +5493,1514 @@ export const SERVICES_PLACE = [
 export const SUCURSAL = [
   'Oficina Illapel',
   'Oficina Salamanca'
+];
+
+//+++++++++++++++++++++++++++++++++++++ RESERVATION +++++++++++++++++++++++++
+export const PREFIX_RESERVATION = '/reservas';
+
+export const FILTERS_RESERVATION: IFiltersReservation[] = [
+  {
+    key: 1,
+    value: 'Rut CP',
+    name: 'rut_CP'
+  },
+  {
+    key: 2,
+    value: 'Rut CS',
+    name: 'rut_cs'
+  },
+  {
+    key: 3,
+    value: 'Razon Social CP',
+    name: 'razon_social_CP'
+  },
+  {
+    key: 4,
+    value: 'Razon Social CS',
+    name: 'razon_social_cs'
+  },
+  {
+    key: 5,
+    value: 'Sucursal',
+    name: 'sucursal'
+  },
+  {
+    key: 6,
+    value: 'Estado Proceso',
+    name: 'estado'
+  },
+  {
+    key: 7,
+    value: 'Nombre Servicio',
+    name: 'nombre_servicio'
+  }
 ]
+
+export const RESERVATIONS_COLUMNS_TABLE = [
+  {
+    title: 'Codigo reserva',
+    dataIndex: 'codigo',
+    key: 'codigo',
+  },
+  {
+    title: 'Fecha inicio reserva',
+    dataIndex: 'fecha_reserva',
+    key: 'fecha_reserva',
+  },
+  {
+    title: 'Fecha término reserva',
+    dataIndex: 'fecha_reserva_fin',
+    key: 'fecha_reserva_fin',
+  },
+  {
+    title: 'Rut CP',
+    dataIndex: 'rut_cp',
+    key: 'rut_cp',
+  },
+  {
+    title: 'Razon social CP',
+    dataIndex: 'razon_social_cp',
+    key: 'razon_social_cp',
+  },
+  {
+    title: 'Rut CS',
+    dataIndex: 'rut_cs',
+    key: 'rut_cs',
+  },
+  {
+    title: 'Razon social CS',
+    dataIndex: 'razon_social_cs',
+    key: 'razon_social_cs',
+  },
+  {
+    title: 'Nombre servicio',
+    dataIndex: 'nombre_servicio',
+    key: 'nombre_servicio',
+  },
+]
+
+//+++++++++++++++++++++++++++++++++++++ EVALUATIONS +++++++++++++++++++++++++
+export const PREFIX_EVALUATION = '/evaluaciones';
+
+export const FILTERS_EVALUATION: IFiltersRequest[] = [
+  {
+    key: 1,
+    value: 'Rut CP',
+    name: 'rut_CP'
+  },
+  {
+    key: 2,
+    value: 'Rut CS',
+    name: 'rut_cs'
+  },
+  {
+    key: 3,
+    value: 'Razon Social CP',
+    name: 'razon_social_cp'
+  },
+  {
+    key: 4,
+    value: 'Razon Social CS',
+    name: 'razon_social_cs'
+  },
+  {
+    key: 5,
+    value: 'Sucursal',
+    name: 'sucursal'
+  },
+  {
+    key: 6,
+    value: 'Estado Proceso',
+    name: 'estado'
+  },
+  {
+    key: 7,
+    value: 'Estado Archivo',
+    name: 'estado_archivo'
+  },
+  {
+    key: 8,
+    value: 'Nombre Servicio',
+    name: 'nombre_servicio'
+  }
+]
+
+export const EVALUATIONS_COLUMNS_TABLE = [
+  {
+    title: 'Codigo evaluación',
+    dataIndex: 'codigo',
+    key: 'codigo',
+  },
+  {
+    title: 'Fecha inicio evaluación',
+    dataIndex: 'fecha_evaluacion',
+    key: 'fecha_evaluacion',
+  },
+  {
+    title: 'Fecha término evaluacion',
+    dataIndex: 'fecha_evaluacion_fin',
+    key: 'fecha_evaluacion_fin',
+  },
+  {
+    title: 'Rut CP',
+    dataIndex: 'rut_cp',
+    key: 'rut_cp',
+  },
+  {
+    title: 'Razon social CP',
+    dataIndex: 'razon_social_cp',
+    key: 'razon_social_cp',
+  },
+  {
+    title: 'Nombre servicio',
+    dataIndex: 'nombre_servicio',
+    key: 'nombre_servicio',
+  },
+]
+
+//+++++++++++++++++++++++++++++++++++++ RESULTS +++++++++++++++++++++++++
+export const PREFIX_RESULTS = '/resultados';
+
+export const FILTERS_RESULT: IFiltersResults[] = [
+  {
+    key: 1,
+    value: 'Rut CP',
+    name: 'rut_CP'
+  },
+  {
+    key: 2,
+    value: 'Rut CS',
+    name: 'rut_cs'
+  },
+  {
+    key: 3,
+    value: 'Razon Social CP',
+    name: 'razon_social_cp'
+  },
+  {
+    key: 4,
+    value: 'Razon Social CS',
+    name: 'razon_social_cs'
+  },
+  {
+    key: 5,
+    value: 'Sucursal',
+    name: 'sucursal'
+  },
+  {
+    key: 6,
+    value: 'Estado Proceso',
+    name: 'estado'
+  },
+  {
+    key: 7,
+    value: 'Estado Archivo',
+    name: 'estado_archivo'
+  },
+  {
+    key: 8,
+    value: 'Nombre Servicio',
+    name: 'nombre_servicio'
+  }
+]
+
+export const RESULTS_COLUMNS_TABLE = [
+  {
+    title: 'Codigo resultado',
+    dataIndex: 'codigo',
+    key: 'codigo',
+  },
+  {
+    title: 'Fecha resultado',
+    dataIndex: 'fecha_resultado',
+    key: 'fecha_resultado',
+  },
+  {
+    title: 'Rut CP',
+    dataIndex: 'rut_cp',
+    key: 'rut_cp',
+  },
+  {
+    title: 'Razon social CP',
+    dataIndex: 'razon_social_cp',
+    key: 'razon_social_cp',
+  },
+  {
+    title: 'Rut CS',
+    dataIndex: 'rut_cs',
+    key: 'rut_cs',
+  },
+  {
+    title: 'Razon social CS',
+    dataIndex: 'razon_social_cs',
+    key: 'razon_social_cs',
+  },
+  {
+    title: 'Nombre servicio',
+    dataIndex: 'nombre_servicio',
+    key: 'nombre_servicio',
+  },
+];
+
+//+++++++++++++++++++++++++++++++++++++ INVOICES +++++++++++++++++++++++++
+export const PREFIX_INVOICES = '/facturaciones';
+
+export const FILTERS_INVOICES: IFiltersInvoices[] = [
+  {
+    key: 1,
+    value: 'Rut CP',
+    name: 'rut_CP'
+  },
+  {
+    key: 2,
+    value: 'Rut CS',
+    name: 'rut_cs'
+  },
+  {
+    key: 3,
+    value: 'Razon Social CP',
+    name: 'razon_social_cp'
+  },
+  {
+    key: 4,
+    value: 'Razon Social CS',
+    name: 'razon_social_cs'
+  },
+  {
+    key: 5,
+    value: 'Nombre Servicio',
+    name: 'nombre_servicio'
+  }
+];
+
+export const INVOICES_COLUMNS_TABLE = [
+  {
+    title: 'Codigo facturacion',
+    dataIndex: 'codigo',
+    key: 'codigo',
+  },
+  {
+    title: 'Requiere OC',
+    dataIndex: 'oc',
+    key: 'oc',
+  },
+  {
+    title: 'Fecha factura',
+    dataIndex: 'fecha_facturacion',
+    key: 'fecha_facturacion',
+  },
+  {
+    title: 'Nro. Factura',
+    dataIndex: 'nro_factura',
+    key: 'nro_factura',
+  },
+  {
+    title: 'Rut CP',
+    dataIndex: 'rut_cp',
+    key: 'rut_cp',
+  },
+  {
+    title: 'Razon social CP',
+    dataIndex: 'razon_social_cp',
+    key: 'razon_social_cp',
+  },
+  {
+    title: 'Rut CS',
+    dataIndex: 'rut_cs',
+    key: 'rut_cs',
+  },
+  {
+    title: 'Razon social CS',
+    dataIndex: 'razon_social_cs',
+    key: 'razon_social_cs',
+  },
+  {
+    title: 'Nombre servicio',
+    dataIndex: 'nombre_servicio',
+    key: 'nombre_servicio',
+  },
+  {
+    title: 'Total',
+    dataIndex: 'total_string',
+    key: 'total_string',
+  },
+];
+
+//+++++++++++++++++++++++++++++++++++++ PAYMENTS +++++++++++++++++++++++++
+export const PREFIX_PAYMENTS = '/pagos';
+
+export const FILTERS_PAYMENTS: IFiltersInvoices[] = [
+  {
+    key: 1,
+    value: 'Rut CP',
+    name: 'rut_CP'
+  },
+  {
+    key: 2,
+    value: 'Rut CS',
+    name: 'rut_cs'
+  },
+  {
+    key: 3,
+    value: 'Razon Social CP',
+    name: 'razon_social_cp'
+  },
+  {
+    key: 4,
+    value: 'Razon Social CS',
+    name: 'razon_social_cs'
+  },
+  {
+    key: 5,
+    value: 'Nombre Servicio',
+    name: 'nombre_servicio'
+  },
+  {
+    key: 6,
+    value: 'Estado proceso',
+    name: 'estado'
+  }
+];
+
+export const PAYMENTS_COLUMNS_TABLE = [
+  {
+    title: 'Codigo pago',
+    dataIndex: 'codigo',
+    key: 'codigo',
+  },
+  {
+    title: 'Fecha facturación',
+    dataIndex: 'fecha_facturacion',
+    key: 'fecha_facturacion',
+  },
+  {
+    title: 'Dias crédito',
+    dataIndex: 'dias_credito',
+    key: 'dias_credito',
+  },
+  {
+    title: 'Valor pagado',
+    dataIndex: 'valor_cancelado_string',
+    key: 'valor_cancelado_string',
+  },
+  {
+    title: 'Valor servicio',
+    dataIndex: 'valor_servicio_string',
+    key: 'valor_servicio_string',
+  },
+  {
+    title: 'Rut CP',
+    dataIndex: 'rut_cp',
+    key: 'rut_cp',
+  },
+  {
+    title: 'Razon social CP',
+    dataIndex: 'razon_social_cp',
+    key: 'razon_social_cp',
+  },
+  {
+    title: 'Rut CS',
+    dataIndex: 'rut_cs',
+    key: 'rut_cs',
+  },
+  {
+    title: 'Razon social CS',
+    dataIndex: 'razon_social_cs',
+    key: 'razon_social_cs',
+  },
+  {
+    title: 'Nombre servicio',
+    dataIndex: 'nombre_servicio',
+    key: 'nombre_servicio',
+  },
+];
+
+//+++++++++++++++++++++++++++++++++++++ REQUEST PAYMENT +++++++++++++++++++++++++
+export const PREFIX_REQUEST_PAYMENT = '/cobranza';
+
+export const FILTERS_REQUEST_PAYMENT: IFiltersRequestPayment[] = [
+  {
+    key: 1,
+    value: 'Rut CP',
+    name: 'rut_CP'
+  },
+  {
+    key: 2,
+    value: 'Razon Social CP',
+    name: 'razon_social_cp'
+  },
+  {
+    key: 3,
+    value: 'Nombre Servicio',
+    name: 'nombre_servicio'
+  },
+  {
+    key: 4,
+    value: 'Estado proceso',
+    name: 'estado'
+  },
+  {
+    key: 5,
+    value: 'Faena',
+    name: 'faena_seleccionada_cp'
+  }
+];
+
+export const REQUESTPAYMENT_COLUMNS_TABLE = [
+  {
+    title: 'Codigo cobranza',
+    dataIndex: 'codigo',
+    key: 'codigo',
+  },
+  {
+    title: 'Fecha facturación',
+    dataIndex: 'fecha_facturacion',
+    key: 'fecha_facturacion',
+  },
+  {
+    title: 'Dias crédito',
+    dataIndex: 'dias_credito',
+    key: 'dias_credito',
+  },
+  {
+    title: 'Valor pagado',
+    dataIndex: 'valor_cancelado_string',
+    key: 'valor_cancelado_string',
+  },
+  {
+    title: 'Valor deuda',
+    dataIndex: 'valor_deuda_string',
+    key: 'valor_deuda_string',
+  },
+  {
+    title: 'Valor servicio',
+    dataIndex: 'valor_servicio_string',
+    key: 'valor_servicio_string',
+  },
+  {
+    title: 'Rut CP',
+    dataIndex: 'rut_cp',
+    key: 'rut_cp',
+  },
+  {
+    title: 'Razon social CP',
+    dataIndex: 'razon_social_cp',
+    key: 'razon_social_cp',
+  },
+  {
+    title: 'Nombre servicio',
+    dataIndex: 'nombre_servicio',
+    key: 'nombre_servicio',
+  },
+  {
+    title: 'Faena',
+    dataIndex: 'faena_seleccionada_cp',
+    key: 'faena_seleccionada_cp',
+  },
+];
+
+//+++++++++++++++++++++++++++++++++++++ EXPENSES +++++++++++++++++++++++++
+export const PREFIX_EXPENSES = '/gastos';
+
+export const FILTERS_EXPENSES: IFiltersExpenses[] = [
+  {
+    key: 1,
+    value: 'Categoria',
+    name: 'categoria_general'
+  },
+  {
+    key: 2,
+    value: 'Subcategoria',
+    name: 'subcategoria_dos'
+  },
+  {
+    key: 3,
+    value: 'Rut proveedor',
+    name: 'rut_proveedor'
+  },
+  {
+    key: 4,
+    value: 'Razon social proveedor',
+    name: 'razon_social_proveedor'
+  },
+  {
+    key: 5,
+    value: 'Tipo registro',
+    name: 'tipo_registro'
+  }
+];
+
+export const EXPENSES_COLUMNS_TABLE = [
+  {
+    title: 'Codigo',
+    dataIndex: 'codigo',
+    key: 'codigo',
+  },
+  {
+    title: 'Fecha',
+    dataIndex: 'fecha',
+    key: 'fecha',
+  },
+  {
+    title: 'Inventario',
+    dataIndex: 'inventario',
+    key: 'inventario',
+  },
+  {
+    title: 'Categoria general',
+    dataIndex: 'categoria_general',
+    key: 'categoria_general',
+  },
+  {
+    title: 'Subcategoria 2',
+    dataIndex: 'subcategoria_dos',
+    key: 'subcategoria_dos',
+  },
+  {
+    title: 'Rut proveedor',
+    dataIndex: 'rut_proveedor',
+    key: 'rut_proveedor',
+  },
+  {
+    title: 'Razon social proveedor',
+    dataIndex: 'razon_social_proveedor',
+    key: 'razon_social_proveedor',
+  },
+  {
+    title: 'Tipo Registro',
+    dataIndex: 'tipo_registro',
+    key: 'tipo_registro',
+  },
+  {
+    title: 'Monto Total',
+    dataIndex: 'total_string',
+    key: 'total_string',
+  },
+  {
+    title: 'Medio de Pago',
+    dataIndex: 'medio_pago',
+    key: 'medio_pago',
+  },
+];
+
+export const REGISTER_TYPE = [
+  'Compra',
+  'Donación',
+  'Pago',
+  'Regalo'
+]
+
+export const DOCUMENTS = [
+  'Factura',
+  'Boleta compra',
+  'Boleta honorario',
+  'Contrato',
+  'Liquidación',
+  'Informe',
+  'Boleta servicio'
+]
+
+export const CATEGORIES_EXPENSES = [
+  {
+    categoria_general: "Mano de Obra Directa",
+    subcategoria_uno: [
+      {
+        subcategoria_uno: "Personal",
+        subcategoria_dos: [
+          {
+            subcategoria_dos: "Sueldos",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Bonos",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Finiquitos",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "AFC",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "ISAPRE",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "AFP",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Salud Laboral",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Vacaciones",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Ropa Corporativa",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "R - Otros",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    categoria_general: "Materiales e Insumos",
+    subcategoria_uno: [
+      {
+        subcategoria_uno: "Insumos Oficina",
+        subcategoria_dos: [
+          {
+            subcategoria_dos: "Art. Oficina",
+            inventario: true,
+            sub_cat_tres: [
+              { codigo: "00001", subcategoria_tres: "Escritorios" },
+            ],
+          },
+          {
+            subcategoria_dos: "Cafetería",
+            inventario: true,
+            sub_cat_tres: [
+              { codigo: "00002", subcategoria_tres: "Hervidores" },
+            ],
+          },
+          {
+            subcategoria_dos: "Limpieza",
+            inventario: true,
+            sub_cat_tres: [
+              { codigo: "00003", subcategoria_tres: "Trapeadores" },
+            ],
+          },
+          {
+            subcategoria_dos: "Perfumería",
+            inventario: true,
+            sub_cat_tres: [{ codigo: "00004", subcategoria_tres: "Colonias" }],
+          },
+          {
+            subcategoria_dos: "S - Otros",
+            inventario: true,
+            sub_cat_tres: [
+              { codigo: "00005", subcategoria_tres: "Ventilación" },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    categoria_general: "Equipos y Herramientas",
+    subcategoria_uno: [
+      {
+        subcategoria_uno: "Equipos y Herramientas",
+        subcategoria_dos: [
+          {
+            subcategoria_dos: "Vehículos",
+            inventario: true,
+            sub_cat_tres: [{ codigo: "00006", subcategoria_tres: "Tuercas" }],
+          },
+          {
+            subcategoria_dos: "Computadores",
+            inventario: true,
+            sub_cat_tres: [{ codigo: "00007", subcategoria_tres: "Placas" }],
+          },
+          {
+            subcategoria_dos: "Teléfonos",
+            inventario: true,
+            sub_cat_tres: [{ codigo: "00008", subcategoria_tres: "Carcasas" }],
+          },
+          {
+            subcategoria_dos: "Impresoras",
+            inventario: true,
+            sub_cat_tres: [{ codigo: "00009", subcategoria_tres: "Tóners" }],
+          },
+          {
+            subcategoria_dos: "Discos Duros",
+            inventario: true,
+            sub_cat_tres: [
+              { codigo: "00010", subcategoria_tres: "Adaptadores" },
+            ],
+          },
+          {
+            subcategoria_dos: "Pantallas",
+            inventario: true,
+            sub_cat_tres: [{ codigo: "00011", subcategoria_tres: "Cables" }],
+          },
+          {
+            subcategoria_dos: "Proyectores",
+            inventario: true,
+            sub_cat_tres: [{ codigo: "00012", subcategoria_tres: "Controles" }],
+          },
+          {
+            subcategoria_dos: "Telones",
+            inventario: true,
+            sub_cat_tres: [{ codigo: "00013", subcategoria_tres: "Soportes" }],
+          },
+          {
+            subcategoria_dos: "EH - Otros",
+            inventario: true,
+            sub_cat_tres: [
+              { codigo: "00014", subcategoria_tres: "Herramientas" },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    categoria_general: "Gastos Generales",
+    subcategoria_uno: [
+      {
+        subcategoria_uno: "Servicios Generales",
+        subcategoria_dos: [
+          {
+            subcategoria_dos: "Arriendos",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Asesorías y Consultorías",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Auditorías",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Outsourcing",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Gastos Bancarios",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "SG - Otros",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+        ],
+      },
+      {
+        subcategoria_uno: "Gastos Fijos",
+        subcategoria_dos: [
+          {
+            subcategoria_dos: "Agua",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Luz",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Gas",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Plan Teléfono",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Televisión",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Internet",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Plan Celular",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Suscripción Diario",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Impresión y Fotocopiado",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "G - Otros",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+        ],
+      },
+      {
+        subcategoria_uno: "Formación",
+        subcategoria_dos: [
+          {
+            subcategoria_dos: "Capacitaciones",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Materiales",
+            inventario: true,
+            sub_cat_tres: [{ codigo: "00015", subcategoria_tres: "Digitales" }],
+          },
+          {
+            subcategoria_dos: "Libros",
+            inventario: true,
+            sub_cat_tres: [{ codigo: "00016", subcategoria_tres: "Física" }],
+          },
+          {
+            subcategoria_dos: "Post-Grado",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Cursos",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Coaching",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "F - Otros",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+        ],
+      },
+      {
+        subcategoria_uno: "Ocio",
+        subcategoria_dos: [
+          {
+            subcategoria_dos: "Vacaciones",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Paseos",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Espectáculos",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Deporte",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Restaurantes",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Bares",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Juegos",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Música",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "O - Otros",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+        ],
+      },
+      {
+        subcategoria_uno: "Transporte",
+        subcategoria_dos: [
+          {
+            subcategoria_dos: "Peajes",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Mecánico",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Combustible",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Multas",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Impuestos",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Garage",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Taxi",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "T - Otros",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+        ],
+      },
+      {
+        subcategoria_uno: "Instalaciones",
+        subcategoria_dos: [
+          {
+            subcategoria_dos: "Muebles",
+            inventario: true,
+            sub_cat_tres: [{ codigo: "00017", subcategoria_tres: "Repisas" }],
+          },
+          {
+            subcategoria_dos: "Electrodomésticos",
+            inventario: true,
+            sub_cat_tres: [
+              { codigo: "00018", subcategoria_tres: "Refrigerantes" },
+            ],
+          },
+          {
+            subcategoria_dos: "Reparaciones",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Informática",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Jardinero",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Textil",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Contribuciones",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "V - Otros",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+        ],
+      },
+      {
+        subcategoria_uno: "Salud",
+        subcategoria_dos: [
+          {
+            subcategoria_dos: "Médicos",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Farmacia",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Cuidado Personal",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Obra Social",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Gimnasio",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "SL - Otros",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    categoria_general: "Costos Indirectos",
+    subcategoria_uno: [
+      {
+        subcategoria_uno: "Gastos Indirectos",
+        subcategoria_dos: [
+          {
+            subcategoria_dos: "Sueldos",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Bonos",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Finiquitos",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "AFC",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "ISAPRE",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "AFP",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Salud Laboral",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Vacaciones",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "GI - Otros",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    categoria_general: "Otros",
+    subcategoria_uno: [
+      {
+        subcategoria_uno: "Seguros",
+        subcategoria_dos: [
+          {
+            subcategoria_dos: "Vivienda",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Vida",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Jubilación",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Vehículo",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "SE - Otros",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+        ],
+      },
+      {
+        subcategoria_uno: "Impuestos",
+        subcategoria_dos: [
+          {
+            subcategoria_dos: "Intereses",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Ingresos Brutos",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Bienes Personales",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "Ganancias",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+          {
+            subcategoria_dos: "O - Otros",
+            inventario: false,
+            sub_cat_tres: [],
+          },
+        ],
+      },
+    ],
+  },
+];
+
+//+++++++++++++++++++++++++++++++++++++ OUTPUT +++++++++++++++++++++++++
+export const PREFIX_OUTPUT = './salidas';
+
+export const FILTERS_OUTPUT: IFiltersOutputs[] = [
+  {
+    key: 1,
+    value: 'Categoria',
+    name: 'categoria_general'
+  },
+  {
+    key: 2,
+    value: 'Subcategoria',
+    name: 'subcategoria_dos'
+  }
+];
+
+export const OUTPUT_COLUMNS_TABLE = [
+  {
+    title: 'Codigo',
+    dataIndex: 'codigo',
+    key: 'codigo',
+  },
+  {
+    title: 'Fecha',
+    dataIndex: 'fecha',
+    key: 'fecha',
+  },
+  {
+    title: 'Categoria general',
+    dataIndex: 'categoria_general',
+    key: 'categoria_general',
+  },
+  {
+    title: 'Subcategoria 2',
+    dataIndex: 'subcategoria_dos',
+    key: 'subcategoria_dos',
+  },
+  {
+    title: 'Tipo Salida',
+    dataIndex: 'tipo_salida',
+    key: 'tipo_salida',
+  },
+  {
+    title: 'Cantidad',
+    dataIndex: 'cantidad',
+    key: 'cantidad',
+  },
+  {
+    title: 'Costo Unitario',
+    dataIndex: 'costo_unitario_string',
+    key: 'costo_unitario_string',
+  },
+  {
+    title: 'Costo Total',
+    dataIndex: 'costo_total_string',
+    key: 'costo_total_string',
+  },
+];
+
+//+++++++++++++++++++++++++++++++++++++ OUTPUT +++++++++++++++++++++++++
+export const PREFIX_EXISTENCE = './existencia';
+
+export const FILTERS_EXISTENCE: IFiltersExistence[] = [
+  {
+    key: 1,
+    value: 'Categoria',
+    name: 'categoria_general'
+  },
+  {
+    key: 2,
+    value: 'Subcategoria 3',
+    name: 'subcategoria_tres'
+  },
+  {
+    key: 3,
+    value: 'Código Producto',
+    name: 'codigo_categoria_tres'
+  }
+];
+
+export const EXISTENCE_COLUMNS_TABLE = [
+  {
+    title: 'Categoria general',
+    dataIndex: 'categoria_general',
+    key: 'categoria_general',
+  },
+  {
+    title: 'Subcategoria 3',
+    dataIndex: 'subcategoria_tres',
+    key: 'subcategoria_tres',
+  },
+  {
+    title: 'Codigo Producto',
+    dataIndex: 'codigo_categoria_tres',
+    key: 'codigo_categoria_tres',
+  },
+  {
+    title: 'Cant. Máxima',
+    dataIndex: 'cantMaxima',
+    key: 'cantMaxima',
+  },
+  {
+    title: 'Entradas',
+    dataIndex: 'entradas',
+    key: 'entradas',
+  },
+  {
+    title: 'Salidas',
+    dataIndex: 'salidas',
+    key: 'salidas',
+  },
+  {
+    title: 'Stock',
+    dataIndex: 'existencia',
+    key: 'existencia',
+  },
+  {
+    title: 'Costo unitario prom. (IVA inc.)',
+    dataIndex: 'costo_unitario_promedio_string',
+    key: 'costo_unitario_promedio_string',
+  },
+  {
+    title: 'Costo total (IVA inc.)',
+    dataIndex: 'costo_total_string',
+    key: 'costo_total_string',
+  },
+];
+
+//+++++++++++++++++++++++++++++++++++++ EMPLOYEES +++++++++++++++++++++++++
+export const PREFIX_EMPLOYEES = './empleados';
+
+export const FILTERS_EMPLOYEES: IFiltersEmployees[] = [
+  {
+    key: 1,
+    value: 'Rut',
+    name: 'rut'
+  },
+  {
+    key: 2,
+    value: 'Razon Social',
+    name: 'razon_social'
+  },
+]
+
+export const EMPLOYEES_COLUMNS_TABLE = [
+  {
+    title: 'Rut',
+    dataIndex: 'rut',
+    key: 'rut',
+  },
+  {
+    title: 'Nombre',
+    dataIndex: 'razon_social',
+    key: 'razon_social',
+  },
+  {
+    title: 'Cargo',
+    dataIndex: 'cargo',
+    key: 'cargo',
+  },
+  {
+    title: 'Tipo Contrato',
+    dataIndex: 'tipo_contrato',
+    key: 'tipo_contrato',
+  },
+  {
+    title: 'Inicio Contrato',
+    dataIndex: 'fecha_inicio_contrato',
+    key: 'fecha_inicio_contrato',
+  },
+  {
+    title: 'Término Contrato',
+    dataIndex: 'fecha_fin_contrato',
+    key: 'fecha_fin_contrato',
+  },
+  {
+    title: 'Sueldo Bruto',
+    dataIndex: 'sueldo_bruto_string',
+    key: 'sueldo_bruto_string',
+  },
+  {
+    title: 'AFP',
+    dataIndex: 'afp',
+    key: 'afp',
+  },
+  {
+    title: 'ISAPRE',
+    dataIndex: 'isapre',
+    key: 'isapre',
+  },
+  {
+    title: 'Seguridad laboral',
+    dataIndex: 'seguridad_laboral',
+    key: 'seguridad_laboral',
+  },
+  {
+    title: 'Dias vacaciones',
+    dataIndex: 'dias_vacaciones',
+    key: 'dias_vacaciones',
+  },
+];
+
+export const CONTRACT_TYPES = [
+  "Contrato Plazo Fijo",
+  "Contrato Indefinido",
+  "Honorarios",
+  "Por Obra",
+  "Por Proyecto",
+  'Contrato Freelance'
+];
+
+export const AFP_LIST = [
+  "AFP Capital",
+  "AFP Cuprum",
+  "AFP Habitat",
+  "AFP Modelo",
+  "AFP Planvital",
+  "AFP Provida",
+  "AFP UNO",
+];
+
+export const ISAPRE_LIST = [
+  "ISAPRE Banmédica",
+  "ISAPRE Consalud",
+  "ISAPRE Colmena",
+  "ISAPRE CruzBlanca",
+  "ISAPRE Nueva Masvida",
+  "ISAPRE Vida Tres",
+  "ISAPRE Chuquicamata",
+  "ISAPRE Fundación BancoEstado",
+  "ISAPRE Fusat",
+  "ISAPRE Ríoblanco",
+  "ISAPRE SanLorenzo",
+  "ISAPRE Cruz del Norte",
+];
+
+export const SECURITY_WORK = [
+  "Instituto de Seguridad del Trabajo (IST)",
+  "Asociación Chilena de Seguridad (ACHS)",
+  "Instituto de Seguridad Laboral (ISL)",
+  "Mutual de Seguridad CChC",
+];
+
+export const RAZON_AUSENCES = [
+  {
+    nombre: "Enfermedad",
+    abrev: "E",
+    color: "#7C4DFF",
+    fullName: "Enfermedad (E)",
+    hora_inicio: "08:30",
+    hora_fin: "18:30"
+  },
+  {
+    nombre: "Vacaciones",
+    abrev: "V",
+    color: "#0D47A1",
+    fullName: "Vacaciones (V)",
+    hora_inicio: "08:30",
+    hora_fin: "18:30"
+  },
+  {
+    nombre: "Maternidad",
+    abrev: "M",
+    color: "#880E4F",
+    fullName: "Maternidad (M)",
+    hora_inicio: "08:30",
+    hora_fin: "18:30"
+  },
+  {
+    nombre: "Trámites",
+    abrev: "T",
+    color: "#64B5F6",
+    fullName: "Trámites (T)",
+    hora_inicio: "08:30",
+    hora_fin: "18:30"
+  },
+  {
+    nombre: "Medio-Día",
+    abrev: "MD",
+    color: "#F57C00",
+    fullName: "Medio-Día (MD)",
+    hora_inicio: "08:30",
+    hora_fin: "13:30"
+  },
+  {
+    nombre: "Día-Completo-Recuperado",
+    abrev: "CR",
+    color: "#1B5E20",
+    fullName: "Día-Completo-Recuperado (CR)",
+    hora_inicio: "08:30",
+    hora_fin: "18:30"
+  },
+  {
+    nombre: "Medio-Día-Recuperado",
+    abrev: "MR",
+    color: "#455A64",
+    fullName: "Medio-Día-Recuperado (MR)",
+    hora_inicio: "08:30",
+    hora_fin: "13:30"
+  },
+];
+
+//+++++++++++++++++++++++++++++++++++++ AUSENCES +++++++++++++++++++++++++
+export const PREFIX_AUSENCES = './ausencias';
+
+
+

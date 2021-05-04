@@ -5,6 +5,9 @@ import { IButtonsProps } from '../../models/index.models';
 
 import ButtonComponent from "../Button/Button";
 import { IFiltersGI } from '../../models/gi.models';
+import { FORMAT_DATE } from '../../constants/var';
+import { IFiltersEvaluation } from '../../models/evaluations.models';
+import { IFiltersResults } from '../../models/results.model';
 
 interface IHeaderTableProps {
   title: string,
@@ -13,9 +16,10 @@ interface IHeaderTableProps {
   showDateFilter?: boolean,
   onClick: (button: IButtonsProps) => IButtonsProps | void,
   onClickSearch: () => void,
+  onClickDateFilter: (date: string) => string | void,
   showInvoicesOptions?: boolean
   onClickGrupal: (value: string) => void
-  dataFilter?: IFiltersGI[],
+  dataFilter?: IFiltersGI[] | IFiltersEvaluation[] | IFiltersResults[],
   filterText?: string,
   setFilterText: React.Dispatch<React.SetStateAction<string>>
   setOptionFilter: React.Dispatch<React.SetStateAction<number>>
@@ -33,6 +37,7 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
   filterText = '',
   setFilterText,
   onClickSearch,
+  onClickDateFilter,
   setOptionFilter
 }) => {
 
@@ -50,7 +55,10 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
         {/* section button and textinput */}
         <div className="container-header-table-section2">
           {showDateFilter &&
-            <DatePicker style={{ width: 150, marginRight: '10px' }} />
+            <DatePicker 
+              style={{ width: 150, marginRight: '10px' }}
+              onSelect={(e) => onClickDateFilter(e.format(FORMAT_DATE))} 
+            />
           }
           <Select
             showSearch
