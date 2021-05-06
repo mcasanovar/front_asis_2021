@@ -84,4 +84,10 @@ export const GiInitializationData: GiModel = {
   estado_licencia: '',
   nivel_educacional: '',
   rol: '',
+};
+
+export const ConfigurationGIInitialization = {
+  rol: '',
+  isEditPassword: false,
+  new_password: ''
 }

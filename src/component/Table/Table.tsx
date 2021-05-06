@@ -230,7 +230,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
           {showConfiguration &&
             <Tooltip title="Configuración" color={'#546E7A'}>
               <Button
-                onClick={() => onClickAction('configurationGi')}
+                onClick={() => onClickAction('configurationGi', record._id)}
                 style={{ backgroundColor: '#546E7A' }}
                 icon={<LockOutlined style={{ fontSize: '1.1rem', color: 'white' }} />}
               />

@@ -15,7 +15,7 @@ import { deleteOneGiService, filterGisService, getAllGIService } from '../../ser
 
 import CreateEditGiView from "./createEditgi.view";
 import DetailsGIView from "./detailsgi.view";
-// import ConfigurationView from "./configurationGi.view";
+import ConfigurationView from "./configurationGi.view";
 
 interface IGiViewProps {
 }
@@ -49,6 +49,7 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [GIs, setGIs] = useState<GiModel[]>([]);
   const [idSelectedGI, setIdSelectedGI] = useState<string>('');
+  const [giSelected, setGiSelected] = useState<GiModel>();
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
   const [OpenModal, setOpenModal] = useState<boolean>(false);
   const [disabledCancel, _] = useState<boolean>(false);
@@ -70,11 +71,12 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
       case 'configurationGi':
         setActualModal({
           _id: id,
-          title: 'Configuración de -nombre-',
+          title: 'Configuración GI',
           size: 'small',
           widthModal: 600,
           showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
-        })
+        });
+        idregister && setGiSelected(GIs.find((gi) => gi._id === idregister));
         setOpenModal(true);
         break;
       case 'details':
@@ -150,7 +152,7 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
 
   async function getGis(pagenumber: number) {
     const aux: IReponseAllGIs = await getAllGIService(pagenumber, N_PER_PAGE);
-    if(!aux.err){
+    if (!aux.err) {
       setGIs(aux.gis);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
@@ -161,7 +163,7 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
 
   async function hanbleDeleteGI(id: string) {
     const aux: IResponseGI = await deleteOneGiService(id);
-    if(aux.err === null){
+    if (aux.err === null) {
       setMessageAlert({ message: aux.res, type: 'success', show: true });
       getGis(1);
       return setLoading(false);
@@ -191,7 +193,7 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
   }, [GIs]);
 
   useEffect(() => {
-    if(ActualModal && ActualModal._id === 'delete'){
+    if (ActualModal && ActualModal._id === 'delete') {
       setLoading(true);
       hanbleDeleteGI(idSelectedGI);
     }
@@ -214,7 +216,7 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
         buttons={buttons}
         onClick={(button) => handleClickButton(button)}
         onClickGrupal={() => { }}
-        onClickDateFilter={() => {}}
+        onClickDateFilter={() => { }}
         dataFilter={FILTERS_GI}
         filterText={filterText}
         setFilterText={setFilterText}
@@ -233,7 +235,7 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
         loading={loading}
         enablePagination={false}
       />
-      <br/>
+      <br />
       <PaginationComponent
         actualPage={actualPage}
         onChange={(newpage: number) => handleChangePagination(newpage)}
@@ -257,7 +259,12 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
             type='insert'
           />
         }
-        {/* {ActualModal._id === 'configurationGi' && <ConfigurationView/>} */}
+        {ActualModal._id === 'configurationGi' &&
+          <ConfigurationView
+            onCloseModal={(value, message) => handleCloseModal(value, message)}
+            giSelected={giSelected}
+          />
+        }
         {ActualModal._id === 'details' &&
           <DetailsGIView
             onCloseModal={(value, message) => handleCloseModal(value, message)}

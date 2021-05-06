@@ -22,6 +22,8 @@ import ExpensesInputsView from "./views/ExpensesInputs/expensesInputs";
 import OutputsView from "./views/outputs/outputs.view";
 import ExistenceView from "./views/Existence/existence.view";
 
+import LoginView from './views/Login/Login';
+
 import TopBarComponent from "./component/TopBar/TopBar";
 
 function App(): JSX.Element {
@@ -97,6 +99,12 @@ function App(): JSX.Element {
       main: () => <ExistenceView/>
     },
   ];
+
+  const existsUser = localStorage.getItem('userLogged');
+
+  if(existsUser === null){
+    return (<LoginView/>)
+  };
 
   return (
     <div className="mainContainer">

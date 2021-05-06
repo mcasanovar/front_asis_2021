@@ -40,6 +40,13 @@ export const BANKING_INSTITUTION = [
   "Banco Consorcio",
   "Scotiabank Azul",
   "Banco BTG Pactual Chile",
+];
+
+export const ROLES_GI = [
+  'Empleados',
+  'Colaboradores',
+  'Clientes',
+  'admin'
 ]
 
 //+++++++++++++++++++++++++++++++++++++ GI +++++++++++++++++++++++++
@@ -7001,6 +7008,11 @@ export const RAZON_AUSENCES = [
 
 //+++++++++++++++++++++++++++++++++++++ AUSENCES +++++++++++++++++++++++++
 export const PREFIX_AUSENCES = './ausencias';
+
+//+++++++++++++++++++++++++++++++++++++ LOGIN +++++++++++++++++++++++++
+export const PREFIX_LOGIN = './login';
+
+
 
 
 

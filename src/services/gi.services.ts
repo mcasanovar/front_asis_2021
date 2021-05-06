@@ -1,5 +1,6 @@
 import { PREFIX_GIS } from "../constants/var";
 import { httpClient, httpClientFormData } from "../libs/axios";
+import { ConfigurationGIModel } from "../models/gi.models";
 
 const getAllGIService = async (pageNumber: number, nPerPage: number) => {
   const extension = `${PREFIX_GIS}/pagination`;
@@ -101,6 +102,16 @@ const getGIByRutService = async (rut: string, selector: number) => {
   }
 };
 
+const editPasswordService = async (id: string, data: ConfigurationGIModel) => {
+  const extension = `${PREFIX_GIS}/editpassword/${id}`;
+  try {
+    const response = await httpClient.put(extension, data);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 export {
   getCompanyGIService,
   getWorkersGIService,
@@ -110,5 +121,6 @@ export {
   getOneGIService,
   editOneGIService,
   deleteOneGiService,
-  getGIByRutService
+  getGIByRutService,
+  editPasswordService
 }

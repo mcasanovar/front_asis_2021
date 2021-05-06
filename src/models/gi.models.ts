@@ -98,6 +98,12 @@ export interface GiModel {
   dias_vacaciones?: string,
   comentarios?: string,
   detalle_empleado?: IDetailsEmployees
+};
+
+export interface ConfigurationGIModel {
+  rol: string,
+  isEditPassword: boolean,
+  new_password: string
 }
 
 export interface IResponseGI {
