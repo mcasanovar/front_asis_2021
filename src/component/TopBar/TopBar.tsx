@@ -5,11 +5,11 @@ import { Button } from "antd";
 import { MenuUnfoldOutlined, PoweroffOutlined } from '@ant-design/icons';
 
 interface TopBarProps {
-  onClick: () => void
+  onClick: () => void,
 };
 
 const TopBarComponent: FunctionComponent<TopBarProps> = ({
-  onClick
+  onClick,
 }) => {
   const { Text } = Typography;
 
@@ -18,7 +18,10 @@ const TopBarComponent: FunctionComponent<TopBarProps> = ({
 
   const handleCloseSession = () => {
     localStorage.removeItem('userLogged');
-    window.location.reload();
+    localStorage.removeItem('authorizated');
+    // window.location.reload();
+    // setAuthorizated(false);
+    window.location.href = '/gi';
     return
   }
 
@@ -32,13 +35,14 @@ const TopBarComponent: FunctionComponent<TopBarProps> = ({
 
   return (
     <div className='mainContainer-topbar'>
-      <Button
+      {/* <Button
         onClick={() => onClick()}
         icon={<MenuUnfoldOutlined style={{ fontSize: '1.2rem' }} />}
-      />
+      /> */}
+      <div></div>
       <div>
         <Text>Usuario activo : </Text>
-        <Text>{giName}</Text>
+        <Text style={{ fontWeight: 'bold' }}>{giName}</Text>
       </div>
       <Popover
         content={

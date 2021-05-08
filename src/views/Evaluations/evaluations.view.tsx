@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
 import { CANCEL, CONFIRM, EVALUATIONS_COLUMNS_TABLE, FILTERS_EVALUATION, N_PER_PAGE, OK } from '../../constants/var';
@@ -20,9 +21,10 @@ import AlertComponent from "../../component/Alert/Alert";
 import PaginationComponent from '../../component/Pagination/Pagination';
 
 interface IEvaluationsViewProps {
+  authorized: boolean
 }
 
-const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = (props) => {
+const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [];
 
@@ -250,6 +252,10 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = (props) 
       return
     }
   }, [ActualModal]);
+
+  if(!authorized){
+    return <Redirect to='./login'/>
+  }
 
   return (
     <div className='container-gi'>

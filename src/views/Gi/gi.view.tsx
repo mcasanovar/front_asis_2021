@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
 import { CANCEL, CONFIRM, EDIT, FILTERS_GI, GIS_COLUMNS_TABLE, N_PER_PAGE, OK } from '../../constants/var';
@@ -18,9 +19,10 @@ import DetailsGIView from "./detailsgi.view";
 import ConfigurationView from "./configurationGi.view";
 
 interface IGiViewProps {
+  authorized: boolean
 }
 
-const GiView: React.FunctionComponent<IGiViewProps> = () => {
+const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [
     {
@@ -198,6 +200,12 @@ const GiView: React.FunctionComponent<IGiViewProps> = () => {
       hanbleDeleteGI(idSelectedGI);
     }
   }, [ActualModal]);
+
+  console.log(authorized)
+
+  if(!authorized){
+    return <Redirect to='./login'/>
+  }
 
   return (
     <div className='container-gi'>

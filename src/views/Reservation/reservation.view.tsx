@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
 import { CANCEL, CONFIRM, EDIT, FILTERS_RESERVATION, N_PER_PAGE, OK, RESERVATIONS_COLUMNS_TABLE } from '../../constants/var';
@@ -19,9 +20,10 @@ import EditReservationView from "./editreservation.view";
 import ConfirmReservationView from "./confirmreservation.view";
 
 interface IReservationViewProps {
+  authorized: boolean
 }
 
-const ReservationView: React.FunctionComponent<IReservationViewProps> = (props) => {
+const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [
     {
@@ -205,6 +207,10 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = (props) 
     }
     //eslint-disable-next-line
   }, [ActualModal]);
+
+  if(!authorized){
+    return <Redirect to='./login'/>
+  }
 
   return (
     <div className='container-gi'>

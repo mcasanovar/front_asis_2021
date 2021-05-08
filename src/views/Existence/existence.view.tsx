@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
 
@@ -15,9 +16,10 @@ import { MilesFormat } from '../../libs/formattedPesos';
 import PaginationComponent from '../../component/Pagination/Pagination';
 
 interface IExistenceViewProps {
+  authorized: boolean
 }
 
-const ExistenceView: React.FunctionComponent<IExistenceViewProps> = (props) => {
+const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({authorized}) => {
 
   const buttons: IButtonsProps[] = [];
 
@@ -129,6 +131,10 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = (props) => {
     setLoading(true)
     getExistences(1);
   }, []);
+
+  if(!authorized){
+    return <Redirect to='./login'/>
+  }
 
   return (
     <div className='container-gi'>

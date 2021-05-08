@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 import { Form, Input, Button, Checkbox, Card, Typography } from 'antd';
 import { FormatingRut } from '../../functions/validators/index.validators';
 import { IResponseEmployees } from '../../models/gi.models';
@@ -8,9 +9,10 @@ import { IAlertMessageContent } from '../../models/index.models';
 import AlertComponent from "../../component/Alert/Alert";
 
 interface ILoginViewProps {
+  authorized: boolean
 }
 
-const LoginView: React.FunctionComponent<ILoginViewProps> = (props) => {
+const LoginView: React.FunctionComponent<ILoginViewProps> = ({ authorized }) => {
 
   const { Text } = Typography;
 
@@ -29,6 +31,7 @@ const LoginView: React.FunctionComponent<ILoginViewProps> = (props) => {
     const aux: IResponseEmployees = await loginService(rut, password);
     if (aux.err === null) {
       localStorage.setItem('userLogged', JSON.stringify(aux.res));
+      localStorage.setItem('authorizated', JSON.stringify(true));
       setLoading(false)
       window.location.reload();
       return;
@@ -54,6 +57,10 @@ const LoginView: React.FunctionComponent<ILoginViewProps> = (props) => {
       }, 3000);
     }
   }, [messageAlert]);
+
+  if(localStorage.getItem('authorizated') !== null){
+    return <Redirect to='/gi' />
+  }
 
   return (
     <div className='loginContainer'>

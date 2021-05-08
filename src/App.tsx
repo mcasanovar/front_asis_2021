@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { Menu } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
 } from "react-router-dom";
 import './App.css';
-import { PieChartOutlined, AppstoreOutlined, MailOutlined } from "@ant-design/icons";
+
+import DrawerComponent from './component/Drawer/Drawer';
 
 import GiView from "./views/Gi/gi.view";
 import RequestsView from "./views/Requests/requests.view";
@@ -27,170 +27,157 @@ import LoginView from './views/Login/Login';
 import TopBarComponent from "./component/TopBar/TopBar";
 
 function App(): JSX.Element {
-  const [OpenDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [authorized] = useState<boolean>(true);
 
-  const { SubMenu } = Menu;
+  //---------------------------------------------------USEEFEECT
+  // useEffect(() => {
+  //   if (localStorage.getItem('userLogged') !== null) {
+  //     setAuthorized(true);
+  //     return
+  //   }
+  //   setAuthorized(false);
+  //   return
+  // }, []);
 
-  const routes = [
-    {
-      path: "/",
-      exact: true,
-      sidebar: () => <div>home!</div>,
-      main: () => <h2>Home</h2>
-    },
-    {
-      path: "/gi",
-      sidebar: () => <div>Grupo de Interes</div>,
-      main: () => <GiView />
-    },
-    {
-      path: "/employees",
-      sidebar: () => <div>Empleados</div>,
-      main: () => <EmployeesView />
-    },
-    {
-      path: "/solicitudes",
-      sidebar: () => <div>Solicitudes</div>,
-      main: () => <RequestsView />
-    },
-    {
-      path: "/reservas",
-      sidebar: () => <div>Reservas</div>,
-      main: () => <ReservationView />
-    },
-    {
-      path: "/evaluaciones",
-      sidebar: () => <div>Evaluaciones</div>,
-      main: () => <EvaluationView />
-    },
-    {
-      path: "/resultados",
-      sidebar: () => <div>Resultados</div>,
-      main: () => <ResultsView />
-    },
-    {
-      path: "/facturaciones",
-      sidebar: () => <div>Facturaciones</div>,
-      main: () => <InvoicesView />
-    },
-    {
-      path: "/pagos",
-      sidebar: () => <div>Pagos</div>,
-      main: () => <PaymentsView />
-    },
-    {
-      path: "/cobranzas",
-      sidebar: () => <div>Cobranzas</div>,
-      main: () => <RequestsPaymentView />
-    },
-    {
-      path: "/gastos_entradas",
-      sidebar: () => <div>Gastos/Entradas</div>,
-      main: () => <ExpensesInputsView/>
-    },
-    {
-      path: "/salidas",
-      sidebar: () => <div>Salidas</div>,
-      main: () => <OutputsView/>
-    },
-    {
-      path: "/existencia",
-      sidebar: () => <div>Existencia</div>,
-      main: () => <ExistenceView/>
-    },
-  ];
-
-  const existsUser = localStorage.getItem('userLogged');
-
-  if(existsUser === null){
-    return (<LoginView/>)
-  };
+  // if(localStorage.getItem('authorizated') === null){
+  //   window.location.href = './login';
+  // }
 
   return (
-    <div className="mainContainer">
-      <TopBarComponent
-        onClick={() => setOpenDrawer(!OpenDrawer)}
-      />
-      <Router>
-        <div className="mainContainer-modules">
-          <div style={{ width: 256, position: 'absolute', zIndex: 10 }}>
-            <Menu
-              defaultSelectedKeys={['1']}
-              defaultOpenKeys={['sub1']}
-              mode="inline"
-              theme="dark"
-              inlineCollapsed={OpenDrawer}
-              style={{ height: '95.9vh' }}
-              onClick={(e) => { }}
-            >
-              <Menu.Item key="1" icon={<PieChartOutlined />}>
-                <Link to='/'>Dashboard</Link>
-              </Menu.Item>
-              <SubMenu key="2" icon={<MailOutlined />} title="Administración">
-                <Menu.Item key="gi">
-                  <Link to='/gi'>Grupo de Interes</Link>
-                </Menu.Item>
-                <Menu.Item key="empleados">
-                  <Link to='/employees'>Empleados</Link>
-                </Menu.Item>
-                <Menu.Item key="calendario">Calendario</Menu.Item>
-              </SubMenu>
-              <SubMenu key="3" icon={<AppstoreOutlined />} title="Operaciones">
-                <Menu.Item key="solicitudes">
-                  <Link to='/solicitudes'>Solicitudes</Link>
-                </Menu.Item>
-                <Menu.Item key="reservas">
-                  <Link to='/reservas'>Reservas</Link>
-                </Menu.Item>
-                <Menu.Item key="evaluaciones">
-                  <Link to='/evaluaciones'>Evaluaciones</Link>
-                </Menu.Item>
-                <Menu.Item key="resultados">
-                  <Link to='/resultados'>Resultados</Link>
-                </Menu.Item>
-              </SubMenu>
-              <SubMenu key="4" icon={<AppstoreOutlined />} title="Finanzas">
-                <SubMenu key="sub8" title="Ingresos">
-                  <Menu.Item key="facturaciones">
-                    <Link to='/facturaciones'>Facturaciones</Link>
-                  </Menu.Item>
-                  <Menu.Item key="pagos">
-                    <Link to='/pagos'>Pagos</Link>
-                  </Menu.Item>
-                  <Menu.Item key="cobranza">
-                    <Link to='/cobranzas'>Cobranza</Link>
-                  </Menu.Item>
-                </SubMenu>
-                <SubMenu key="sub9" title="Egresos">
-                  <Menu.Item key="gas_ent">
-                    <Link to='/gastos_entradas'>Gastos / Entradas</Link>
-                  </Menu.Item>
-                  <Menu.Item key="salidas">
-                    <Link to='/salidas'>Salidas</Link>
-                  </Menu.Item>
-                  <Menu.Item key="existencia">
-                    <Link to='/existencia'>Existencia</Link>
-                  </Menu.Item>
-                </SubMenu>
-              </SubMenu>
-            </Menu>
+    <Router>
+      {localStorage.getItem('authorizated') !== null ?
+        <>
+          <TopBarComponent
+            onClick={() => { }}
+          />
+          <div className="mainContainer-modules">
+            <DrawerComponent />
+            <Switch>
+              <Route exact path='/' component={() => <GiView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+              <Route exact path='/login' component={() => <LoginView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+              <Route exact path='/gi' component={() => <GiView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+              <Route exact path='/employees' component={() => <EmployeesView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+              <Route exact path='/solicitudes' component={() => <RequestsView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+              <Route exact path='/reservas' component={() => <ReservationView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+              <Route exact path='/evaluaciones' component={() => <EvaluationView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+              <Route exact path='/resultados' component={() => <ResultsView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+              <Route exact path='/facturaciones' component={() => <InvoicesView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+              <Route exact path='/pagos' component={() => <PaymentsView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+              <Route exact path='/cobranzas' component={() => <RequestsPaymentView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+
+              <Route exact path='/gastos_entradas' component={() => <ExpensesInputsView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+              <Route exact path='/salidas' component={() => <OutputsView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+              <Route exact path='/existencia' component={() => <ExistenceView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+            </Switch>
           </div>
-        </div>
-        <div className='modules'>
-          <Switch>
-            {routes.map((route, index) => (
-              <Route
-                key={index}
-                path={route.path}
-                exact={route.exact}
-                children={<route.main />}
-              />
-            ))}
-          </Switch>
-        </div>
-      </Router>
-    </div>
+        </> :
+        <Switch>
+          <Route exact path='/' component={() => <LoginView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+          <Route exact path='/login' component={() => <LoginView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+          <Route exact path='/gi' component={() => <GiView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+          <Route exact path='/solicitudes' component={() => <RequestsView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+          <Route exact path='/reservas' component={() => <ReservationView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+          <Route exact path='/evaluaciones' component={() => <EvaluationView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+          <Route exact path='/resultados' component={() => <ResultsView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+          <Route exact path='/facturaciones' component={() => <InvoicesView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+          <Route exact path='/pagos' component={() => <PaymentsView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+          <Route exact path='/cobranzas' component={() => <RequestsPaymentView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+          <Route exact path='/gastos_entradas' component={() => <ExpensesInputsView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+          <Route exact path='/salidas' component={() => <OutputsView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+          <Route exact path='/existencia' component={() => <ExistenceView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+
+        </Switch>
+      }
+    </Router>
   );
+
+  // return (
+  //   <div className="mainContainer">
+  //     <TopBarComponent
+  //       onClick={() => setOpenDrawer(!OpenDrawer)}
+  //     />
+  //     <Router>
+  //       <div className="mainContainer-modules">
+  //         <div style={{ width: 256, position: 'absolute', zIndex: 10 }}>
+  //           <Menu
+  //             defaultSelectedKeys={['1']}
+  //             defaultOpenKeys={['sub1']}
+  //             mode="inline"
+  //             theme="dark"
+  //             inlineCollapsed={OpenDrawer}
+  //             style={{ height: '95.9vh' }}
+  //             onClick={(e) => { }}
+  //           >
+  //             <Menu.Item key="1" icon={<PieChartOutlined />}>
+  //               <Link to='/dashboard'>Dashboard</Link>
+  //             </Menu.Item>
+  //             <SubMenu key="2" icon={<MailOutlined />} title="Administración">
+  //               <Menu.Item key="gi">
+  //                 <Link to='/gi'>Grupo de Interes</Link>
+  //               </Menu.Item>
+  //               <Menu.Item key="empleados">
+  //                 <Link to='/employees'>Empleados</Link>
+  //               </Menu.Item>
+  //               <Menu.Item key="calendario">Calendario</Menu.Item>
+  //             </SubMenu>
+  //             <SubMenu key="3" icon={<AppstoreOutlined />} title="Operaciones">
+  //               <Menu.Item key="solicitudes">
+  //                 <Link to='/solicitudes'>Solicitudes</Link>
+  //               </Menu.Item>
+  //               <Menu.Item key="reservas">
+  //                 <Link to='/reservas'>Reservas</Link>
+  //               </Menu.Item>
+  //               <Menu.Item key="evaluaciones">
+  //                 <Link to='/evaluaciones'>Evaluaciones</Link>
+  //               </Menu.Item>
+  //               <Menu.Item key="resultados">
+  //                 <Link to='/resultados'>Resultados</Link>
+  //               </Menu.Item>
+  //             </SubMenu>
+  //             <SubMenu key="4" icon={<AppstoreOutlined />} title="Finanzas">
+  //               <SubMenu key="sub8" title="Ingresos">
+  //                 <Menu.Item key="facturaciones">
+  //                   <Link to='/facturaciones'>Facturaciones</Link>
+  //                 </Menu.Item>
+  //                 <Menu.Item key="pagos">
+  //                   <Link to='/pagos'>Pagos</Link>
+  //                 </Menu.Item>
+  //                 <Menu.Item key="cobranza">
+  //                   <Link to='/cobranzas'>Cobranza</Link>
+  //                 </Menu.Item>
+  //               </SubMenu>
+  //               <SubMenu key="sub9" title="Egresos">
+  //                 <Menu.Item key="gas_ent">
+  //                   <Link to='/gastos_entradas'>Gastos / Entradas</Link>
+  //                 </Menu.Item>
+  //                 <Menu.Item key="salidas">
+  //                   <Link to='/salidas'>Salidas</Link>
+  //                 </Menu.Item>
+  //                 <Menu.Item key="existencia">
+  //                   <Link to='/existencia'>Existencia</Link>
+  //                 </Menu.Item>
+  //               </SubMenu>
+  //             </SubMenu>
+  //           </Menu>
+  //         </div>
+  //       </div>
+  //       <div className='modules'>
+  //         <Switch>
+  //           <Route exact path='/gi' component={() => <GiView authorized={false} />} />
+  //           <Route exact path='/login' component={LoginView} />
+  //           {/* {routes.map((route, index) => (
+  //             <Route
+  //               key={index}
+  //               path={route.path}
+  //               exact={route.exact}
+  //               children={<route.main />}
+  //             />
+  //           ))} */}
+  //         </Switch>
+  //       </div>
+  //     </Router>
+  //   </div>
+  // );
 }
 
 export default App;

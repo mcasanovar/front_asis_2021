@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
 import { CANCEL, CONFIRM, FILTERS_PAYMENTS, N_PER_PAGE, OK, PAYMENTS_COLUMNS_TABLE } from '../../constants/var';
@@ -21,9 +22,10 @@ import AlertComponent from "../../component/Alert/Alert";
 import { MilesFormat } from '../../libs/formattedPesos';
 
 interface IPaymentsViewProps {
+  authorized: boolean
 }
 
-const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = (props) => {
+const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [
     {
@@ -167,6 +169,10 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = (props) => {
     setLoading(true)
     getPayments(1);
   }, []);
+
+  if(!authorized){
+    return <Redirect to='./login'/>
+  }
 
   return (
     <div className='container-gi'>

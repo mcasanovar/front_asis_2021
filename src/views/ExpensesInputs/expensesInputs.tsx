@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 import { ExpensesModel, IResponseAllExpenses, IResponseExpenses } from '../../models/expenses.models';
 import { CANCEL, EXPENSES_COLUMNS_TABLE, FILTERS_EXPENSES, N_PER_PAGE, OK } from '../../constants/var';
 
@@ -19,9 +20,10 @@ import { MilesFormat } from '../../libs/formattedPesos';
 import PaginationComponent from '../../component/Pagination/Pagination';
 
 interface IExpensesInputsViewProps {
+  authorized: boolean
 }
 
-const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = (props) => {
+const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({authorized}) => {
 
   const buttons: IButtonsProps[] = [
     {
@@ -208,6 +210,10 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = (p
       return
     }
   }, [ActualModal]);
+
+  if(!authorized){
+    return <Redirect to='./login'/>
+  }
 
   return (
     <div className='container-gi'>

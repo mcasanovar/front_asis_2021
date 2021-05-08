@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
 import { CANCEL, CONFIRM, EDIT, EMPLOYEES_COLUMNS_TABLE, FILTERS_EMPLOYEES, N_PER_PAGE } from '../../constants/var';
@@ -23,10 +24,10 @@ import { deleteEmployeeService, filterEmployeesService, getAllEmployeesService }
 const buttons: IButtonsProps[] = [];
 
 interface IEmployeesProps {
-
+  authorized: boolean
 }
 
-const Employees: React.FunctionComponent<IEmployeesProps> = (props) => {
+const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
@@ -188,6 +189,10 @@ const Employees: React.FunctionComponent<IEmployeesProps> = (props) => {
       hanbleDeleteEmployee(idEmployeeSelected);
     }
   }, [ActualModal]);
+
+  if(!authorized){
+    return <Redirect to='/login' />
+  }
 
   return (
     <div className='container-gi'>

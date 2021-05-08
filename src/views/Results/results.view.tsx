@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
 import { CANCEL, CONFIRM, FILTERS_RESULT, N_PER_PAGE, OK, RESULTS_COLUMNS_TABLE } from '../../constants/var';
@@ -18,9 +19,10 @@ import UploadResultView from './uploadresults.view';
 import AlertComponent from "../../component/Alert/Alert";
 
 interface IResultsViewProps {
+  authorized: boolean
 }
 
-const ResultsView: React.FunctionComponent<IResultsViewProps> = (props) => {
+const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [];
 
@@ -255,7 +257,9 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = (props) => {
     // eslint-disable-next-line
   }, [ActualModal]);
 
-  console.log(ActualModal)
+  if(!authorized){
+    return <Redirect to='./login'/>
+  }
 
   return (
     <div className='container-gi'>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
 
@@ -18,9 +19,10 @@ import { FILTERS_OUTPUT, N_PER_PAGE, OUTPUT_COLUMNS_TABLE } from '../../constant
 import { MilesFormat } from '../../libs/formattedPesos';
 
 interface IOutputsViewProps {
+  authorized: boolean
 }
 
-const OutputsView: React.FunctionComponent<IOutputsViewProps> = (props) => {
+const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({authorized}) => {
 
   const buttons: IButtonsProps[] = [
     {
@@ -169,6 +171,10 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = (props) => {
       handleDeleteOutput(idSelectedOuput);
     }
   }, [ActualModal]);
+
+  if(!authorized){
+    return <Redirect to='./login'/>
+  }
 
   return (
     <div className='container-gi'>

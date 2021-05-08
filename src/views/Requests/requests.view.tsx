@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
 
 import { CANCEL, CONFIRM, EDIT, FILTERS_REQUEST, N_PER_PAGE, OK, REQUESTS_COLUMNS_TABLE } from '../../constants/var';
@@ -20,9 +21,10 @@ import DetailsRequestView from "./detailsrequest.view";
 import ConfirmRequestView from "./confirmrequest.view";
 
 interface IRequestViewProps {
+  authorized: boolean
 }
 
-const RequestView: React.FunctionComponent<IRequestViewProps> = (props) => {
+const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [
     {
@@ -142,7 +144,8 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = (props) => {
       setRequests(aux.solicitudes);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
-    }
+    };
+    setLoading(false)
   };
 
   async function hanbleDeleteRequest(id: string) {
@@ -201,6 +204,10 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = (props) => {
       hanbleDeleteRequest(idSelectedRequest);
     }
   }, [ActualModal]);
+
+  if(!authorized){
+    return <Redirect to='/login' />
+  }
 
   return (
     <div className='container-gi'>

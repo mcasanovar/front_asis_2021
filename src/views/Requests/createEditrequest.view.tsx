@@ -215,6 +215,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
 
     getWorkers();
     type === 'edit' && getOneRequest();
+    setLoading(false)
   }, []);
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
 import { ICompanyInfo, InvoicesModel, IResponseAllInvoices, IResponseInvoices } from '../../models/invoices.models';
@@ -26,9 +27,10 @@ import PaginationComponent from '../../component/Pagination/Pagination';
 import { MilesFormat } from '../../libs/formattedPesos';
 
 interface IInvoicesViewProps {
+  authorized: boolean
 }
 
-const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = (props) => {
+const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [];
 
@@ -300,6 +302,10 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = (props) => {
       return
     }
   }, [ActualModal]);
+
+  if(!authorized){
+    return <Redirect to='./login'/>
+  }
 
   return (
     <div className='container-gi'>
