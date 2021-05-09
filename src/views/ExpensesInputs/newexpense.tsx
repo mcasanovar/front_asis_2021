@@ -211,8 +211,9 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
                     option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                   }
                   optionFilterProp="children"
+                  showSearch
                   style={{ width: '100%' }}
-                  onSelect={(e) => handleAssingSupplier(e.toString())}
+                  onSearch={(e) => handleAssingSupplier(e.toString())}
                   value={`${newDataExpense.rut_proveedor} - ${newDataExpense.razon_social_proveedor}`}
                 >
                   {suppliers.map((supplier) => (
