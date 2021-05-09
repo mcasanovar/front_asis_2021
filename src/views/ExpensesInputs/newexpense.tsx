@@ -142,6 +142,8 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
     };
   };
 
+  console.log(newDataExpense)
+
   //--------------------------------RENDERS
   const renderGeneralData = () => {
     return (
@@ -207,6 +209,7 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
                 label='Proveedor'
               >
                 <Select
+                  showSearch
                   filterOption={(input, option) =>
                     option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                   }
@@ -307,8 +310,8 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
                 format={FORMAT_DATE}
                 defaultValue={moment(new Date(), FORMAT_DATE)}
                 style={{ width: '100%' }}
-                value={newDataExpense.fecha !== '' ? moment(newDataExpense.fecha) : undefined}
                 onSelect={(e: Moment) => setNewDataExpense({ ...newDataExpense, fecha: e.format(FORMAT_DATE) })}
+                value={newDataExpense.fecha !== '' ? moment(newDataExpense.fecha, FORMAT_DATE) : undefined}
               />
             </Col>
           </Row>

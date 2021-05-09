@@ -272,8 +272,8 @@ const CreateOutputView: React.FunctionComponent<ICreateOutputViewProps> = ({
                 format={FORMAT_DATE}
                 defaultValue={moment(new Date(), FORMAT_DATE)}
                 style={{ width: '100%' }}
-                value={newDataOutput.fecha !== '' ? moment(newDataOutput.fecha) : undefined}
                 onSelect={(e: Moment) => setNewDataOutput({ ...newDataOutput, fecha: e.format(FORMAT_DATE) })}
+                value={newDataOutput.fecha !== '' ? moment(newDataOutput.fecha, FORMAT_DATE) : undefined}
               />
             </Form.Item>
           </Col>

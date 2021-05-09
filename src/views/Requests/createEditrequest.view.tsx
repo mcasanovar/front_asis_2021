@@ -303,7 +303,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                 <DatePicker
                   format={`${FORMAT_DATE} HH:mm`}
                   style={{ width: '100%' }}
-                  value={newRequestData.fecha_solicitud !== '' ? moment(newRequestData.fecha_solicitud) : undefined}
+                  value={newRequestData.fecha_solicitud !== '' ? moment(newRequestData.fecha_solicitud, FORMAT_DATE) : undefined}
                   onSelect={(e: Moment) => handleSelectRequestDate(e)}
                   showTime={{ defaultValue: moment('00:00:00', 'HH:mm') }}
                 />
@@ -770,7 +770,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                   format={FORMAT_DATE}
                   style={{ width: '100%' }}
                   onSelect={(e: Moment) => setNewRequestData({ ...newRequestData, fecha_servicio_solicitado: e.format(FORMAT_DATE) })}
-                  value={newRequestData.fecha_servicio_solicitado !== '' ? moment(newRequestData.fecha_servicio_solicitado) : undefined}
+                  value={newRequestData.fecha_servicio_solicitado !== '' ? moment(newRequestData.fecha_servicio_solicitado, FORMAT_DATE) : undefined}
                 />
               </Form.Item>
             </Col>
@@ -794,7 +794,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                   format={FORMAT_DATE}
                   style={{ width: '100%' }}
                   onSelect={(e: Moment) => setNewRequestData({ ...newRequestData, fecha_servicio_solicitado_termino: e.format(FORMAT_DATE) })}
-                  value={newRequestData.fecha_servicio_solicitado_termino !== '' ? moment(newRequestData.fecha_servicio_solicitado_termino) : undefined}
+                  value={newRequestData.fecha_servicio_solicitado_termino !== '' ? moment(newRequestData.fecha_servicio_solicitado_termino, FORMAT_DATE) : undefined}
                 />
               </Form.Item>
             </Col>
