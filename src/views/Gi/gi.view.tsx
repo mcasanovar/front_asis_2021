@@ -184,7 +184,7 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
 
   useEffect(() => {
     setLoading(true)
-    getGis(1);
+    GIs.length === 0 && getGis(1);
   }, []);
 
   useEffect(() => {
