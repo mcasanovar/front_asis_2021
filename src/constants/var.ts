@@ -14,7 +14,7 @@ export const OK = 'ok';
 export const EDIT = 'edit';
 export const FORMAT_DATE = 'DD-MM-YYYY';
 
-export const N_PER_PAGE = 20;
+export const N_PER_PAGE = 12;
 
 export const DEFAULT_PERCENTAGE_IVA = 19;
 
