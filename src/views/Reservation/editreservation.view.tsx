@@ -126,8 +126,8 @@ const EditReservationView: React.FunctionComponent<IEditReservationViewProps> = 
                 <DatePicker
                   format={FORMAT_DATE}
                   style={{ width: '100%' }}
-                  value={newReservationData.fecha_reserva !== '' ? moment(newReservationData.fecha_reserva) : undefined}
                   onSelect={(e: Moment) => setNewReservationData({ ...newReservationData, fecha_reserva: e.format(FORMAT_DATE) })}
+                  value={newReservationData.fecha_reserva !== '' ? moment(newReservationData.fecha_reserva, FORMAT_DATE) : undefined}
                 />
               </Form.Item>
             </Col>
@@ -153,8 +153,8 @@ const EditReservationView: React.FunctionComponent<IEditReservationViewProps> = 
                 <DatePicker
                   format={FORMAT_DATE}
                   style={{ width: '100%' }}
-                  value={newReservationData.fecha_reserva_fin !== '' ? moment(newReservationData.fecha_reserva_fin) : undefined}
                   onSelect={(e: Moment) => setNewReservationData({ ...newReservationData, fecha_reserva_fin: e.format(FORMAT_DATE) })}
+                  value={newReservationData.fecha_reserva_fin !== '' ? moment(newReservationData.fecha_reserva_fin, FORMAT_DATE) : undefined}
                 />
               </Form.Item>
             </Col>

@@ -137,7 +137,7 @@ const EditEmployeeView: React.FunctionComponent<IEditEmployeeViewProps> = ({
                   style={{ width: '100%' }}
                   format={FORMAT_DATE}
                   onChange={(e) => setNewDataEmployee({ ...newDataEmployee, fecha_inicio_contrato: e?.format(FORMAT_DATE) || '' })}
-                  value={moment(newDataEmployee?.fecha_inicio_contrato)}
+                  value={moment(newDataEmployee?.fecha_inicio_contrato, FORMAT_DATE)}
                 />
               </Form.Item>
             </Col>
@@ -150,7 +150,7 @@ const EditEmployeeView: React.FunctionComponent<IEditEmployeeViewProps> = ({
                     style={{ width: '100%' }}
                     format={FORMAT_DATE}
                     onChange={(e) => setNewDataEmployee({ ...newDataEmployee, fecha_fin_contrato: e?.format(FORMAT_DATE) || '' })}
-                    value={moment(newDataEmployee?.fecha_fin_contrato)}
+                    value={moment(newDataEmployee?.fecha_fin_contrato, FORMAT_DATE)}
                   />
                 </Form.Item>
               </Col>

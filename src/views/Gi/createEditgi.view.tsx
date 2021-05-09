@@ -163,7 +163,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
     const firstDate = moment(new Date());
     const secondDate = e;
     const aux = secondDate.diff(firstDate, 'days');
-    setNewGiData({ ...newGiData, fecha_venc_licencia: e.format(FORMAT_DATE), estado_licencia: aux + 1<= 0 ? 'No Vigente' : 'Vigente' });
+    setNewGiData({ ...newGiData, fecha_venc_licencia: e.format(FORMAT_DATE), estado_licencia: aux + 1 <= 0 ? 'No Vigente' : 'Vigente' });
   };
 
   const handleSetContractNumber = (e: SelectValue) => {
@@ -209,7 +209,8 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
 
   async function getOrganizationBelonging() {
     const aux: IResponseGI = await getCompanyGIService();
-    setOrganizationsBelonging(aux.res || [])
+    setOrganizationsBelonging(aux.res || []);
+    type === 'insert' && setLoading(false);
   }
 
   async function getOneGI() {
@@ -279,21 +280,6 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
     type === 'edit' && getOneGI();
     // eslint-disable-next-line
   }, []);
-
-  // useEffect(() => {
-  //   if(type == 'edit'){
-  //     setLoading(true);
-  //     getOneGI();
-  //   }
-  // }, [type]);
-
-  // useEffect(() => {
-  //   if (countries.length > 0) {
-  //     setDisabledCancel(false)
-  //     // setLoading(false)
-  //   };
-  //   // eslint-disable-next-line
-  // }, [countries]);
 
   //---------RENDERS
   const renderTributaryInformation = () => {
@@ -371,7 +357,6 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                 label='Rubro principal'
               >
                 <Input
-                  placeholder="Rubro Principal"
                   readOnly
                   value={newGiData.rubro_principal}
                 />
@@ -405,7 +390,6 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                 label='Rubro secundario'
               >
                 <Input
-                  placeholder="Rubro secundario"
                   readOnly
                   value={newGiData.rubro_secundario}
                 />
@@ -499,9 +483,8 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                 <DatePicker
                   onSelect={(e) => handleSetBirthDate(e)}
                   format={FORMAT_DATE}
-                  placeholder='Fecha inicio / nacimiento'
                   style={{ width: '100%' }}
-                  value={newGiData.fecha_inic_mac !== '' ? moment(newGiData.fecha_inic_mac) : undefined}
+                  value={newGiData.fecha_inic_mac !== '' ? moment(newGiData.fecha_inic_mac, FORMAT_DATE) : undefined}
                 />
               </Form.Item>
             </Col>
@@ -799,7 +782,11 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                     label='Profesión u oficio'
                   >
                     <Select
-                      placeholder='Profesión u Oficio'
+                      showSearch
+                      filterOption={(input, option) =>
+                        option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                      }
+                      optionFilterProp="children"
                       style={{ width: '100%' }}
                       onChange={(e) => setNewGiData({ ...newGiData, profesion_oficio: e.toString() })}
                       value={newGiData.profesion_oficio}
@@ -939,7 +926,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                       style={{ width: '100%' }}
                       onSelect={(e: Moment) => setNewGiData({ ...newGiData, fecha_vencimiento_ci: e.format(FORMAT_DATE) })}
                       format={FORMAT_DATE}
-                      value={newGiData.fecha_vencimiento_ci ? moment(newGiData.fecha_vencimiento_ci) : undefined}
+                      value={newGiData.fecha_vencimiento_ci ? moment(newGiData.fecha_vencimiento_ci, FORMAT_DATE) : undefined}
                     />
                   </Form.Item>
                 </Col>
@@ -1011,7 +998,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                           placeholder=''
                           onSelect={(e: Moment) => handleCalculateLicenseState(e)}
                           style={{ width: '100%' }}
-                          value={newGiData.fecha_venc_licencia !== '' ? moment(newGiData.fecha_venc_licencia) : undefined}
+                          value={newGiData.fecha_venc_licencia !== '' ? moment(newGiData.fecha_venc_licencia, FORMAT_DATE) : undefined}
                         />
                       </Form.Item>
                     </Col>
@@ -1187,7 +1174,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
         >
           <Button
             onClick={() => onCloseModal('', '')}
-            style={{backgroundColor: '#E10D17', color: 'white'}}
+            style={{ backgroundColor: '#E10D17', color: 'white' }}
           >
             Cancelar
             </Button>

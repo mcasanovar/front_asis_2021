@@ -122,7 +122,7 @@ const ConfirmRequestView: React.FunctionComponent<IConfirmRequestViewProps> = ({
                   onSelect={(e: Moment) => setConfirmRequest({ ...confirmRequest, fecha_confirmacion: e.format(FORMAT_DATE) })}
                   format={FORMAT_DATE}
                   style={{ width: '100%' }}
-                  value={confirmRequest.fecha_confirmacion !== '' ? moment(confirmRequest.fecha_confirmacion) : undefined}
+                  value={confirmRequest.fecha_confirmacion !== '' ? moment(confirmRequest.fecha_confirmacion, FORMAT_DATE) : undefined}
                 />
               </Form.Item>
             </Col>

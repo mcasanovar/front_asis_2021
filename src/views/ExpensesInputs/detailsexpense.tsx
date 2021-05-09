@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Col, Input, Row, Form, Typography, Button, Select, Spin, Collapse, DatePicker, InputNumber, Upload } from 'antd';
+import { Col, Input, Row, Form, Typography, Button, Spin, Collapse } from 'antd';
 import { InboxOutlined } from "@ant-design/icons";
 import { IAlertMessageContent } from '../../models/index.models';
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Spin, Form, Collapse, Row, Col, Select, Input, Button, DatePicker, InputNumber, Typography } from 'antd';
+import { Form, Row, Col, Input, Button, Typography } from 'antd';
 import { ExistenceModel } from '../../models/existence.models';
 import { MilesFormat } from '../../libs/formattedPesos';
 
