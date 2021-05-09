@@ -291,8 +291,8 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
                   <Select
                     showSearch
                     optionFilterProp="children"
-                    filterOption={(input, option) =>
-                      option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    filterOption={(input, optionA) =>
+                      optionA?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                     }
                     style={{ width: '100%' }}
                     onSelect={(e) => handleAssignRequest(e.toString())}
