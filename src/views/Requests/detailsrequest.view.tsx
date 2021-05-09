@@ -482,7 +482,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
               >
                 <Input
                   readOnly
-                  value={newRequestData.fecha_servicio_solicitado_termino}
+                  value={newRequestData.hora_servicio_solicitado}
                 />
               </Form.Item>
             </Col>
@@ -492,7 +492,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
               >
                 <Input
                   readOnly
-                  value={newRequestData.hora_servicio_solicitado}
+                  value={newRequestData.fecha_servicio_solicitado_termino}
                 />
               </Form.Item>
             </Col>

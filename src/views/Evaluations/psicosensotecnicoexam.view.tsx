@@ -43,7 +43,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
     { label: 'Ley tránsito', value: 'ley-transito', key: '9', name_exam: 'is_ley_transito' }
   ];
 
-  //----------REMDERS
+  //----------RENDERS
   const renderInformation = () => {
     return (
       <Form layout='vertical'>
@@ -82,6 +82,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, resultado: e.toString() })}
+                  value={newExamData.resultado}
                   id='error_2'
                 >
                   <Option value="Aprobado">Aprobado</Option>
@@ -95,7 +96,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 label='Restricciones'
               >
                 <Input
-                  onChange={(e) => setNewExamData({ ...newExamData, restricciones: e.toString() })}
+                  onChange={(e) => setNewExamData({ ...newExamData, restricciones: e.currentTarget.value })}
                 />
               </Form.Item>
             </Col>
@@ -131,9 +132,10 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, tiempo_reaccion: e.toString() })}
+                  value={newExamData.tiempo_reaccion}
                 >
-                  <Option value="jack">Aprobado</Option>
-                  <Option value="lucy">No Aprobado</Option>
+                  <Option value="Aprobado">Aprobado</Option>
+                  <Option value="No Aprobado">No Aprobado</Option>
                 </Select>
               </Form.Item>
               <Form.Item
@@ -153,7 +155,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
               >
                 <Input
                   style={{ width: '100%', height: '100%' }}
-                  onChange={(e) => setNewExamData({ ...newExamData, promedio_tiempo_reaccion: parseInt(e.toString()) })}
+                  onChange={(e) => setNewExamData({ ...newExamData, promedio_tiempo_reaccion: parseInt(e.currentTarget.value) })}
                   type='number'
                 />
               </Form.Item>
@@ -167,10 +169,10 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onChange={(e) => setNewExamData({ ...newExamData, coordinacion_bimanual: e.toString() })}
+                  value={newExamData.coordinacion_bimanual}
                 >
-                  <Option value="jack">Aprobado</Option>
-                  <Option value="lucy">No Aprobado</Option>
-                  <Option value="Yiminghe">yiminghe</Option>
+                  <Option value="Aprobado">Aprobado</Option>
+                  <Option value="No Aprobado">No Aprobado</Option>
                 </Select>
               </Form.Item>
               <Form.Item
@@ -191,7 +193,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
               >
                 <Input
                   style={{ width: '100%', height: '100%' }}
-                  onChange={(e) => setNewExamData({ ...newExamData, promedio_coordinacion_bimanual: parseInt(e.toString()) })}
+                  onChange={(e) => setNewExamData({ ...newExamData, promedio_coordinacion_bimanual: parseInt(e.currentTarget.value) })}
                   type='number'
                 />
               </Form.Item>
@@ -205,10 +207,10 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, precision_coordinacion_visomotriz: e.toString() })}
+                  value={newExamData.precision_coordinacion_visomotriz}
                 >
-                  <Option value="jack">Aprobado</Option>
-                  <Option value="lucy">No Aprobado</Option>
-                  <Option value="Yiminghe">yiminghe</Option>
+                  <Option value="Aprobado">Aprobado</Option>
+                  <Option value="No Aprobado">No Aprobado</Option>
                 </Select>
               </Form.Item>
               <Form.Item
@@ -228,8 +230,22 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
               >
                 <Input
                   style={{ width: '100%', height: '100%' }}
-                  onChange={(e) => setNewExamData({ ...newExamData, promedio_precision_coordinacion_vis: parseInt(e.toString()) })}
+                  onChange={(e) => setNewExamData({ ...newExamData, promedio_precision_coordinacion_vis: parseInt(e.currentTarget.value) })}
                   type='number'
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <Form.Item
+                label='Observaciones'
+                style={{ width: '100%', height: '100%' }}
+              >
+                <TextArea
+                  rows={2}
+                  onChange={(e) => setNewExamData({ ...newExamData, obs_examen_psicotecnico: e.currentTarget.value })}
+                  value={newExamData.obs_examen_psicotecnico}
                 />
               </Form.Item>
             </Col>
@@ -270,10 +286,11 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, monocular_derecha: e.toString() })}
+                  value={newExamData.monocular_derecha}
                 >
-                  <Option value="jack">Aprobado</Option>
-                  <Option value="jack">Aprobado con obs.</Option>
-                  <Option value="lucy">No Aprobado</Option>
+                  <Option value="Aprobado">Aprobado</Option>
+                  <Option value="Aprobado con obs">Aprobado con obs</Option>
+                  <Option value="No Aprobado">No Aprobado</Option>
                 </Select>
               </Form.Item>
               <Form.Item
@@ -298,10 +315,11 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, monocular_izquierda: e.toString() })}
+                  value={newExamData.monocular_izquierda}
                 >
-                  <Option value="jack">Aprobado</Option>
-                  <Option value="jack">Aprobado con obs.</Option>
-                  <Option value="lucy">No Aprobado</Option>
+                  <Option value="Aprobado">Aprobado</Option>
+                  <Option value="Aprobado con obs">Aprobado con obs</Option>
+                  <Option value="No Aprobado">No Aprobado</Option>
                 </Select>
               </Form.Item>
               <Form.Item
@@ -326,10 +344,11 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, vision_binocular: e.toString() })}
+                  value={newExamData.vision_binocular}
                 >
-                  <Option value="jack">Aprobado</Option>
-                  <Option value="jack">Aprobado con obs.</Option>
-                  <Option value="lucy">No Aprobado</Option>
+                  <Option value="Aprobado">Aprobado</Option>
+                  <Option value="Aprobado con obs">Aprobado con obs</Option>
+                  <Option value="No Aprobado">No Aprobado</Option>
                 </Select>
               </Form.Item>
               <Form.Item
@@ -356,9 +375,10 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, perimetria: e.toString() })}
+                  value={newExamData.perimetria}
                 >
-                  <Option value="jack">Aprobado</Option>
-                  <Option value="lucy">No Aprobado</Option>
+                  <Option value="Aprobado">Aprobado</Option>
+                  <Option value="No Aprobado">No Aprobado</Option>
                 </Select>
               </Form.Item>
               <Form.Item
@@ -382,9 +402,10 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, profundidad: e.toString() })}
+                  value={newExamData.profundidad}
                 >
-                  <Option value="jack">Aprobado</Option>
-                  <Option value="lucy">No Aprobado</Option>
+                  <Option value="Aprobado">Aprobado</Option>
+                  <Option value="No Aprobado">No Aprobado</Option>
                 </Select>
               </Form.Item>
               <Form.Item
@@ -408,9 +429,10 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, discriminacion_colores: e.toString() })}
+                  value={newExamData.discriminacion_colores}
                 >
-                  <Option value="jack">Aprobado</Option>
-                  <Option value="lucy">No Aprobado</Option>
+                  <Option value="Aprobado">Aprobado</Option>
+                  <Option value="No Aprobado">No Aprobado</Option>
                 </Select>
               </Form.Item>
               <Form.Item
@@ -435,9 +457,10 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, vision_nocturna: e.toString() })}
+                  value={newExamData.vision_nocturna}
                 >
-                  <Option value="jack">Aprobado</Option>
-                  <Option value="lucy">No Aprobado</Option>
+                  <Option value="Aprobado">Aprobado</Option>
+                  <Option value="No Aprobado">No Aprobado</Option>
                 </Select>
               </Form.Item>
               <Form.Item
@@ -461,9 +484,10 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, phoria_vertical: e.toString() })}
+                  value={newExamData.phoria_vertical}
                 >
-                  <Option value="jack">Aprobado</Option>
-                  <Option value="lucy">No Aprobado</Option>
+                  <Option value="Aprobado">Aprobado</Option>
+                  <Option value="No Aprobado">No Aprobado</Option>
                 </Select>
               </Form.Item>
               <Form.Item
@@ -487,9 +511,10 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, phoria_horizontal: e.toString() })}
+                  value={newExamData.phoria_horizontal}
                 >
-                  <Option value="jack">Aprobado</Option>
-                  <Option value="lucy">No Aprobado</Option>
+                  <Option value="Aprobado">Aprobado</Option>
+                  <Option value="No Aprobado">No Aprobado</Option>
                 </Select>
               </Form.Item>
               <Form.Item
@@ -514,9 +539,10 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, recuperacion_encandilamiento: e.toString() })}
+                  value={newExamData.recuperacion_encandilamiento}
                 >
-                  <Option value="jack">Aprobado</Option>
-                  <Option value="lucy">No Aprobado</Option>
+                  <Option value="Aprobado">Aprobado</Option>
+                  <Option value="No Aprobado">No Aprobado</Option>
                 </Select>
               </Form.Item>
               <Form.Item
@@ -539,10 +565,11 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, audiometria: e.toString() })}
+                  value={newExamData.audiometria}
                 >
-                  <Option value="jack">Aprobado</Option>
-                  <Option value="jack">Aprobado con obs.</Option>
-                  <Option value="lucy">No Aprobado</Option>
+                  <Option value="Aprobado">Aprobado</Option>
+                  <Option value="Aprobado con obs">Aprobado con obs</Option>
+                  <Option value="No Aprobado">No Aprobado</Option>
                 </Select>
               </Form.Item>
               <Form.Item
@@ -556,6 +583,20 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 </div>} title="Audiometria">
                   <Button style={{ width: '100%', color: '#1073B5' }} icon={<QuestionCircleOutlined color='#1073B5' />} />
                 </Popover>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <Form.Item
+                label='Observaciones'
+                style={{ width: '100%', height: '100%' }}
+              >
+                <TextArea
+                  rows={2}
+                  onChange={(e) => setNewExamData({ ...newExamData, obs_examen_sensometrico: e.currentTarget.value })}
+                  value={newExamData.obs_examen_sensometrico}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -591,10 +632,25 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, test_velocidad_anticipacion: e.toString() })}
+                  value={newExamData.test_velocidad_anticipacion}
                 >
-                  <Option value="jack">Aprobado</Option>
-                  <Option value="lucy">No Aprobado</Option>
+                  <Option value="Aprobado">Aprobado</Option>
+                  <Option value="No Aprobado">No Aprobado</Option>
                 </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <Form.Item
+                label='Observaciones'
+                style={{ width: '100%', height: '100%' }}
+              >
+                <TextArea
+                  rows={2}
+                  onChange={(e) => setNewExamData({ ...newExamData, obs_test_velocidad_anticipacion: e.currentTarget.value })}
+                  value={newExamData.obs_test_velocidad_anticipacion}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -627,6 +683,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, probabilidad_somnolencia: e.toString() })}
+                  value={newExamData.probabilidad_somnolencia}
                 >
                   <Option value="Si">Si</Option>
                   <Option value="No">No</Option>
@@ -639,7 +696,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 style={{ width: '100%', height: '100%' }}
               >
                 <Input
-                  onChange={(e) => setNewExamData({ ...newExamData, punto: parseInt(e.toString()) })}
+                  onChange={(e) => setNewExamData({ ...newExamData, punto: parseInt(e.currentTarget.value) })}
                   type='number'
                 />
               </Form.Item>
@@ -660,6 +717,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onChange={(e) => setNewExamData({ ...newExamData, test_epworth: e.toString() })}
+                  value={newExamData.test_epworth}
                 >
                   <Option value="Aprobado">Aprobado</Option>
                   <Option value="No Aprobado">No Aprobado</Option>
@@ -675,6 +733,20 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 </div>} title="TieTest EPWORTH">
                   <Button style={{ width: '100%', color: '#1073B5' }} icon={<QuestionCircleOutlined color='#1073B5' />} />
                 </Popover>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <Form.Item
+                label='Observaciones'
+                style={{ width: '100%', height: '100%' }}
+              >
+                <TextArea
+                  rows={2}
+                  onChange={(e) => setNewExamData({ ...newExamData, obs_evaluacion_somnolencia: e.currentTarget.value })}
+                  value={newExamData.obs_evaluacion_somnolencia}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -706,7 +778,9 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 label='Observaciones'
                 style={{ width: '100%', height: '100%' }}
               >
-                <TextArea rows={5} onChange={(e) => setNewExamData({ ...newExamData, observacion_psicologica: e.currentTarget.value })} />
+                <TextArea
+                  rows={5}
+                  onChange={(e) => setNewExamData({ ...newExamData, observacion_psicologica: e.currentTarget.value, obs_evaluacion_psicologica: e.currentTarget.value })} />
               </Form.Item>
             </Col>
           </Row>
@@ -740,6 +814,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, test_tolerancia_monotonia: e.toString() })}
+                  value={newExamData.test_tolerancia_monotonia}
                 >
                   <Option value="Aprobado">Aprobado</Option>
                   <Option value="No Aprobado">No Aprobado</Option>
@@ -757,48 +832,54 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 </Popover>
               </Form.Item>
             </Col>
-          </Row>
-          <Row gutter={8}>
-            <Col span={2}>
+            <Col span={2} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
               <Form.Item
                 label='Aciertos'
                 style={{ width: '100%', height: '100%' }}
               >
                 <Input
-                  onSelect={(e) => setNewExamData({ ...newExamData, test_aciertos_tolerancia: parseInt(e.toString()) })}
+                  onSelect={(e) => setNewExamData({ ...newExamData, test_aciertos_tolerancia: parseInt(e.currentTarget.value) })}
                   type='number'
                 />
               </Form.Item>
             </Col>
-            <Col span={2}>
+            <Col span={2} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
               <Form.Item
                 label='Errores'
                 style={{ width: '100%', height: '100%' }}
               >
                 <Input
-                  onSelect={(e) => setNewExamData({ ...newExamData, test_errores_tolerancia: parseInt(e.toString()) })}
+                  onSelect={(e) => setNewExamData({ ...newExamData, test_errores_tolerancia: parseInt(e.currentTarget.value) })}
                   type='number'
                 />
               </Form.Item>
             </Col>
-            <Col span={4}>
+            <Col span={4} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
               <Form.Item
                 label='Promedio reaccion'
                 style={{ width: '100%', height: '100%' }}
               >
                 <Input
-                  onSelect={(e) => setNewExamData({ ...newExamData, promedio_reaccion_monotonia: parseInt(e.toString()) })}
-                  type='number'
+                  onSelect={(e) => setNewExamData({ ...newExamData, promedio_reaccion_monotonia: parseFloat(e.currentTarget.value) })}
+                  type='decimal'
                   suffix='Segundos'
                 />
               </Form.Item>
             </Col>
-            {/* <Col span={4}>
-              <Input
-                placeholder="Promedio aciertos"
-                type='number'
-              />
-            </Col> */}
+          </Row>
+          <Row>
+            <Col span={24}>
+              <Form.Item
+                label='Observaciones'
+                style={{ width: '100%', height: '100%' }}
+              >
+                <TextArea
+                  rows={2}
+                  onChange={(e) => setNewExamData({ ...newExamData, obs_test_tolerancia_monotonia: e.currentTarget.value })}
+                  value={newExamData.obs_test_tolerancia_monotonia}
+                />
+              </Form.Item>
+            </Col>
           </Row>
         </Input.Group>
       </Form>
@@ -832,6 +913,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, test_reacciones_multiples: e.toString() })}
+                  value={newExamData.test_reacciones_multiples}
                 >
                   <Option value="Aprobado">Aprobado</Option>
                   <Option value="No Aprobado">No Aprobado</Option>
@@ -847,6 +929,20 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 </div>} title="Reacciones multiples">
                   <Button style={{ width: '100%', color: '#1073B5' }} icon={<QuestionCircleOutlined color='#1073B5' />} />
                 </Popover>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <Form.Item
+                label='Observaciones'
+                style={{ width: '100%', height: '100%' }}
+              >
+                <TextArea
+                  rows={2}
+                  onChange={(e) => setNewExamData({ ...newExamData, obs_test_reacciones_multiples: e.currentTarget.value })}
+                  value={newExamData.obs_test_reacciones_multiples}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -881,6 +977,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 <Select
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewExamData({ ...newExamData, test_estado_ley_transito: e.toString() })}
+                  value={newExamData.test_estado_ley_transito}
                 >
                   <Option value="Aprobado">Aprobado</Option>
                   <Option value="No Aprobado">No Aprobado</Option>
@@ -909,7 +1006,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                   min={0}
                   max={100}
                   type='number'
-                  onChange={(e) => setNewExamData({ ...newExamData, porcentaje_legales: parseInt(e.currentTarget.value) })}
+                  onChange={(e) => setNewExamData({ ...newExamData, porcentaje_legales: parseFloat(e.currentTarget.value) })}
                   suffix={<PercentageOutlined />}
                 />
               </Form.Item>
@@ -923,7 +1020,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                   min={0}
                   max={100}
                   type='number'
-                  onChange={(e) => setNewExamData({ ...newExamData, porcentaje_reglamentarios: parseInt(e.currentTarget.value) })}
+                  onChange={(e) => setNewExamData({ ...newExamData, porcentaje_reglamentarios: parseFloat(e.currentTarget.value) })}
                   suffix={<PercentageOutlined />}
                 />
               </Form.Item>
@@ -937,7 +1034,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                   min={0}
                   max={100}
                   type='number'
-                  onChange={(e) => setNewExamData({ ...newExamData, porcentaje_mecanica: parseInt(e.currentTarget.value) })}
+                  onChange={(e) => setNewExamData({ ...newExamData, porcentaje_mecanica: parseFloat(e.currentTarget.value) })}
                   suffix={<PercentageOutlined />}
                 />
               </Form.Item>
@@ -951,7 +1048,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                   min={0}
                   max={100}
                   type='number'
-                  onChange={(e) => setNewExamData({ ...newExamData, porcentaje_señales_viales: parseInt(e.currentTarget.value) })}
+                  onChange={(e) => setNewExamData({ ...newExamData, porcentaje_señales_viales: parseFloat(e.currentTarget.value) })}
                   suffix={<PercentageOutlined />}
                 />
               </Form.Item>
@@ -965,8 +1062,22 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                   min={0}
                   max={100}
                   type='number'
-                  onChange={(e) => setNewExamData({ ...newExamData, porcentaje_conducta_vial: parseInt(e.currentTarget.value) })}
+                  onChange={(e) => setNewExamData({ ...newExamData, porcentaje_conducta_vial: parseFloat(e.currentTarget.value) })}
                   suffix={<PercentageOutlined />}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <Form.Item
+                label='Observaciones'
+                style={{ width: '100%', height: '100%' }}
+              >
+                <TextArea
+                  rows={2}
+                  onChange={(e) => setNewExamData({ ...newExamData, obs_evaluacion_transito_nacional: e.currentTarget.value })}
+                  value={newExamData.obs_evaluacion_transito_nacional}
                 />
               </Form.Item>
             </Col>
@@ -1077,6 +1188,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                   <Select
                     style={{ width: '100%' }}
                     onSelect={(e) => setNewExamData({ ...newExamData, examen_psicotecnico: e.toString() })}
+                    value={newExamData.examen_psicotecnico}
                     id='error_3'
                   >
                     <Option value="Aprobado">Aprobado</Option>
@@ -1095,6 +1207,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                   <Select
                     style={{ width: '100%' }}
                     onSelect={(e) => setNewExamData({ ...newExamData, examen_sensometrico: e.toString() })}
+                    value={newExamData.examen_sensometrico}
                     id='error_4'
                   >
                     <Option value="Aprobado">Aprobado</Option>
@@ -1112,6 +1225,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                     <Select
                       style={{ width: '100%' }}
                       onSelect={(e) => setNewExamData({ ...newExamData, test_velocidad_anticipacion: e.toString() })}
+                      value={newExamData.test_velocidad_anticipacion}
                     >
                       <Option value="Aprobado">Aprobado</Option>
                       <Option value="Aprobado con obs">Aprobado con obs</Option>
@@ -1129,6 +1243,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                     <Select
                       style={{ width: '100%' }}
                       onSelect={(e) => setNewExamData({ ...newExamData, evaluacion_somnolencia: e.toString() })}
+                      value={newExamData.evaluacion_somnolencia}
                     >
                       <Option value="Aprobado">Aprobado</Option>
                       <Option value="Aprobado con obs">Aprobado con obs</Option>
@@ -1146,6 +1261,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                     <Select
                       style={{ width: '100%' }}
                       onSelect={(e) => setNewExamData({ ...newExamData, evaluacion_psicologica: e.toString() })}
+                      value={newExamData.evaluacion_psicologica}
                     >
                       <Option value="Aprobado">Aprobado</Option>
                       <Option value="Aprobado con obs">Aprobado con obs</Option>
@@ -1163,6 +1279,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                     <Select
                       style={{ width: '100%' }}
                       onSelect={(e) => setNewExamData({ ...newExamData, test_tolerancia_monotonia: e.toString() })}
+                      value={newExamData.test_tolerancia_monotonia}
                     >
                       <Option value="Aprobado">Aprobado</Option>
                       <Option value="Aprobado con obs">Aprobado con obs</Option>
@@ -1183,6 +1300,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                       <Select
                         style={{ width: '100%' }}
                         onSelect={(e) => setNewExamData({ ...newExamData, test_reacciones_multiples: e.toString() })}
+                        value={newExamData.test_reacciones_multiples}
                       >
                         <Option value="Aprobado">Aprobado</Option>
                         <Option value="Aprobado con obs">Aprobado con obs</Option>
@@ -1200,6 +1318,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                       <Select
                         style={{ width: '100%' }}
                         onSelect={(e) => setNewExamData({ ...newExamData, evaluacion_transito_nacional: e.toString() })}
+                        value={newExamData.evaluacion_transito_nacional}
                       >
                         <Option value="Aprobado">Aprobado</Option>
                         <Option value="Aprobado con obs">Aprobado con obs</Option>

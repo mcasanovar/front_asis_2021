@@ -31,6 +31,8 @@ const AversionRiesgoExamView: React.FunctionComponent<IAversionRiesgoExamViewPro
 
   const handleGenerateExam = async () => {
     const examToInsert = MapAversionToCreateExam(evaluationSelected, newDataAversion);
+    console.log(examToInsert)
+    return
     setLoading(true)
     const aux: IResponseEvaluation = await createExamAversionService(examToInsert);
     if (aux.err === null) {
@@ -357,7 +359,7 @@ const AversionRiesgoExamView: React.FunctionComponent<IAversionRiesgoExamViewPro
   //--------
 
   useEffect(() => {
-    if (newDataAversion.maquinaria !== '') return setDisabledConfirm(false)
+    if (newDataAversion.maquinaria !== '' && newDataAversion.meses_vigencia > 0) return setDisabledConfirm(false)
   }, [newDataAversion]);
 
   const handleChangeSelectionConclusion = (value: string) => {
@@ -442,6 +444,8 @@ const AversionRiesgoExamView: React.FunctionComponent<IAversionRiesgoExamViewPro
               <Form.Item
                 label='Meses vigencia'
                 style={{ width: '100%', height: '100%' }}
+                validateStatus={newDataAversion.meses_vigencia !== 0 ? 'success' : 'error'}
+                help={newDataAversion.meses_vigencia !== 0 ? '' : 'seleccionar'}
               >
                 <Input
                   onChange={(e) => setNewDataAversion({ ...newDataAversion, meses_vigencia: parseInt(e.currentTarget.value) })}

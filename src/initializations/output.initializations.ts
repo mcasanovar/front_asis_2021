@@ -1,10 +1,12 @@
+const userLogged = localStorage.getItem('userLogged');
+
 export const OutputsInitialization = {
   _id: '',
   codigo: '',
   fecha: '',
   tipo_salida: '',
   nro_documento: '',
-  usuario: '',
+  usuario: userLogged !== null ? JSON.parse(userLogged).gi.razon_social : '',
   categoria_general: '',
   subcategoria_uno: '',
   subcategoria_dos: '',

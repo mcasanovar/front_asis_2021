@@ -159,11 +159,11 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
   };
 
   const handleCalculateLicenseState = (e: Moment) => {
-    setNewGiData({ ...newGiData, fecha_venc_licencia: e.format(FORMAT_DATE) });
+    // setNewGiData({ ...newGiData, fecha_venc_licencia: e.format(FORMAT_DATE) });
     const firstDate = moment(new Date());
     const secondDate = e;
-    const aux = secondDate.diff(firstDate, 'days')
-    setNewGiData({ ...newGiData, estado_licencia: aux <= 0 ? 'No Vigente' : 'Vigente' });
+    const aux = secondDate.diff(firstDate, 'days');
+    setNewGiData({ ...newGiData, fecha_venc_licencia: e.format(FORMAT_DATE), estado_licencia: aux + 1<= 0 ? 'No Vigente' : 'Vigente' });
   };
 
   const handleSetContractNumber = (e: SelectValue) => {
@@ -184,7 +184,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
     } else {
       if (result.err === 99)
         setLoading(false)
-        return setMessageAlert({ message: result.res, type: 'error', show: true });
+      return setMessageAlert({ message: result.res, type: 'error', show: true });
     }
   };
 
@@ -201,6 +201,29 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
       return setMessageAlert({ message: result.err, type: 'error', show: true });
     }
   };
+
+  async function getCountries() {
+    const aux = await httpExternalApi(API_COUNTRIES);
+    setCountries(aux.response);
+  }
+
+  async function getOrganizationBelonging() {
+    const aux: IResponseGI = await getCompanyGIService();
+    setOrganizationsBelonging(aux.res || [])
+  }
+
+  async function getOneGI() {
+    const aux: IResponseGI = await getOneGIService(_id);
+    if (aux.err !== null) {
+      setMessageAlert({ message: aux.err, type: 'error', show: true });
+      return
+    }
+    const gi: GiModel = aux.res;
+    const selected = organizationsBelonging.find((org) => org._id === gi.id_GI_org_perteneciente);
+    setOrganizationBelongingSelected(selected || GiInitializationData)
+    setNewGiData(gi);
+    setLoading(false);
+  }
 
   //------------------------ USEEFECT
   useEffect(() => {
@@ -222,8 +245,8 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
   }, [newGiData.categoria]);
 
   useEffect(() => {
-    if(newGiData.grupo_interes === 'Empleados') return setNewGiData({...newGiData, categoria_cliente: 'No Aplica'});
-    return setNewGiData({...newGiData, categoria_cliente: ''});
+    if (newGiData.grupo_interes === 'Empleados') return setNewGiData({ ...newGiData, categoria_cliente: 'No Aplica' });
+    return setNewGiData({ ...newGiData, categoria_cliente: newGiData.categoria_cliente || 'Ocacional' });
   }, [newGiData.grupo_interes]);
 
   useEffect(() => {
@@ -231,7 +254,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
   }, [newGiData.credito]);
 
   useEffect(() => {
-    if (newGiData.rut !== '' 
+    if (newGiData.rut !== ''
       && isRutOk
       && isPrimaryEmailOk
       && newGiData.categoria !== ''
@@ -239,7 +262,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
       && newGiData.categoria_cliente !== '') {
 
       if (newGiData.categoria === 'Persona Natural') {
-        if(newGiData.id_GI_org_perteneciente !== '' && newGiData.razon_social_org_perteneciente !== '') return setDisabledConfirm(false)
+        if (newGiData.id_GI_org_perteneciente !== '' && newGiData.razon_social_org_perteneciente !== '') return setDisabledConfirm(false)
         return setDisabledConfirm(true)
       } else {
         setDisabledConfirm(false)
@@ -250,42 +273,27 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
   }, [newGiData.categoria_empresa, newGiData.categoria_cliente, isRutOk, isPrimaryEmailOk]);
 
   useEffect(() => {
-    setDisabledCancel(true)
     setLoading(true);
-
-    async function getCountries() {
-      const aux = await httpExternalApi(API_COUNTRIES);
-      setCountries(aux.response);
-    }
-    async function getOrganizationBelonging() {
-      const aux: IResponseGI = await getCompanyGIService();
-      setOrganizationsBelonging(aux.res || [])
-    }
-    async function getOneGI() {
-      const aux: IResponseGI = await getOneGIService(_id);
-      if (aux.err !== null) {
-        setMessageAlert({ message: aux.err, type: 'error', show: true });
-        return
-      }
-      const gi: GiModel = aux.res;
-      const selected = organizationsBelonging.find((org) => org._id === gi.id_GI_org_perteneciente);
-      setOrganizationBelongingSelected(selected || GiInitializationData)
-      setNewGiData(gi);
-    }
-
     getCountries();
     getOrganizationBelonging();
     type === 'edit' && getOneGI();
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
-    if (countries.length > 0) {
-      setDisabledCancel(false)
-      setLoading(false)
-    };
-    // eslint-disable-next-line
-  }, [countries]);
+  // useEffect(() => {
+  //   if(type == 'edit'){
+  //     setLoading(true);
+  //     getOneGI();
+  //   }
+  // }, [type]);
+
+  // useEffect(() => {
+  //   if (countries.length > 0) {
+  //     setDisabledCancel(false)
+  //     // setLoading(false)
+  //   };
+  //   // eslint-disable-next-line
+  // }, [countries]);
 
   //---------RENDERS
   const renderTributaryInformation = () => {
@@ -1151,66 +1159,61 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
   };
 
   return (
-    <>
-      <Spin spinning={loading} size='large' tip='Cargando...'>
-        {messageAlert.show && <AlertComponent message={messageAlert.message} type={messageAlert.type} />}
-        {type === 'edit' && <Title level={4}>{newGiData.razon_social}</Title>}
-        <Collapse accordion defaultActiveKey={['1']}>
-          <Panel header="Datos Tributarios" key="1">
-            {renderTributaryInformation()}
-          </Panel>
-          <Panel header="Datos de Contacto" key="2">
-            {renderContactInformaction()}
-          </Panel>
-          <Panel header="Datos Personales / Laborales" key="3">
-            {renderPersonalWorkingInformation()}
-          </Panel>
-        </Collapse>
-        <br />
-        <Row gutter={8} style={{
-          display: 'flex',
-          flexDirection: 'row',
-          width: '100%',
-          justifyContent: 'flex-end',
-          alignItems: 'flex-end'
-        }}>
-          <Col
-            span={4}
-            style={{ display: 'flex', justifyContent: 'space-between' }}
+    <Spin spinning={loading} size='large' tip='Cargando...'>
+      {messageAlert.show && <AlertComponent message={messageAlert.message} type={messageAlert.type} />}
+      {type === 'edit' && <Title level={4}>{newGiData.razon_social}</Title>}
+      <Collapse accordion defaultActiveKey={['1']}>
+        <Panel header="Datos Tributarios" key="1">
+          {renderTributaryInformation()}
+        </Panel>
+        <Panel header="Datos de Contacto" key="2">
+          {renderContactInformaction()}
+        </Panel>
+        <Panel header="Datos Personales / Laborales" key="3">
+          {renderPersonalWorkingInformation()}
+        </Panel>
+      </Collapse>
+      <br />
+      <Row gutter={8} style={{
+        display: 'flex',
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end'
+      }}>
+        <Col
+          span={4}
+          style={{ display: 'flex', justifyContent: 'space-between' }}
+        >
+          <Button
+            onClick={() => onCloseModal('', '')}
+            style={{backgroundColor: '#E10D17', color: 'white'}}
           >
-            <Button
-              onClick={() => onCloseModal('', '')}
-              disabled={disabledCancel}
-              style={!disabledCancel ? {
-                backgroundColor: '#E10D17', color: 'white'
-              } : { backgroundColor: 'grey', color: 'white' }}
-            >
-              Cancelar
+            Cancelar
             </Button>
-            {type === 'insert' ?
-              <Button
-                onClick={() => handleInsertGI()}
-                disabled={disabledConfirm}
-                style={!disabledConfirm ?
-                  { backgroundColor: 'green', borderColor: 'green', color: 'white' } :
-                  { backgroundColor: 'grey', borderColor: 'grey', color: 'white' }}
-              >
-                Confirmar
+          {type === 'insert' ?
+            <Button
+              onClick={() => handleInsertGI()}
+              disabled={disabledConfirm}
+              style={!disabledConfirm ?
+                { backgroundColor: 'green', borderColor: 'green', color: 'white' } :
+                { backgroundColor: 'grey', borderColor: 'grey', color: 'white' }}
+            >
+              Confirmar
             </Button> :
-              <Button
-                onClick={() => handleSaveGI()}
-                disabled={disabledConfirm}
-                style={!disabledConfirm ?
-                  { backgroundColor: 'orange', borderColor: 'orange', color: 'white' } :
-                  { backgroundColor: 'grey', borderColor: 'grey', color: 'white' }}
-              >
-                Guardar
+            <Button
+              onClick={() => handleSaveGI()}
+              disabled={disabledConfirm}
+              style={!disabledConfirm ?
+                { backgroundColor: 'orange', borderColor: 'orange', color: 'white' } :
+                { backgroundColor: 'grey', borderColor: 'grey', color: 'white' }}
+            >
+              Guardar
               </Button>
-            }
-          </Col>
-        </Row>
-      </Spin>
-    </>
+          }
+        </Col>
+      </Row>
+    </Spin>
   );
 };
 

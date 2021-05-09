@@ -89,7 +89,11 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
     }
 
     setLoading(false);
-  }
+  };
+
+  const handleWorkingDay = (date: string) => {
+
+  };
 
   const handleSelectRequestDate = (e: Moment) => {
     setNewRequestData({
@@ -154,12 +158,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
   const handleInsertRequest = async () => {
     setLoading(true);
     let formData = new FormData();
-    const { hora_servicio_solicitado, hora_servicio_solicitado_termino, ...restOfData } = newRequestData;
-    const requestToInsert = MapRequestToInsert({
-      ...newRequestData,
-      hora_servicio_solicitado: moment(hora_servicio_solicitado).format('HH:mm'),
-      hora_servicio_solicitado_termino: moment(hora_servicio_solicitado_termino).format('HH:mm')
-    });
+    const requestToInsert = MapRequestToInsert(newRequestData);
     formData.append("data", JSON.stringify(requestToInsert));
     const result: IResponseRequest = await insertRequestService(formData);
     if (result.err === null) {
@@ -175,43 +174,39 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
   const handleSaveRequest = async () => {
     setLoading(true);
     let formData = new FormData();
-    const { hora_servicio_solicitado, hora_servicio_solicitado_termino, ...restOfData } = newRequestData;
-    const requestToInsert = MapRequestToInsert({
-      ...newRequestData,
-      hora_servicio_solicitado: moment(hora_servicio_solicitado).format('HH:mm'),
-      hora_servicio_solicitado_termino: moment(hora_servicio_solicitado_termino).format('HH:mm')
-    });
+    const requestToInsert = MapRequestToInsert(newRequestData);
     formData.append("data", JSON.stringify(requestToInsert));
-    const result: IResponseGI = await editRequestService(newRequestData._id, formData);
+    const result: IResponseRequest = await editRequestService(newRequestData._id, formData);
     if (result.err === null) {
-      onCloseModal('reload', result.res)
+      onCloseModal('reload', result.msg)
     } else {
       if (result.err === 98) return setMessageAlert({ message: result.res, type: 'error', show: true });
       return setMessageAlert({ message: result.err, type: 'error', show: true });
     }
   };
 
+  async function getOneRequest() {
+    const aux: IResponseGI = await getOneRequestService(_id);
+    if (aux.err !== null) {
+      setMessageAlert({ message: aux.err, type: 'error', show: true });
+      return
+    }
+    const request: RequestModel = aux.res;
+    setNewRequestData({ ...request, observacion_solicitud: '' });
+
+    getGIByRut(request.rut_CP, 1);
+    getGIByRut(request.rut_cs, 2);
+  };
+
+  async function getWorkers() {
+    const aux: IResponseGI = await getWorkersGIService();
+    aux.err === null && setWorkers(aux.res || [])
+    return
+  }
+
   //----------------------------------------USEEFECT
   useEffect(() => {
     setLoading(true)
-
-    async function getWorkers() {
-      const aux: IResponseGI = await getWorkersGIService();
-      aux.err === null && setWorkers(aux.res || [])
-    }
-
-    async function getOneRequest() {
-      const aux: IResponseGI = await getOneRequestService(_id);
-      if (aux.err !== null) {
-        setMessageAlert({ message: aux.err, type: 'error', show: true });
-        return
-      }
-      const request: RequestModel = aux.res;
-      setNewRequestData({ ...request, observacion_solicitud: '' });
-
-      getGIByRut(request.rut_CP, 1);
-      getGIByRut(request.rut_cs, 2);
-    }
 
     getWorkers();
     type === 'edit' && getOneRequest();
@@ -264,6 +259,18 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
   }, [messageAlert]);
 
   useEffect(() => {
+    if(newRequestData.hora_servicio_solicitado !== ''){
+      const arrayHour = newRequestData.hora_servicio_solicitado.split(':');
+      if((parseInt(arrayHour[0]) >= 6 && parseInt(arrayHour[0]) < 20) || (parseInt(arrayHour[0]) === 20 && parseInt(arrayHour[1]) === 0)){
+        setNewRequestData({...newRequestData, jornada: 'Diurna'});
+        return
+      }
+      setNewRequestData({...newRequestData, jornada: 'Vespertina'});
+      return
+    }
+  }, [newRequestData.hora_servicio_solicitado]);
+
+  useEffect(() => {
     if (newRequestData.nombre_servicio !== ''
       && newRequestData.id_GI_PersonalAsignado !== ''
       && newRequestData.id_GI_Principal
@@ -282,7 +289,6 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
   newRequestData.faena_seleccionada_cp
   ]);
 
-  console.log(primaryClient);
 
   //---RENDERS
   const renderServiceInformation = () => {
@@ -775,8 +781,8 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                 <TimePicker
                   style={{ width: '100%' }}
                   format="HH:mm"
-                  onChange={(e) => setNewRequestData({ ...newRequestData, hora_servicio_solicitado: e?.toString() || '' })}
-                  value={newRequestData.hora_servicio_solicitado !== '' ? moment(newRequestData.hora_servicio_solicitado) : undefined}
+                  onChange={(e) => setNewRequestData({ ...newRequestData, hora_servicio_solicitado: e?.format('HH:mm') || '' })}
+                  value={newRequestData.hora_servicio_solicitado !== '' ? moment(`${newRequestData.fecha_servicio_solicitado} ${newRequestData.hora_servicio_solicitado}`) : undefined}
                 />
               </Form.Item>
             </Col>
@@ -799,8 +805,8 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                 <TimePicker
                   style={{ width: '100%' }}
                   format="HH:mm"
-                  onChange={(e) => setNewRequestData({ ...newRequestData, hora_servicio_solicitado_termino: e?.toString() || '' })}
-                  value={newRequestData.hora_servicio_solicitado_termino !== '' ? moment(newRequestData.hora_servicio_solicitado_termino) : undefined}
+                  onChange={(e) => setNewRequestData({ ...newRequestData, hora_servicio_solicitado_termino: e?.format('HH:mm') || '' })}
+                  value={newRequestData.hora_servicio_solicitado_termino !== '' ? moment(`${newRequestData.fecha_servicio_solicitado_termino} ${newRequestData.hora_servicio_solicitado_termino}`) : undefined}
                 />
               </Form.Item>
             </Col>

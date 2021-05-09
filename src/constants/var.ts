@@ -12,7 +12,7 @@ export const CANCEL = 'cancel';
 export const CONFIRM = 'confirm';
 export const OK = 'ok';
 export const EDIT = 'edit';
-export const FORMAT_DATE = 'YYYY-MM-DD';
+export const FORMAT_DATE = 'DD-MM-YYYY';
 
 export const N_PER_PAGE = 20;
 

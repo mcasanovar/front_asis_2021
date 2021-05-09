@@ -187,7 +187,7 @@ const CreateOutputView: React.FunctionComponent<ICreateOutputViewProps> = ({
             >
               <Input
                 readOnly
-                value='Usuario sistema'
+                value={newDataOutput.usuario}
               />
             </Form.Item>
           </Col>

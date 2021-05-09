@@ -2,6 +2,8 @@ import moment from "moment";
 import { FORMAT_DATE } from "../constants/var";
 import { RequestModel } from "../models/request.models";
 
+const userLogged = localStorage.getItem('userLogged');
+
 export const RequestInitialization: RequestModel = {
   _id: '',
   codigo: '',
@@ -20,7 +22,7 @@ export const RequestInitialization: RequestModel = {
   hora_solicitud: moment().format('HH:mm'),
   mes_solicitud: '',
   anio_solicitud: '',
-  nombre_receptor: 'Usuario logeado',
+  nombre_receptor: userLogged !== null ? JSON.parse(userLogged).gi.razon_social : '',
   categoria1: '',
   categoria2: '',
   categoria3: '',

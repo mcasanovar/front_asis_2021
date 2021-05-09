@@ -2,6 +2,16 @@ import { PREFIX_GIS } from "../constants/var";
 import { httpClient, httpClientFormData } from "../libs/axios";
 import { ConfigurationGIModel } from "../models/gi.models";
 
+const getAllGIWithoutPaginationService = async () => {
+  const extension = `${PREFIX_GIS}`;
+  try {
+    const response = await httpClient.get(extension);
+    return response.data
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 const getAllGIService = async (pageNumber: number, nPerPage: number) => {
   const extension = `${PREFIX_GIS}/pagination`;
   try {
@@ -113,6 +123,7 @@ const editPasswordService = async (id: string, data: ConfigurationGIModel) => {
 };
 
 export {
+  getAllGIWithoutPaginationService,
   getCompanyGIService,
   getWorkersGIService,
   insertGIService,

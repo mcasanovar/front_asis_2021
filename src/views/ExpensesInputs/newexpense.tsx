@@ -8,8 +8,8 @@ import AlertComponent from "../../component/Alert/Alert";
 import { ExpensesModel, IResponseExpenses } from '../../models/expenses.models';
 import { ExpensesInitialization } from '../../initializations/expenses.initialization';
 import { BANKING_INSTITUTION, CATEGORIES_EXPENSES, DEFAULT_PERCENTAGE_IVA, DOCUMENTS, FORMAT_DATE, PAYMENT_METHODS, REGISTER_TYPE } from '../../constants/var';
-import { GiModel, IResponseGI } from '../../models/gi.models';
-import { getCompanyGIService, getAllRequestsNoPaginationService, insertExpenseService } from '../../services';
+import { GiModel, IReponseAllGIs, IResponseGI } from '../../models/gi.models';
+import { getAllGIWithoutPaginationService, getAllRequestsNoPaginationService, insertExpenseService } from '../../services';
 import { IResponseAllRequests, IResponseRequest, RequestModel } from '../../models/request.models';
 
 import moment, { Moment } from 'moment';
@@ -129,9 +129,9 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
   };
 
   async function getSuppliers() {
-    const aux: IResponseGI = await getCompanyGIService();
-    if (aux.err === null) {
-      setSuppliers(aux.res);
+    const aux: IReponseAllGIs = await getAllGIWithoutPaginationService();
+    if (aux && aux.gis && aux.gis.length > 0) {
+      setSuppliers(aux.gis);
     };
   };
 
