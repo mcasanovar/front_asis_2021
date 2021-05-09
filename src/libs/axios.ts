@@ -1,4 +1,10 @@
 import axios from "axios";
+import { setupCache } from 'axios-cache-adapter';
+
+// Create `axios-cache-adapter` instance
+const cache = setupCache({
+  maxAge: 15 * 60 * 1000
+})
 
 const config = {
   // baseURL: process.env.REACT_APP_API_DEV,
@@ -8,6 +14,7 @@ const config = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
   },
+  adapter: cache.adapter
 };
 
 const configFormData = {
