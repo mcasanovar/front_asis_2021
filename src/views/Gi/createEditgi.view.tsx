@@ -281,6 +281,8 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
     // eslint-disable-next-line
   }, []);
 
+  console.log(newGiData);
+
   //---------RENDERS
   const renderTributaryInformation = () => {
     return (
