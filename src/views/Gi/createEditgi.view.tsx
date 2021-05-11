@@ -769,6 +769,11 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                     label='Organización perteneciente'
                   >
                     <Select
+                      showSearch
+                      optionFilterProp="children"
+                      filterOption={(input, optionOrgPert) =>
+                        optionOrgPert?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                      }
                       style={{ width: '100%' }}
                       onSelect={(e: SelectValue) => handleSelectOrgBeloging(e.toString())}
                       value={newGiData.id_GI_org_perteneciente}

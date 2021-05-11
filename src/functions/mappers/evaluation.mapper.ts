@@ -65,7 +65,24 @@ const MapPsicoToCreateExam = (
     rut_cp: evaluation?.rut_cp,
     rut_cs: evaluation?.rut_cs,
     id_GI_personalAsignado: evaluation?.id_GI_personalAsignado,
-    ...psicoMapped
+    ...psico,
+    obs_examen_psicotecnico: psico.obs_examen_psicotecnico !== ''
+      ? psico.obs_examen_psicotecnico : 'Sin Observaciones',
+    obs_examen_sensometrico: psico.obs_examen_sensometrico !== ''
+      ? psico.obs_examen_sensometrico : 'Sin Observaciones',
+    obs_evaluacion_somnolencia: psico.obs_evaluacion_somnolencia !== ''
+      ? psico.obs_evaluacion_somnolencia : 'Sin Observaciones',
+    obs_evaluacion_psicologica: psico.obs_evaluacion_psicologica !== ''
+      ? psico.obs_evaluacion_psicologica : 'Sin Observaciones',
+    obs_test_velocidad_anticipacion: psico.obs_test_velocidad_anticipacion !== ''
+      ? psico.obs_test_velocidad_anticipacion : 'Sin Observaciones',
+    obs_test_tolerancia_monotonia: psico.obs_test_tolerancia_monotonia !== ''
+      ? psico.obs_test_tolerancia_monotonia : 'Sin Observaciones',
+    obs_test_reacciones_multiples: psico.obs_test_reacciones_multiples !== ''
+      ? psico.obs_test_reacciones_multiples : 'Sin Observaciones',
+    obs_evaluacion_transito_nacional: psico.obs_evaluacion_transito_nacional !== ''
+      ? psico.obs_evaluacion_transito_nacional : 'Sin Observaciones',
+    restricciones: psico.restricciones !== '' ? psico.restricciones : 'Sin Restricciones'
   }
 };
 

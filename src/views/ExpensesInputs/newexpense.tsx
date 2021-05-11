@@ -142,8 +142,6 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
     };
   };
 
-  console.log(newDataExpense)
-
   //--------------------------------RENDERS
   const renderGeneralData = () => {
     return (
@@ -210,12 +208,12 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
               >
                 <Select
                   showSearch
-                  filterOption={(input, option) =>
-                    option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  filterOption={(input, optionProvee) =>
+                    optionProvee?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                   }
                   optionFilterProp="children"
                   style={{ width: '100%' }}
-                  onSearch={(e) => handleAssingSupplier(e.toString())}
+                  onSelect={(e) => handleAssingSupplier(e.toString())}
                   value={`${newDataExpense.rut_proveedor} - ${newDataExpense.razon_social_proveedor}`}
                 >
                   {suppliers.map((supplier) => (
@@ -533,10 +531,9 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
         </Input.Group>
       </Form>
     );
-  }
+  };
 
-  console.log(newDataExpense)
-  console.log(file)
+  console.log(newDataExpense);
 
   //---------------------------------------USEEFECT
   useEffect(() => {
@@ -565,7 +562,15 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
       && file !== null) {
       setDisabledConfirm(false);
     }
-  }, [newDataExpense, file]);
+  }, [newDataExpense.fecha, 
+    newDataExpense.categoria_general, 
+    newDataExpense.subcategoria_uno, 
+    newDataExpense.subcategoria_dos,
+    newDataExpense.rut_proveedor,
+    newDataExpense.medio_pago,
+    newDataExpense.institucion_bancaria,
+    newDataExpense.cantidad_factor, 
+    file]);
 
   useEffect(() => {
     if (newDataExpense.medio_pago === 'Efectivo') {

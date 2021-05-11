@@ -31,8 +31,6 @@ const AversionRiesgoExamView: React.FunctionComponent<IAversionRiesgoExamViewPro
 
   const handleGenerateExam = async () => {
     const examToInsert = MapAversionToCreateExam(evaluationSelected, newDataAversion);
-    console.log(examToInsert)
-    return
     setLoading(true)
     const aux: IResponseEvaluation = await createExamAversionService(examToInsert);
     if (aux.err === null) {
