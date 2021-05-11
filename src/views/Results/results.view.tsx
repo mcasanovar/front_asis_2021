@@ -56,8 +56,11 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
       setResults(reservationsMapped);
+      setLoading(false)
+      return
     }
     setLoading(false);
+    return setMessageAlert({ message: 'No se ha podido cargar los resultados', type: 'error', show: true });
   };
 
   async function deleteResult(id: string) {
@@ -219,7 +222,6 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
     getResults(newpage);
-    setLoading(false)
   };
 
   //--------------USEEFECT

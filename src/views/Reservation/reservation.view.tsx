@@ -128,7 +128,6 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
     getReservations(newpage);
-    setLoading(false)
   };
 
   async function getReservations(pagenumber: number) {
@@ -145,8 +144,11 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
       setReservations(reservationsMapped);
+      setLoading(false)
+      return
     }
     setLoading(false);
+    return setMessageAlert({ message: 'No se ha podido cargar las reservas', type: 'error', show: true });
   };
 
   async function filterRequests(date: string, headFilter: string) {

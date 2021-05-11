@@ -184,7 +184,6 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
     getInvoices(newpage);
-    setLoading(false)
   };
 
   const handleCloseModal = (value: string, message: string) => {
@@ -229,8 +228,11 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
       setCompany(aux.empresa);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
+      setLoading(false);
+      return
     }
-    setLoading(false)
+    setLoading(false);
+    return setMessageAlert({ message: 'No se ha podido cargar las facturaciones', type: 'error', show: true });
   };
 
   async function filterInvoices(date: string, headFilter: string) {

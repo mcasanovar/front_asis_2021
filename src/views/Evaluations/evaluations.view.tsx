@@ -143,8 +143,11 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
       return setLoading(false);
     }
     if (aux.err === 98) {
+      setLoading(false)
       setMessageAlert({ message: aux.msg, type: 'error', show: true });
+      return
     }
+    setLoading(false)
     return setMessageAlert({ message: aux.err, type: 'error', show: true });
   };
 
@@ -216,7 +219,6 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
     getEvaluations(newpage);
-    setLoading(false)
   };
 
   //--------------USEEFECT

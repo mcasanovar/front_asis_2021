@@ -114,7 +114,6 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
     getExpenses(newpage);
-    setLoading(false)
   };
 
   const handleTransformPrice = (expenses: ExpensesModel[]) => {
@@ -160,8 +159,11 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
       setExpenses(aux.gastos);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
+      setLoading(false);
+      return
     }
     setLoading(false)
+    return setMessageAlert({ message: 'No se ha podido cargar los gastos', type: 'error', show: true });
   };
 
   async function downloadFile(id: string) {

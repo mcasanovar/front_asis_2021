@@ -135,7 +135,6 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
     getRequests(newpage);
-    setLoading(false)
   };
 
   async function getRequests(pagenumber: number) {
@@ -144,8 +143,11 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
       setRequests(aux.solicitudes);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
+      setLoading(false)
+      return
     };
-    setLoading(false)
+    setLoading(false);
+    return setMessageAlert({ message: 'No se ha podido cargar las solicitudes', type: 'error', show: true });
   };
 
   async function hanbleDeleteRequest(id: string) {

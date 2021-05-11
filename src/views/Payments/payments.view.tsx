@@ -96,7 +96,6 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
     getPayments(newpage);
-    setLoading(false)
   };
 
   const handleCloseModal = (value: string, message: string) => {
@@ -152,8 +151,11 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
       setPayments(aux.pagos);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
+      setLoading(false);
+      return
     }
-    setLoading(false)
+    setLoading(false);
+    return setMessageAlert({ message: 'No se ha podido cargar los pagos', type: 'error', show: true });
   };
 
   //--------------USEEFECT

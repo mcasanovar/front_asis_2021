@@ -65,7 +65,6 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
     getRequestPayment(newpage);
-    setLoading(false)
   };
 
   const handleCLickActionTable = (id: string, idregister: string | undefined) => {
@@ -138,8 +137,11 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
       setRequestpayment(aux.cobranzas);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
+      setLoading(false);
+      return
     }
     setLoading(false)
+    return setMessageAlert({ message: 'No se ha podido cargar las cobranzas', type: 'error', show: true });
   };
 
   //--------------USEEFECT

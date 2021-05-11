@@ -82,7 +82,6 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({authorized}) =
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
     getOutputs(newpage);
-    setLoading(false)
   };
 
   const handleCloseModal = (value: string, message: string) => {
@@ -136,8 +135,11 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({authorized}) =
       setOutputs(aux.salidas);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
+      setLoading(false);
+      return
     }
-    setLoading(false)
+    setLoading(false);
+    return setMessageAlert({ message: 'No se ha podido cargar los salidas', type: 'error', show: true });
   };
 
   async function handleDeleteOutput(id: string) {

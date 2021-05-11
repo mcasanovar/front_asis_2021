@@ -149,7 +149,6 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
     getGis(newpage);
-    setLoading(false)
   };
 
   async function getGis(pagenumber: number) {
@@ -158,8 +157,10 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
       setGIs(aux.gis);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
+      setLoading(false)
       return
     }
+    setLoading(false)
     return setMessageAlert({ message: 'No se ha podido cargar los GIs', type: 'error', show: true });
   };
 

@@ -80,7 +80,6 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({authorized
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
     getExistences(newpage);
-    setLoading(false)
   };
 
   const handleClickSearch = async () => {
@@ -114,7 +113,10 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({authorized
       setExistences(aux.existencias);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
+      setLoading(false);
+      return
     }
+    return setMessageAlert({ message: 'No se ha podido cargar las existencias', type: 'error', show: true });
     setLoading(false)
   };
 
