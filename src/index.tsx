@@ -5,6 +5,7 @@ import App from './App';
 import { ConfigProvider } from 'antd';
 import esES from 'antd/lib/locale/es_ES';
 import moment from 'moment';
+import 'moment/locale/es';
 
 moment.locale('es');
 

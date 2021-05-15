@@ -301,11 +301,11 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                 label='Fecha solicitud'
               >
                 <DatePicker
-                  format={`${FORMAT_DATE} HH:mm`}
+                  format={`${FORMAT_DATE}`}
                   style={{ width: '100%' }}
                   value={newRequestData.fecha_solicitud !== '' ? moment(newRequestData.fecha_solicitud, FORMAT_DATE) : undefined}
                   onSelect={(e: Moment) => handleSelectRequestDate(e)}
-                  showTime={{ defaultValue: moment('00:00:00', 'HH:mm') }}
+                  // showTime={{ defaultValue: moment('00:00:00', 'HH:mm') }}
                 />
               </Form.Item>
             </Col>

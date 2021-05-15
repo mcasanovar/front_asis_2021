@@ -161,7 +161,10 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
     );
 
     if (!aux.err) {
-      return setEmployees(aux.empleados);
+      setEmployees(aux.empleados);
+      setActualPage(aux.pagina_actual);
+      setTotalItems(aux.total_items);
+      return
     }
     if (aux.err) {
       return setMessageAlert({ message: aux.err, type: 'error', show: true });

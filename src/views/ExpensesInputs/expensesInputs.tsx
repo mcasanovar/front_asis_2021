@@ -144,7 +144,10 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
     );
 
     if (!aux.err) {
-      return setExpenses(aux.gastos);
+      setExpenses(aux.gastos);
+      setActualPage(aux.pagina_actual);
+      setTotalItems(aux.total_items);
+      return
     }
     if (aux.err) {
       return setMessageAlert({ message: aux.err, type: 'error', show: true });

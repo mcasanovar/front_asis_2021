@@ -186,7 +186,10 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
     );
 
     if (!aux.err) {
-      return setEvaluations(aux.evaluaciones);
+      setEvaluations(aux.evaluaciones);
+      setActualPage(aux.pagina_actual);
+      setTotalItems(aux.total_items);
+      return
     }
     if (aux.err) {
       return setMessageAlert({ message: aux.err, type: 'error', show: true });

@@ -143,6 +143,8 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
     };
 
     setGIs(response.gis);
+    setActualPage(response.pagina_actual);
+    setTotalItems(response.total_items);
     setLoading(false)
   };
 
@@ -204,8 +206,8 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
 
   console.log(authorized)
 
-  if(!authorized){
-    return <Redirect to='./login'/>
+  if (!authorized) {
+    return <Redirect to='./login' />
   }
 
   return (

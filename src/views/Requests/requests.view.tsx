@@ -171,6 +171,8 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
 
     if (!aux.err) {
       setRequests(aux.solicitudes);
+      setActualPage(aux.pagina_actual);
+      setTotalItems(aux.total_items);
     }
     if (aux.err) {
       setMessageAlert({ message: aux.err, type: 'error', show: true });

@@ -136,7 +136,10 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
     );
 
     if (!aux.err) {
-      return setPayments(aux.pagos);
+      setPayments(aux.pagos);
+      setActualPage(aux.pagina_actual);
+      setTotalItems(aux.total_items);
+      return
     }
     if (aux.err) {
       return setMessageAlert({ message: aux.err, type: 'error', show: true });

@@ -7,8 +7,8 @@ import axios from "axios";
 // })
 
 const config = {
-  // baseURL: process.env.REACT_APP_API_DEV,
-  baseURL: 'https://sslprotocol.api-asis.com',
+  baseURL: process.env.REACT_APP_API_DEV,
+  // baseURL: 'https://sslprotocol.api-asis.com',
   withCredentials: false,
   headers: {
     Accept: 'application/json',
@@ -18,8 +18,8 @@ const config = {
 };
 
 const configFormData = {
-  // baseURL: process.env.REACT_APP_API_DEV,
-  baseURL: 'https://sslprotocol.api-asis.com',
+  baseURL: process.env.REACT_APP_API_DEV,
+  // baseURL: 'https://sslprotocol.api-asis.com',
   withCredentials: false,
   headers: {
     Accept: 'application/json',

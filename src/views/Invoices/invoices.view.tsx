@@ -245,7 +245,11 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
     );
 
     if (!aux.err) {
-      return setInvoices(aux.facturaciones);
+      setInvoices(aux.facturaciones);
+      setCompany(aux.empresa);
+      setActualPage(aux.pagina_actual);
+      setTotalItems(aux.total_items);
+      return
     }
     if (aux.err) {
       return setMessageAlert({ message: aux.err, type: 'error', show: true });

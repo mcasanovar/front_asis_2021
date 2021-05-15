@@ -161,7 +161,10 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
     );
 
     if (!aux.err) {
-      return setReservations(aux.reservas);
+      setReservations(aux.reservas);
+      setActualPage(aux.pagina_actual);
+      setTotalItems(aux.total_items);
+      return
     }
     if (aux.err) {
       return setMessageAlert({ message: aux.err, type: 'error', show: true });

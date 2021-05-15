@@ -191,6 +191,8 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
     );
 
     if (!aux.err) {
+      setActualPage(aux.pagina_actual);
+      setTotalItems(aux.total_items);
       return setResults(aux.resultados.map((result) => {
         return {
           ...result,
