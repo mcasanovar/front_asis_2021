@@ -80,7 +80,7 @@ const ConfirmExamView: React.FunctionComponent<IConfirmExamViewProps> = ({
               >
                 <Input
                   readOnly
-                  value={newDataEvaluation.fecha_evaluacion}
+                  value={moment(newDataEvaluation.fecha_evaluacion, FORMAT_DATE).format(FORMAT_DATE)}
                 />
               </Form.Item>
             </Col>

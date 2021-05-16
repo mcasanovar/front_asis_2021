@@ -48,7 +48,12 @@ const ConfirmResultView: React.FunctionComponent<IConfirmResultViewProps> = ({
         setDisabledConfirm(false);
         return
       }
-      if (newDataResult.estado_resultado !== '') return setDisabledConfirm(false);
+      if (!!newDataResult.estado_resultado 
+        && !!newDataResult.vigencia_examen
+        && !!newDataResult?.fecha_resultado
+        && !!newDataResult?.hora_resultado){
+        return setDisabledConfirm(false);
+      }
     }
     return setDisabledConfirm(true);
   }, [newDataResult]);
@@ -83,6 +88,8 @@ const ConfirmResultView: React.FunctionComponent<IConfirmResultViewProps> = ({
                     <Col span={12}>
                       <Form.Item
                         label='Estado resultado'
+                        validateStatus={newDataResult.estado_resultado !== '' ? 'success' : 'error'}
+                        help={newDataResult.estado_resultado !== '' ? '' : 'Seleccione resultado'}
                       >
                         <Select
                           style={{ width: '100%' }}
@@ -102,6 +109,8 @@ const ConfirmResultView: React.FunctionComponent<IConfirmResultViewProps> = ({
                     <Col span={8}>
                       <Form.Item
                         label='Vigencia examen'
+                        validateStatus={!!newDataResult.vigencia_examen ? 'success' : 'error'}
+                        help={!!newDataResult.vigencia_examen ? '' : 'Seleccione vigencia'}
                       >
                         <Select
                           style={{ width: '100%' }}
@@ -120,6 +129,8 @@ const ConfirmResultView: React.FunctionComponent<IConfirmResultViewProps> = ({
                     <Col span={8}>
                       <Form.Item
                         label='Fecha resultado'
+                        validateStatus={newDataResult?.fecha_resultado && newDataResult.fecha_resultado !== 'En Revisión' ? 'success' : 'error'}
+                        help={newDataResult?.fecha_resultado && newDataResult.fecha_resultado !== 'En Revisión' ? '' : 'Seleccione vigencia'}
                       >
                         <DatePicker
                           style={{ width: '100%' }}
@@ -130,6 +141,8 @@ const ConfirmResultView: React.FunctionComponent<IConfirmResultViewProps> = ({
                     <Col span={8}>
                       <Form.Item
                         label='Hora resultado'
+                        validateStatus={newDataResult?.hora_resultado ? 'success' : 'error'}
+                        help={newDataResult?.hora_resultado ? '' : 'Seleccione vigencia'}
                       >
                         <TimePicker
                           format='HH:mm'

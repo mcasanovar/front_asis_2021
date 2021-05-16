@@ -95,7 +95,7 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
             />
           ))}
           {showInvoicesOptions &&
-            <Select placeholder='Pago Grupal...' style={{ width: 160 }} onChange={onClickGrupal}>
+            <Select placeholder='Pago Grupal...' style={{ width: 160 }} onSelect={onClickGrupal}>
               <Option value="uploadgroupoc">Carga OC grupal</Option>
               <Option value="validategroupoc">Validar OC grupal</Option>
               <Option value="uploadgroupinvoice">Carga factura grupal</Option>

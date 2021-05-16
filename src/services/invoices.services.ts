@@ -11,6 +11,49 @@ const getAllInvoicesService = async (pageNumber: number, nPerPage: number) => {
   }
 };
 
+//----------------------------------------GROUP SERVICES
+const getGroupOCService = async () => {
+  const extension = `${PREFIX_INVOICES}/getoc`;
+  try {
+    const response = await httpClient.get(extension);
+    return response.data
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+const uploadGroupOCService = async (data: FormData) => {
+  const extension = `${PREFIX_INVOICES}/oc/subiroc/many`;
+  try {
+    const response = await httpClientFormData.post(extension, data);
+    return response.data
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+const getGroupOCConfirmService = async () => {
+  const extension = `${PREFIX_INVOICES}/getconfirmoc`;
+  try {
+    const response = await httpClient.get(extension);
+    return response.data
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+const confirmGroupOCService = async (data: any) => {
+  const extension = `${PREFIX_INVOICES}/oc/confirmaroc/many`;
+  try {
+    const response = await httpClient.post(extension, data);
+    return response.data
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+//-----------------------------------------------------
+
 const uploadOCService = async (id: string, data: FormData) => {
   const extension = `${PREFIX_INVOICES}/subiroc/${id}`;
   try {
@@ -84,7 +127,11 @@ const filterInvoicesService = async (
 
 export {
   getAllInvoicesService,
+  getGroupOCService,
+  uploadGroupOCService,
   uploadOCService,
+  getGroupOCConfirmService,
+  confirmGroupOCService,
   downloadFilesService,
   confirmOCService,
   generateInvoiceService,

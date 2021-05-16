@@ -59,7 +59,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
           _id: value,
           title: 'Carga grupal de OC',
           size: 'small',
-          widthModal: 1500,
+          widthModal: 1100,
           showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
         })
         setOpenModal(true);
@@ -69,7 +69,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
           _id: value,
           title: 'Validación grupal de OC',
           size: 'small',
-          widthModal: 1500,
+          widthModal: 1100,
           showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
         })
         setOpenModal(true);
@@ -309,8 +309,8 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
     }
   }, [ActualModal]);
 
-  if(!authorized){
-    return <Redirect to='./login'/>
+  if (!authorized) {
+    return <Redirect to='./login' />
   }
 
   return (
@@ -356,7 +356,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
         showValidateInvoice
         enablePagination={false}
       />
-      <br/>
+      <br />
       <PaginationComponent
         actualPage={actualPage}
         onChange={(newpage: number) => handleChangePagination(newpage)}
@@ -406,9 +406,21 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
               invoiceSelected={invoiceSelected}
             />
           }
-          {ActualModal._id === 'uploadgroupoc' && <UploadGroupOCView />}
-          {ActualModal._id === 'validategroupoc' && <ConfirmGroupOCView />}
-          {ActualModal._id === 'uploadgroupinvoice' && <UploadGroupInvoicesView />}
+          {ActualModal._id === 'uploadgroupoc' &&
+            <UploadGroupOCView
+              onCloseModal={(value, message) => handleCloseModal(value, message)}
+            />
+          }
+          {ActualModal._id === 'validategroupoc' &&
+            <ConfirmGroupOCView
+              onCloseModal={(value, message) => handleCloseModal(value, message)}
+            />
+          }
+          {ActualModal._id === 'uploadgroupinvoice' && 
+            <UploadGroupInvoicesView 
+              
+            />
+          }
           {ActualModal._id === 'validategroupinvoice' && <ValidateGroupInvoicesView />}
         </ModalComponent>
       }

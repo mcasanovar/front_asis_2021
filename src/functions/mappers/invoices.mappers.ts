@@ -1,4 +1,4 @@
-import { ICompanyInfo, InvoicesModel } from "../../models/invoices.models";
+import { ICompanyInfo, IGroupConfirmOC, IGroupUploadOC, InvoicesModel } from "../../models/invoices.models";
 
 const MapOcToUpload = (invoice: InvoicesModel, obs_oc: string) => {
   return {
@@ -28,4 +28,36 @@ const MapInvoiceToConfirm = (invoice: InvoicesModel, observation: string) => {
   }
 };
 
-export { MapOcToUpload, MapInvoiceToGenerate, MapInvoiceToConfirm }
+const MapGroupInvoiceToUploadOC = (data: IGroupUploadOC, selectedKeyInvoices: React.Key[]) => {
+  const aux = [
+    {
+      ...data
+    },
+    {
+      ids: selectedKeyInvoices
+    }
+  ];
+
+  return aux;
+};
+
+const MapGroupInvoiceToConfirmOC = (data: IGroupConfirmOC, selectedKeyInvoices: React.Key[]) => {
+  const aux = [
+    {
+      ...data
+    },
+    {
+      ids: selectedKeyInvoices
+    }
+  ];
+
+  return aux;
+};
+
+export { 
+  MapOcToUpload, 
+  MapInvoiceToGenerate, 
+  MapInvoiceToConfirm, 
+  MapGroupInvoiceToUploadOC,
+  MapGroupInvoiceToConfirmOC
+}

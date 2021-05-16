@@ -82,3 +82,15 @@ export interface IFiltersInvoices {
   value: string,
   name: string
 };
+
+export interface IGroupUploadOC {
+  fecha_oc: string,
+  hora_oc: string,
+  nro_oc: string,
+  observacion_oc: string
+}
+
+export interface IGroupConfirmOC {
+  estado_archivo: string,
+  observaciones: string
+}

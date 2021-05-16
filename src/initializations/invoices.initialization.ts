@@ -41,4 +41,16 @@ export const InvoicesInitialization = {
   monto_nota_credito: 0,
   factura_anular: '',
   isActive: true
+};
+
+export const IGroupUploadOCInitialization =  {
+  fecha_oc: '',
+  hora_oc: '',
+  nro_oc: '',
+  observacion_oc: ''
+}
+
+export const IGroupConfirmOCInitialization = {
+  estado_archivo: '',
+  observaciones: ''
 }

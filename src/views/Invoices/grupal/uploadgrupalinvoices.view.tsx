@@ -29,6 +29,18 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
               />
             </Col>
           </Row>
+          <br />
+          <Row>
+            <Col span={24}>
+              <Upload.Dragger name="files" action="/upload.do">
+                <p className="ant-upload-drag-icon">
+                  <InboxOutlined />
+                </p>
+                <p className="ant-upload-text">Click o arrastra el archivo para subirlo</p>
+                <p className="ant-upload-hint">10mb max.</p>
+              </Upload.Dragger>
+            </Col>
+          </Row>
         </Col>
         <Col span={12}>
           <Input.Group>
@@ -91,24 +103,12 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
                 />
               </Col>
             </Row>
-            <br />
-            <Row>
-              <Col span={24}>
-                <Upload.Dragger name="files" action="/upload.do">
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined />
-                  </p>
-                  <p className="ant-upload-text">Click o arrastra el archivo para subirlo</p>
-                  <p className="ant-upload-hint">10mb max.</p>
-                </Upload.Dragger>
-              </Col>
-            </Row>
           </Input.Group>
         </Col>
       </Row>
-      <br/>
-      <br/>
-      <br/>
+      <br />
+      <br />
+      <br />
       <Row>
         <Col span={24}>
           <Col span={24} style={{
