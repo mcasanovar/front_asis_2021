@@ -24,4 +24,15 @@ export const ReservationInitialization = {
   observacion: [],
   estado: '',
   isActive: true
+};
+
+export const IDataReservationInitialization = {
+  fecha_reserva: '',
+  fecha_reserva_fin: '',
+  hora_reserva: '',
+  hora_reserva_fin: '',
+  id_GI_personalAsignado: '',
+  sucursal: '',
+  observacion: '',
+  reqEvaluacion: ''
 }

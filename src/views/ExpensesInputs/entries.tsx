@@ -431,7 +431,8 @@ const EntriesView: React.FunctionComponent<IEntriesViewProps> = ({
             alignItems: 'flex-start',
             width: '100%',
           }}>
-            {reloadTable && <Table style={{ width: '100%' }} showHeader={true} dataSource={entries} pagination={false}>
+            {reloadTable && 
+            <Table style={{ width: '100%' }} showHeader={true} dataSource={entries} pagination={false}>
               <Column className='column-money' title="Categoria general" dataIndex="categoria_general" key="categoria_general" />
               <Column className='column-money' title="Sub-categoria 3" dataIndex="subcategoria_tres" key="subcategoria_tres" />
               <Column className='column-money' title="Sub-categoria 3" dataIndex="codigo_categoria_tres" key="codigo_categoria_tres" />
@@ -488,7 +489,8 @@ const EntriesView: React.FunctionComponent<IEntriesViewProps> = ({
                   </>
                 )}
               />
-            </Table>}
+            </Table>
+            }
           </Col>
         </Row>
       </Form>

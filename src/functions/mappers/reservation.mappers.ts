@@ -1,4 +1,4 @@
-import { ReservationModel } from "../../models/reservation.models";
+import { IDataReservationConfirmation, ReservationModel } from "../../models/reservation.models";
 
 const MapReservation = (reservation: ReservationModel, obs: string, idProfessional: string) => {
   const { observacion, ...restOfData } = reservation;
@@ -9,4 +9,17 @@ const MapReservation = (reservation: ReservationModel, obs: string, idProfession
   };
 };
 
-export { MapReservation }
+const MapGroupReservationsToConfirm = (data: IDataReservationConfirmation, selectedKeyRequests: React.Key[]) => {
+  const aux = [
+    {
+      ...data
+    },
+    {
+      ids: selectedKeyRequests
+    }
+  ];
+
+  return aux;
+};
+
+export { MapReservation, MapGroupReservationsToConfirm }

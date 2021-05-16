@@ -11,6 +11,16 @@ const getAllReservationsService = async (pageNumber: number, nPerPage: number) =
   }
 };
 
+const getGroupReservationsService = async () => {
+  const extension = `${PREFIX_RESERVATION}/ingresadas`;
+  try {
+    const response = await httpClient.get(extension);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 const filterReservationsService = async (
   identificador: number,
   filtro: string,
@@ -53,6 +63,16 @@ const confirmReservationService = async (id: string, data: FormData) => {
   }
 };
 
+const confirmGroupReservationsService = async (data: FormData) => {
+  const extension = `${PREFIX_RESERVATION}/confirmar`;
+  try {
+    const response = await httpClientFormData.post(extension, data);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 const editReservationService = async (id: string, data: FormData) => {
   const extension = `${PREFIX_RESERVATION}/${id}`;
   try {
@@ -75,8 +95,10 @@ const deleteReservationService = async (id: string) => {
 
 export {
   getAllReservationsService,
+  getGroupReservationsService,
   filterReservationsService,
   confirmReservationService,
+  confirmGroupReservationsService,
   getOneReservationService,
   editReservationService,
   deleteReservationService

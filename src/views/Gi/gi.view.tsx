@@ -39,13 +39,13 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
         }
       ]
     },
-    {
-      _id: 'newgrupalgi',
-      title: 'GI GRUPAL',
-      size: 'small',
-      widthModal: 1200,
-      showButtons: []
-    }
+    // {
+    //   _id: 'newgrupalgi',
+    //   title: 'GI GRUPAL',
+    //   size: 'small',
+    //   widthModal: 1200,
+    //   showButtons: []
+    // }
   ];
 
   const [loading, setLoading] = useState<boolean>(false);

@@ -93,4 +93,11 @@ export interface IFiltersRequest {
   key: number,
   value: string,
   name: string
+};
+
+export interface IDataConfirmation {
+  fecha_solicitud: string,
+  hora_solicitud: string,
+  medio_confirmacion: string,
+  observacion_solicitud: string
 }

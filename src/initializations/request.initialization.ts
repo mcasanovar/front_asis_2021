@@ -45,3 +45,10 @@ export const RequestInitialization: RequestModel = {
   estado: 'Ingresado',
   isActive: true,
 }
+
+export const IDataConfirmationInitialization = {
+  fecha_solicitud: '',
+  hora_solicitud: '',
+  medio_confirmacion: '',
+  observacion_solicitud: ''
+}

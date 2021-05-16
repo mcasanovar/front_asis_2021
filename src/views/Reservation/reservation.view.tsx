@@ -31,7 +31,7 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
       title: 'CONFIRMACION GRUPAL',
       customTitle: 'Confirmación grupal de reservas,',
       size: 'small',
-      widthModal: 1200,
+      widthModal: 1600,
       showButtons: []
     },
   ];
@@ -213,8 +213,8 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
     //eslint-disable-next-line
   }, [ActualModal]);
 
-  if(!authorized){
-    return <Redirect to='./login'/>
+  if (!authorized) {
+    return <Redirect to='./login' />
   }
 
   return (
@@ -256,7 +256,7 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
         showReservation
         enablePagination={false}
       />
-      <br/>
+      <br />
       <PaginationComponent
         actualPage={actualPage}
         onChange={(newpage: number) => handleChangePagination(newpage)}
@@ -272,7 +272,11 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
         onClickConfirm={(id) => { }}
         showButtons={ActualModal.showButtons || []}
       >
-        {ActualModal._id === 'confirm' && <GroupConfirmReservationView />}
+        {ActualModal._id === 'confirm' &&
+          <GroupConfirmReservationView
+            onCloseModal={(value, message) => handleCloseModal(value, message)}
+          />
+        }
         {ActualModal._id === 'details' &&
           <DetailsReservationView
             onCloseModal={(value, message) => handleCloseModal(value, message)}

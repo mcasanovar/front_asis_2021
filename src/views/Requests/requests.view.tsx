@@ -17,7 +17,7 @@ import PaginationComponent from '../../component/Pagination/Pagination';
 
 import CreateEditRequestView from "./createEditrequest.view";
 import DetailsRequestView from "./detailsrequest.view";
-// import GroupConfirmationView from "./groupconfirmation.view";
+import GroupConfirmationView from "./groupconfirmation.view";
 import ConfirmRequestView from "./confirmrequest.view";
 
 interface IRequestViewProps {
@@ -36,7 +36,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
     },
     {
       _id: 'confirm',
-      title: 'CONFIRMAR',
+      title: 'CONFIRMACIÓN GRUPAL',
       customTitle: 'CONFIRMACIÓN GRUPAL DE SOLICITUDES',
       size: 'small',
       widthModal: 1600,
@@ -105,6 +105,15 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
           showButtons: [{ _id: CANCEL }, { _id: EDIT }]
         })
         break;
+      case 'confirm':
+        setActualModal({
+          _id: id,
+          title: 'Confirmación grupal de solicitudes',
+          size: 'small',
+          widthModal: 400,
+          showButtons: []
+        });
+        break;
       default:
         return setActualModal(buttons[0])
     }
@@ -128,7 +137,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
   const handleClickSearch = async () => {
     setLoading(true)
     const headfilter = FILTERS_REQUEST.find((element) => element.key === optionFilter);
-    if(!headfilter) return
+    if (!headfilter) return
     filterRequests(filterText, headfilter.name)
   };
 
@@ -139,7 +148,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
 
   async function getRequests(pagenumber: number) {
     const aux: IResponseAllRequests = await getAllRequestsService(pagenumber, N_PER_PAGE);
-    if(!aux.err){
+    if (!aux.err) {
       setRequests(aux.solicitudes);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
@@ -209,7 +218,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
     }
   }, [ActualModal]);
 
-  if(!authorized){
+  if (!authorized) {
     return <Redirect to='/login' />
   }
 
@@ -251,7 +260,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
         showSchedule
         enablePagination={false}
       />
-      <br/>
+      <br />
       <PaginationComponent
         actualPage={actualPage}
         onChange={(newpage: number) => handleChangePagination(newpage)}
@@ -291,6 +300,11 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
           <ConfirmRequestView
             onCloseModal={(value, message) => handleCloseModal(value, message)}
             _id={idSelectedRequest}
+          />
+        }
+        {ActualModal._id === 'confirm' &&
+          <GroupConfirmationView
+            onCloseModal={(value, message) => handleCloseModal(value, message)}
           />
         }
       </ModalComponent>

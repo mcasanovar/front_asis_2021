@@ -743,7 +743,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                     option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                   }
                   onChange={(e) => setNewGiData({ ...newGiData, pais_origen: e.toString() })}
-                  value={newGiData.pais_origen}
+                  value={newGiData.pais_origen ?? 'CHL'}
                 >
                   {countries.length > 0 && countries.map((country, index) => (
                     <Option key={index} value={country.alpha3Code}>{country.name}</Option>

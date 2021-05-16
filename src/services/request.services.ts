@@ -11,6 +11,16 @@ const getAllRequestsNoPaginationService = async () => {
   }
 };
 
+const getAllRequestToConfirmService = async () => {
+  const extension = `${PREFIX_REQUEST}/ingresadas`; 
+  try {
+    const response = await httpClient.get(extension);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 const getAllRequestsService = async (pageNumber: number, nPerPage: number) => {
   const extension = `${PREFIX_REQUEST}/pagination`;
   try {
@@ -80,6 +90,16 @@ const confirmRequestService = async (id: string, data: FormData) => {
   }
 };
 
+const confirmGroupRequestsService = async (data: FormData) => {
+  const extension = `${PREFIX_REQUEST}/many`;
+  try {
+    const response = await httpClientFormData.post(extension, data);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 const filterRequestsService = async (
   identificador: number,
   filtro: string,
@@ -104,12 +124,14 @@ const filterRequestsService = async (
 
 export {
   getAllRequestsService,
+  getAllRequestToConfirmService,
   insertRequestService,
   getOneRequestService,
   editRequestService,
   deleteOneRequestService,
   getRequestToConfirmService,
   confirmRequestService,
+  confirmGroupRequestsService,
   filterRequestsService,
   getAllRequestsNoPaginationService
 }

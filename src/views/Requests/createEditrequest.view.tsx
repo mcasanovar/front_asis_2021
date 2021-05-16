@@ -782,7 +782,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                   style={{ width: '100%' }}
                   format="HH:mm"
                   onChange={(e) => setNewRequestData({ ...newRequestData, hora_servicio_solicitado: e?.format('HH:mm') || '' })}
-                  value={newRequestData.hora_servicio_solicitado !== '' ? moment(`${newRequestData.fecha_servicio_solicitado} ${newRequestData.hora_servicio_solicitado}`) : undefined}
+                  value={newRequestData.hora_servicio_solicitado !== '' ? moment(`${newRequestData.fecha_servicio_solicitado} ${newRequestData.hora_servicio_solicitado}`, `${FORMAT_DATE} HH:mm`) : undefined}
                 />
               </Form.Item>
             </Col>
@@ -806,7 +806,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                   style={{ width: '100%' }}
                   format="HH:mm"
                   onChange={(e) => setNewRequestData({ ...newRequestData, hora_servicio_solicitado_termino: e?.format('HH:mm') || '' })}
-                  value={newRequestData.hora_servicio_solicitado_termino !== '' ? moment(`${newRequestData.fecha_servicio_solicitado_termino} ${newRequestData.hora_servicio_solicitado_termino}`) : undefined}
+                  value={newRequestData.hora_servicio_solicitado_termino !== '' ? moment(`${newRequestData.fecha_servicio_solicitado_termino} ${newRequestData.hora_servicio_solicitado_termino}`, `${FORMAT_DATE} HH:mm`) : undefined}
                 />
               </Form.Item>
             </Col>

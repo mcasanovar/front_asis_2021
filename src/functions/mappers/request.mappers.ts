@@ -1,4 +1,5 @@
-import { RequestModel } from "../../models/request.models";
+import React from "react";
+import { IDataConfirmation, RequestModel } from "../../models/request.models";
 
 const MapRequestToInsert = (request: RequestModel) => {
   const { _id, ...restOfData } = request;
@@ -26,4 +27,17 @@ const MapRequestToConfirm = (request: RequestModel) => {
   }
 };
 
-export { MapRequestToInsert, MapRequestToConfirm }
+const MapGroupRequestsToConfirm = (data: IDataConfirmation, selectedKeyRequests: React.Key[]) => {
+  const aux = [
+    {
+      ...data
+    },
+    {
+      ids: selectedKeyRequests
+    }
+  ];
+
+  return aux;
+};
+
+export { MapRequestToInsert, MapRequestToConfirm, MapGroupRequestsToConfirm }

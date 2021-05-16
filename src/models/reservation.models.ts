@@ -53,3 +53,14 @@ export interface IFiltersReservation {
   value: string,
   name: string
 };
+
+export interface IDataReservationConfirmation {
+  fecha_reserva: string,
+  fecha_reserva_fin: string,
+  hora_reserva: string,
+  hora_reserva_fin: string,
+  id_GI_personalAsignado: string,
+  sucursal: string,
+  observacion: string,
+  reqEvaluacion: string
+}

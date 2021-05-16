@@ -15,6 +15,7 @@
     "antd": "^4.15.0",
     "axios": "^0.21.1",
     "axios-cache-adapter": "^2.7.3",
+    "faker": "^5.5.3",
     "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -49,6 +50,7 @@
     ]
   },
   "devDependencies": {
+    "@types/faker": "^5.5.5",
     "@types/react-router-dom": "^5.1.7"
   }
 }
