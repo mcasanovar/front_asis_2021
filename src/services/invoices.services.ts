@@ -52,6 +52,36 @@ const confirmGroupOCService = async (data: any) => {
   }
 };
 
+const getGroupInvoiceToUploadService = async () => {
+  const extension = `${PREFIX_INVOICES}/getinvoices`;
+  try {
+    const response = await httpClient.get(extension);
+    return response.data
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+const uploadGroupInvoicesService = async (data: FormData) => {
+  const extension = `${PREFIX_INVOICES}/`;
+  try {
+    const response = await httpClientFormData.post(extension, data);
+    return response.data
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+const confirmGroupInvoicesService = async (data: any) => {
+  const extension = `${PREFIX_INVOICES}/validar/factura/asis/many`;
+  try {
+    const response = await httpClient.post(extension, data);
+    return response.data
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 //-----------------------------------------------------
 
 const uploadOCService = async (id: string, data: FormData) => {
@@ -131,8 +161,11 @@ export {
   uploadGroupOCService,
   uploadOCService,
   getGroupOCConfirmService,
+  getGroupInvoiceToUploadService,
+  uploadGroupInvoicesService,
   confirmGroupOCService,
   downloadFilesService,
+  confirmGroupInvoicesService,
   confirmOCService,
   generateInvoiceService,
   filterInvoicesService,

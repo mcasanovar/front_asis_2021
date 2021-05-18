@@ -11,7 +11,6 @@ import { InvoicesInitialization } from '../../initializations/invoices.initializ
 import { DEFAULT_PERCENTAGE_IVA, FORMAT_DATE } from '../../constants/var';
 import { CalculateIVA } from '../../libs/calculateIVA';
 import { MapInvoiceToGenerate } from '../../functions/mappers';
-import TextArea from 'antd/lib/input/TextArea';
 import { generateInvoiceService } from '../../services';
 
 interface IGenerateInvoiceProps {
@@ -29,6 +28,7 @@ const GenerateInvoice: React.FunctionComponent<IGenerateInvoiceProps> = ({
 	const { Paragraph, Title } = Typography;
 	const { Column } = Table;
 	const { Panel } = Collapse;
+	const { TextArea } = Input;
 
 	const [loading, setLoading] = useState<boolean>(false);
 	const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });

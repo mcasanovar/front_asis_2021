@@ -8,6 +8,8 @@ import { IAlertMessageContent } from '../../../models/index.models';
 import { MilesFormat } from '../../../libs/formattedPesos';
 import { MapGroupInvoiceToConfirmOC } from '../../../functions/mappers';
 
+import AlertComponent from '../../../component/Alert/Alert';
+
 interface IConfirmGroupOCViewProps {
   onCloseModal: (value: string, message: string) => string | void
 }
@@ -36,7 +38,7 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
     setLoading(true);
     const dataMapped = MapGroupInvoiceToConfirmOC(dataConfirmation, selectedInvoices);
     const aux: IResponseInvoices = await confirmGroupOCService(dataMapped);
-    if(!aux.err){
+    if (!aux.err) {
       return onCloseModal('reload', aux.msg)
     }
     setMessageAlert({ message: aux.msg, type: 'error', show: true });
@@ -71,7 +73,7 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
   }, [messageAlert]);
 
   useEffect(() => {
-    if(!!dataConfirmation.estado_archivo && !!selectedInvoices.length){
+    if (!!dataConfirmation.estado_archivo && !!selectedInvoices.length) {
       setDisabledConfirm(false);
       return
     }
@@ -91,7 +93,7 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
             >
               <Select
                 style={{ width: '100%' }}
-                onSelect={(e) => setDataConfirmation({...dataConfirmation, estado_archivo: e.toString()})}
+                onSelect={(e) => setDataConfirmation({ ...dataConfirmation, estado_archivo: e.toString() })}
               >
                 <Option value="Aprobado">Aprobado</Option>
                 <Option value="Rechazado">Rechazado</Option>
@@ -106,7 +108,7 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
             >
               <TextArea
                 rows={3}
-                onChange={(e) => setDataConfirmation({...dataConfirmation, observaciones: e.currentTarget.value})}
+                onChange={(e) => setDataConfirmation({ ...dataConfirmation, observaciones: e.currentTarget.value })}
               />
             </Form.Item>
           </Col>
@@ -148,6 +150,7 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
 
   return (
     <Spin spinning={loading} size='large' tip='Cargando...'>
+      {messageAlert.show && <AlertComponent message={messageAlert.message} type={messageAlert.type} />}
       <Form layout='vertical'>
         <Row>
           <Col span='24'>

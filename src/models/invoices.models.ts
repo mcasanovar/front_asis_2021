@@ -68,7 +68,7 @@ export interface ICompanyInfo {
   email: string
 }
 
-export interface IResponseAllInvoices{
+export interface IResponseAllInvoices {
   total_items: number,
   pagina_actual: number,
   nro_paginas: 0,
@@ -92,5 +92,30 @@ export interface IGroupUploadOC {
 
 export interface IGroupConfirmOC {
   estado_archivo: string,
+  observaciones: string
+}
+
+export interface IGroupUploadInvoices {
+  fecha_facturacion: string,
+  nro_factura: string,
+  monto_neto: number,
+  porcentaje_impuesto: number,
+  valor_impuesto: number,
+  sub_total: number,
+  exento: number,
+  descuento: number,
+  total: number,
+  representante: string,
+  razon_social_empresa: string,
+  email_empresa: string,
+  observacion_factura: string
+}
+
+export interface IGroupConfirmInvoices {
+  estado_archivo: string,
+  nro_nota_credito: string,
+  fecha_nota_credito: string,
+  monto_nota_credito: number,
+  factura_anular: string,
   observaciones: string
 }

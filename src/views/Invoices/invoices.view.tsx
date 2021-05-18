@@ -79,7 +79,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
           _id: value,
           title: 'Subida grupal de facturas',
           size: 'small',
-          widthModal: 1500,
+          widthModal: 1100,
           showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
         })
         setOpenModal(true);
@@ -89,7 +89,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
           _id: value,
           title: 'Validación grupal de facturas',
           size: 'small',
-          widthModal: 1500,
+          widthModal: 1100,
           showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
         })
         setOpenModal(true);
@@ -416,12 +416,17 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
               onCloseModal={(value, message) => handleCloseModal(value, message)}
             />
           }
-          {ActualModal._id === 'uploadgroupinvoice' && 
-            <UploadGroupInvoicesView 
-              
+          {ActualModal._id === 'uploadgroupinvoice' &&
+            <UploadGroupInvoicesView
+              onCloseModal={(value, message) => handleCloseModal(value, message)}
+              company={company}
             />
           }
-          {ActualModal._id === 'validategroupinvoice' && <ValidateGroupInvoicesView />}
+          {ActualModal._id === 'validategroupinvoice' &&
+            <ValidateGroupInvoicesView
+              onCloseModal={(value, message) => handleCloseModal(value, message)}
+            />
+          }
         </ModalComponent>
       }
     </div>

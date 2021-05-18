@@ -54,3 +54,28 @@ export const IGroupConfirmOCInitialization = {
   estado_archivo: '',
   observaciones: ''
 }
+
+export const IGroupUploadInvoicesInitialization = {
+  fecha_facturacion: '',
+  nro_factura: '',
+  monto_neto: 0,
+  porcentaje_impuesto: 0,
+  valor_impuesto: 0,
+  sub_total: 0,
+  exento: 0,
+  descuento: 0,
+  total: 0,
+  representante: '',
+  razon_social_empresa: '',
+  email_empresa: '',
+  observacion_factura: ''
+}
+
+export const IGroupConfirmInvoicesInitialization = {
+  estado_archivo: '',
+  nro_nota_credito: '',
+  fecha_nota_credito: '',
+  monto_nota_credito: 0,
+  factura_anular: '',
+  observaciones: ''
+}
