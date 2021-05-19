@@ -37,4 +37,14 @@ export const ParcialPaymentInitialization = {
   institucion_bancaria: '',
   archivo_pago: '',
   isActive: true
+};
+
+export const IGroupConfirmPaymentInitialization = {
+  fecha_pago: '',
+  hora_pago: '',
+  sucursal: '',
+  tipo_pago: '',
+  descuento: 0,
+  observaciones: '',
+  institucion_bancaria: ''
 }

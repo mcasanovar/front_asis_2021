@@ -178,6 +178,9 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
           {record.estado === 'Pago Parcial' &&
             <Tag style={{ textAlign: 'center' }} color="#FC9410">Pago Parcial</Tag>
           }
+          {record.estado === 'Pagado' &&
+            <Tag style={{ textAlign: 'center' }} color="#4CAF50">Pagado</Tag>
+          }
           {record.estado === 'Vencido' &&
             <Tag style={{ textAlign: 'center' }} color="#E41B0E">Vencido</Tag>
           }
@@ -448,7 +451,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<DollarOutlined style={{ fontSize: '1.1rem', color: '#870989' }} />} />
             </Tooltip>
           }
-          {showGeneratePayment &&
+          {showGeneratePayment && record.estado !== 'Pagado' &&
             <Tooltip title='Realizar Pago' color={'#35A20C'}>
               <Button
                 onClick={() => onClickAction('generatepayment', record._id)}

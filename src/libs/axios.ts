@@ -7,8 +7,9 @@ import axios from "axios";
 // })
 
 const config = {
-  // baseURL: process.env.REACT_APP_API_DEV,
-  baseURL: 'https://asis-api-2021.herokuapp.com/',
+  baseURL: process.env.REACT_APP_API_DEV,
+  // baseURL: 'https://asis-api-2021.herokuapp.com/',
+  // baseURL: 'https://sslprotocol.api-asis.com',
   withCredentials: false,
   headers: {
     Accept: 'application/json',
@@ -18,8 +19,9 @@ const config = {
 };
 
 const configFormData = {
-  // baseURL: process.env.REACT_APP_API_DEV,
-  baseURL: 'https://asis-api-2021.herokuapp.com/',
+  baseURL: process.env.REACT_APP_API_DEV,
+  // baseURL: 'https://asis-api-2021.herokuapp.com/',
+  // baseURL: 'https://asis-api-2021.herokuapp.com/',
   withCredentials: false,
   headers: {
     Accept: 'application/json',

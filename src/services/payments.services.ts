@@ -11,8 +11,28 @@ const getAllPaymentsService = async (pageNumber: number, nPerPage: number) => {
   }
 };
 
+const getAllPendingPaymentsService = async () => {
+  const extension = `${PREFIX_PAYMENTS}/pending`;
+  try {
+    const response = await httpClient.get(extension);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 const generateParcialPaymentService = async (id: string, data: FormData) => {
   const extension = `${PREFIX_PAYMENTS}/nuevo/${id}`;
+  try {
+    const response = await httpClientFormData.post(extension, data);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+const generateGroupPaymentsService = async (data: FormData) => {
+  const extension = `${PREFIX_PAYMENTS}/many`;
   try {
     const response = await httpClientFormData.post(extension, data);
     return response.data;
@@ -46,6 +66,8 @@ const filterPaymentsService = async (
 
 export { 
   getAllPaymentsService,
+  getAllPendingPaymentsService,
   generateParcialPaymentService,
-  filterPaymentsService
+  generateGroupPaymentsService,
+  filterPaymentsService,
 }

@@ -32,7 +32,7 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
       _id: 'grouppayment',
       title: 'PAGO GRUPAL',
       size: 'small',
-      widthModal: 900,
+      widthModal: 1200,
       showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
     },
   ];
@@ -175,8 +175,8 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
     getPayments(1);
   }, []);
 
-  if(!authorized){
-    return <Redirect to='./login'/>
+  if (!authorized) {
+    return <Redirect to='./login' />
   }
 
   return (
@@ -215,7 +215,7 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
         showGeneratePayment
         enablePagination={false}
       />
-      <br/>
+      <br />
       <PaginationComponent
         actualPage={actualPage}
         onChange={(newpage: number) => handleChangePagination(newpage)}
@@ -250,7 +250,11 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
               paymentSelected={paymentSelected}
             />
           }
-          {ActualModal._id === 'grouppayment' && <GenerateGroupPaymentView />}
+          {ActualModal._id === 'grouppayment' &&
+            <GenerateGroupPaymentView
+              onCloseModal={(value, message) => handleCloseModal(value, message)}
+            />
+          }
         </ModalComponent>}
     </div>
   );

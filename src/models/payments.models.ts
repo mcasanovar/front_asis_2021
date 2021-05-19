@@ -59,3 +59,13 @@ export interface IFiltersPayment {
   value: string,
   name: string
 };
+
+export interface IGroupConfirmPayment {
+  fecha_pago: string,
+  hora_pago: string,
+  sucursal: string,
+  tipo_pago: string,
+  descuento: number,
+  observaciones: string,
+  institucion_bancaria: string
+};
