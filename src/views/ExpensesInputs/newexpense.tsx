@@ -304,13 +304,17 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
           }
           <Row>
             <Col span={4}>
-              <DatePicker
-                format={FORMAT_DATE}
-                defaultValue={moment(new Date(), FORMAT_DATE)}
-                style={{ width: '100%' }}
-                onSelect={(e: Moment) => setNewDataExpense({ ...newDataExpense, fecha: e.format(FORMAT_DATE) })}
-                value={newDataExpense.fecha !== '' ? moment(newDataExpense.fecha, FORMAT_DATE) : undefined}
-              />
+              <Form.Item
+                label='Fecha'
+              >
+                <DatePicker
+                  format={FORMAT_DATE}
+                  defaultValue={moment(new Date(), FORMAT_DATE)}
+                  style={{ width: '100%' }}
+                  onSelect={(e: Moment) => setNewDataExpense({ ...newDataExpense, fecha: e.format(FORMAT_DATE) })}
+                  value={newDataExpense.fecha !== '' ? moment(newDataExpense.fecha, FORMAT_DATE) : undefined}
+                />
+              </Form.Item>
             </Col>
           </Row>
           <br />
@@ -562,14 +566,14 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
       && file !== null) {
       setDisabledConfirm(false);
     }
-  }, [newDataExpense.fecha, 
-    newDataExpense.categoria_general, 
-    newDataExpense.subcategoria_uno, 
-    newDataExpense.subcategoria_dos,
-    newDataExpense.rut_proveedor,
-    newDataExpense.medio_pago,
-    newDataExpense.institucion_bancaria,
-    newDataExpense.cantidad_factor, 
+  }, [newDataExpense.fecha,
+  newDataExpense.categoria_general,
+  newDataExpense.subcategoria_uno,
+  newDataExpense.subcategoria_dos,
+  newDataExpense.rut_proveedor,
+  newDataExpense.medio_pago,
+  newDataExpense.institucion_bancaria,
+  newDataExpense.cantidad_factor,
     file]);
 
   useEffect(() => {

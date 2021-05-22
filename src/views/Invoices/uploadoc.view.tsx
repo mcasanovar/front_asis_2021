@@ -10,6 +10,7 @@ import { InvoicesInitialization } from '../../initializations/invoices.initializ
 import { FORMAT_DATE } from '../../constants/var';
 import { MapOcToUpload } from '../../functions/mappers';
 import { uploadOCService } from '../../services';
+import moment from 'moment';
 
 interface IUploadOCViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -52,6 +53,14 @@ const UploadOCView: React.FunctionComponent<IUploadOCViewProps> = ({
 
   //---------------------------------------USEEFECT
   useEffect(() => {
+    setNewDataInvoice({
+      ...newDataInvoice,
+      fecha_oc: moment().format(FORMAT_DATE),
+      hora_oc: moment().format('HH:mm')
+    });
+  }, []);
+
+  useEffect(() => {
     if(newDataInvoice.nro_oc !== '' 
       && newDataInvoice.fecha_oc !== ''
       && newDataInvoice.hora_oc !== ''
@@ -59,8 +68,6 @@ const UploadOCView: React.FunctionComponent<IUploadOCViewProps> = ({
         setDisabledConfirm(false)
     }
   }, [newDataInvoice, file]);
-
-  console.log(newDataInvoice)
 
   return (
     <Spin spinning={loading} size='large' tip='Cargando...'>
@@ -97,6 +104,7 @@ const UploadOCView: React.FunctionComponent<IUploadOCViewProps> = ({
                         format={FORMAT_DATE}
                         id='error_2'
                         onChange={(e) => setNewDataInvoice({ ...newDataInvoice, fecha_oc: e?.format(FORMAT_DATE) || '' })}
+                        value={!newDataInvoice.fecha_oc ? moment(new Date(), FORMAT_DATE) : moment(newDataInvoice.fecha_oc, FORMAT_DATE)}
                       />
                     </Form.Item>
                   </Col>
@@ -111,6 +119,7 @@ const UploadOCView: React.FunctionComponent<IUploadOCViewProps> = ({
                         style={{ width: '100%' }}
                         id='error_3'
                         onChange={(e) => setNewDataInvoice({ ...newDataInvoice, hora_oc: e?.format('HH:mm') || '' })}
+                        defaultValue={moment(new Date(), 'HH:mm')}
                       />
                     </Form.Item>
                   </Col>

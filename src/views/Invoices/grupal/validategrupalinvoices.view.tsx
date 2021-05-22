@@ -8,6 +8,7 @@ import { IAlertMessageContent } from '../../../models/index.models';
 import AlertComponent from '../../../component/Alert/Alert';
 import { MilesFormat } from '../../../libs/formattedPesos';
 import { MapGroupConfirmInvoices } from '../../../functions/mappers';
+import moment from 'moment';
 
 interface IValidateGroupInvoicesViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -122,6 +123,7 @@ const ValidateGroupInvoicesView: React.FunctionComponent<IValidateGroupInvoicesV
                     style={{ width: '100%' }}
                     format={FORMAT_DATE}
                     onChange={(e) => setDataConfirmation({ ...dataConfirmation, fecha_nota_credito: e?.format(FORMAT_DATE) || '' })}
+                    value={!dataConfirmation.fecha_nota_credito ? moment(new Date(), FORMAT_DATE) : moment(dataConfirmation.fecha_nota_credito, FORMAT_DATE)}
                   />
                 </Form.Item>
               </Col>

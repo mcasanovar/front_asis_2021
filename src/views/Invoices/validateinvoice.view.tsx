@@ -10,6 +10,7 @@ import { InvoicesInitialization } from '../../initializations/invoices.initializ
 import { FORMAT_DATE } from '../../constants/var';
 import { MapInvoiceToConfirm } from '../../functions/mappers';
 import { confirmInvoiceService } from '../../services';
+import moment from 'moment';
 
 interface IValidateInvoiceViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -42,6 +43,13 @@ const ValidateInvoiceView: React.FunctionComponent<IValidateInvoiceViewProps> = 
   };
 
   //------------------------------USEEFFECT
+  useEffect(() => {
+    setNewDataInvoice({
+      ...newDataInvoice,
+      fecha_nota_credito: moment().format(FORMAT_DATE)
+    })
+  }, []);
+
   useEffect(() => {
     if(newDataInvoice.estado_archivo === 'Rechazado'){
       if(newDataInvoice.nro_nota_credito
@@ -92,6 +100,7 @@ const ValidateInvoiceView: React.FunctionComponent<IValidateInvoiceViewProps> = 
                           style={{ width: '100%' }}
                           format={FORMAT_DATE}
                           onChange={(e) => setNewDataInvoice({ ...newDataInvoice, fecha_nota_credito: e?.format(FORMAT_DATE) || '' })}
+                          value={!newDataInvoice.fecha_nota_credito ? moment(new Date(), FORMAT_DATE) : moment(newDataInvoice.fecha_nota_credito, FORMAT_DATE)}
                         />
                       </Form.Item>
                     </Col>

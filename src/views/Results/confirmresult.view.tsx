@@ -8,6 +8,8 @@ import { IResponseResults, ResultModel } from '../../models/results.model';
 import { ResultsInitalization } from '../../initializations/results.initialization';
 import { FORMAT_DATE } from '../../constants/var';
 import { confirmResultService } from '../../services';
+import moment from 'moment';
+import { date } from 'faker';
 
 interface IConfirmResultViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -57,6 +59,14 @@ const ConfirmResultView: React.FunctionComponent<IConfirmResultViewProps> = ({
     }
     return setDisabledConfirm(true);
   }, [newDataResult]);
+
+  useEffect(() => {
+    setNewDataResult({
+      ...newDataResult,
+      fecha_resultado: moment().format(FORMAT_DATE),
+      hora_resultado: moment().format('HH:mm')
+    })
+  }, []);
   //--------------------------------
 
   console.log(newDataResult)
@@ -135,6 +145,7 @@ const ConfirmResultView: React.FunctionComponent<IConfirmResultViewProps> = ({
                         <DatePicker
                           style={{ width: '100%' }}
                           onChange={(e) => setNewDataResult({ ...newDataResult, fecha_resultado: e?.format(FORMAT_DATE) })}
+                          value={!newDataResult.fecha_resultado ? moment(new Date(), FORMAT_DATE) : moment(newDataResult.fecha_resultado, FORMAT_DATE)}
                         />
                       </Form.Item>
                     </Col>
@@ -148,6 +159,7 @@ const ConfirmResultView: React.FunctionComponent<IConfirmResultViewProps> = ({
                           format='HH:mm'
                           style={{ width: '100%' }}
                           onChange={(e) => setNewDataResult({ ...newDataResult, hora_resultado: e?.format('HH:mm') })}
+                          defaultValue={moment(new Date(), 'HH:mm')}
                         />
                       </Form.Item>
                     </Col>
@@ -231,7 +243,7 @@ const ConfirmResultView: React.FunctionComponent<IConfirmResultViewProps> = ({
             alignItems: 'flex-end'
           }}>
             <Col
-              span={5}
+              span={4}
               style={{ display: 'flex', justifyContent: 'space-between' }}
             >
               <Button

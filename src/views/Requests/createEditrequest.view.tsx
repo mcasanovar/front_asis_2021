@@ -185,6 +185,16 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
     }
   };
 
+  const handleWorkDay = () => {
+    const arrayHour = newRequestData.hora_servicio_solicitado.split(':');
+    if ((parseInt(arrayHour[0]) >= 6 && parseInt(arrayHour[0]) < 20) || (parseInt(arrayHour[0]) === 20 && parseInt(arrayHour[1]) === 0)) {
+      setNewRequestData({ ...newRequestData, jornada: 'Diurna' });
+      return
+    }
+    setNewRequestData({ ...newRequestData, jornada: 'Vespertina' });
+    return
+  };
+
   async function getOneRequest() {
     const aux: IResponseGI = await getOneRequestService(_id);
     if (aux.err !== null) {
@@ -202,13 +212,13 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
     const aux: IResponseGI = await getWorkersGIService();
     aux.err === null && setWorkers(aux.res || [])
     return
-  }
+  };
 
   //----------------------------------------USEEFECT
   useEffect(() => {
     setLoading(true)
-
     getWorkers();
+    handleWorkDay();
     type === 'edit' && getOneRequest();
     setLoading(false)
   }, []);
@@ -259,14 +269,8 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
   }, [messageAlert]);
 
   useEffect(() => {
-    if(newRequestData.hora_servicio_solicitado !== ''){
-      const arrayHour = newRequestData.hora_servicio_solicitado.split(':');
-      if((parseInt(arrayHour[0]) >= 6 && parseInt(arrayHour[0]) < 20) || (parseInt(arrayHour[0]) === 20 && parseInt(arrayHour[1]) === 0)){
-        setNewRequestData({...newRequestData, jornada: 'Diurna'});
-        return
-      }
-      setNewRequestData({...newRequestData, jornada: 'Vespertina'});
-      return
+    if (newRequestData.hora_servicio_solicitado !== '') {
+      handleWorkDay()
     }
   }, [newRequestData.hora_servicio_solicitado]);
 
@@ -275,8 +279,9 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
       && newRequestData.id_GI_PersonalAsignado !== ''
       && newRequestData.id_GI_Principal
       && newRequestData.id_GI_Secundario !== ''
-      && newRequestData.nro_contrato_seleccionado_cp !== ''
-      && newRequestData.faena_seleccionada_cp !== '') {
+      // && newRequestData.nro_contrato_seleccionado_cp !== ''
+      // && newRequestData.faena_seleccionada_cp !== ''
+    ) {
 
       setDisabledConfirm(false)
     }
@@ -285,8 +290,8 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
   newRequestData.id_GI_PersonalAsignado,
   newRequestData.id_GI_Principal,
   newRequestData.id_GI_Secundario,
-  newRequestData.nro_contrato_seleccionado_cp,
-  newRequestData.faena_seleccionada_cp
+  // newRequestData.nro_contrato_seleccionado_cp,
+  // newRequestData.faena_seleccionada_cp
   ]);
 
 
@@ -305,7 +310,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                   style={{ width: '100%' }}
                   value={newRequestData.fecha_solicitud !== '' ? moment(newRequestData.fecha_solicitud, FORMAT_DATE) : undefined}
                   onSelect={(e: Moment) => handleSelectRequestDate(e)}
-                  // showTime={{ defaultValue: moment('00:00:00', 'HH:mm') }}
+                // showTime={{ defaultValue: moment('00:00:00', 'HH:mm') }}
                 />
               </Form.Item>
             </Col>
@@ -637,8 +642,8 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
           <Row gutter={8}>
             <Col span={6}>
               <Form.Item
-                validateStatus={newRequestData.nro_contrato_seleccionado_cp !== '' ? 'success' : 'error'}
-                help={newRequestData.nro_contrato_seleccionado_cp !== '' ? '' : 'Formato de rut incorrecto'}
+                // validateStatus={newRequestData.nro_contrato_seleccionado_cp !== '' ? 'success' : 'error'}
+                // help={newRequestData.nro_contrato_seleccionado_cp !== '' ? '' : 'Formato de rut incorrecto'}
                 label='Contrato'
               >
                 <Select
@@ -655,8 +660,8 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
             </Col>
             <Col span={6}>
               <Form.Item
-                validateStatus={newRequestData.faena_seleccionada_cp !== '' ? 'success' : 'error'}
-                help={newRequestData.faena_seleccionada_cp !== '' ? '' : 'Formato de rut incorrecto'}
+                // validateStatus={newRequestData.faena_seleccionada_cp !== '' ? 'success' : 'error'}
+                // help={newRequestData.faena_seleccionada_cp !== '' ? '' : 'Formato de rut incorrecto'}
                 label='Seleccione faena'
               >
                 <Select
@@ -770,7 +775,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                   format={FORMAT_DATE}
                   style={{ width: '100%' }}
                   onSelect={(e: Moment) => setNewRequestData({ ...newRequestData, fecha_servicio_solicitado: e.format(FORMAT_DATE) })}
-                  value={newRequestData.fecha_servicio_solicitado !== '' ? moment(newRequestData.fecha_servicio_solicitado, FORMAT_DATE) : undefined}
+                  value={!!newRequestData.fecha_servicio_solicitado ? moment(newRequestData.fecha_servicio_solicitado, FORMAT_DATE) : undefined}
                 />
               </Form.Item>
             </Col>

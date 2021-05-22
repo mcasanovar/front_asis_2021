@@ -10,6 +10,7 @@ import { generateParcialPaymentService } from '../../services';
 import { IAlertMessageContent } from '../../models/index.models';
 import AlertComponent from "../../component/Alert/Alert";
 import { setInterval } from 'node:timers';
+import moment from 'moment';
 
 interface IGeneratePaymentViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -63,7 +64,7 @@ const GeneratePaymentView: React.FunctionComponent<IGeneratePaymentViewProps> = 
     let formData = new FormData();
     const partialPaymentMapped = MapParcialPaymentToGenerate(paymentSelected || PaymentInitialization, newDataParcialPayment);
     formData.append("data", JSON.stringify(partialPaymentMapped));
-    file !== null && formData.append("archivo", file);
+    !!file && formData.append("archivo", file);
     const aux: IResponsePayment = await generateParcialPaymentService(paymentSelected?._id || '', formData);
     if (aux.err === null) {
       onCloseModal('reload', aux.msg)
@@ -77,7 +78,6 @@ const GeneratePaymentView: React.FunctionComponent<IGeneratePaymentViewProps> = 
     if (newDataParcialPayment.tipo_pago !== ''
       && newDataParcialPayment.fecha_pago !== ''
       && newDataParcialPayment.hora_pago !== ''
-      && file !== null
       && newDataParcialPayment.monto !== 0
       && validAmmount) {
       setDisabledConfirm(false)
@@ -89,7 +89,7 @@ const GeneratePaymentView: React.FunctionComponent<IGeneratePaymentViewProps> = 
     else {
       setNewDataParcialPayment({ ...newDataParcialPayment, institucion_bancaria: '' });
     }
-  }, [newDataParcialPayment.tipo_pago, newDataParcialPayment.fecha_pago, newDataParcialPayment.hora_pago, file, validAmmount, newDataParcialPayment.monto]);
+  }, [newDataParcialPayment.tipo_pago, newDataParcialPayment.fecha_pago, newDataParcialPayment.hora_pago, validAmmount, newDataParcialPayment.monto]);
 
   useEffect(() => {
     if (messageAlert.show) {
@@ -168,6 +168,7 @@ const GeneratePaymentView: React.FunctionComponent<IGeneratePaymentViewProps> = 
                   format={FORMAT_DATE}
                   onChange={(e) => setNewDataParcialPayment({ ...newDataParcialPayment, fecha_pago: e?.format(FORMAT_DATE) || '' })}
                   id='error_4'
+                  value={!newDataParcialPayment.fecha_pago ? moment(new Date(), FORMAT_DATE) : moment(newDataParcialPayment.fecha_pago, FORMAT_DATE)}
                 />
               </Form.Item>
             </Col>
@@ -182,6 +183,7 @@ const GeneratePaymentView: React.FunctionComponent<IGeneratePaymentViewProps> = 
                   style={{ width: '100%' }}
                   onChange={(e) => setNewDataParcialPayment({ ...newDataParcialPayment, hora_pago: e?.format('HH:mm') || '' })}
                   id='error_5 '
+                  defaultValue={moment(new Date(), 'HH:mm')}
                 />
               </Form.Item>
             </Col>
@@ -312,8 +314,8 @@ const GeneratePaymentView: React.FunctionComponent<IGeneratePaymentViewProps> = 
                 label='.'
                 getValueFromEvent={getFileUploaded}
                 valuePropName="fileData"
-                validateStatus={file !== null ? 'success' : 'error'}
-                help={file !== null ? '' : 'Seleccione'}
+                // validateStatus={file !== null ? 'success' : 'error'}
+                // help={file !== null ? '' : 'Seleccione'}
               >
                 <Upload.Dragger
                   name="file"
@@ -341,7 +343,7 @@ const GeneratePaymentView: React.FunctionComponent<IGeneratePaymentViewProps> = 
           alignItems: 'flex-end'
         }}>
           <Col
-            span={6}
+            span={5}
             style={{ display: 'flex', justifyContent: 'space-between' }}
           >
             <Button

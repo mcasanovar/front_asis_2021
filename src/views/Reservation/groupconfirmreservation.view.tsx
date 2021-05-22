@@ -92,7 +92,7 @@ const GroupConfirmReservationView: React.FunctionComponent<IGroupConfirmReservat
                   style={{ width: '100%' }}
                   format={FORMAT_DATE}
                   onChange={(e) => setDataConfirmation({ ...dataConfirmation, fecha_reserva: e?.format(FORMAT_DATE) || '' })}
-                // value={dataConfirmation.fecha_solicitud !== '' ? moment(dataConfirmation.fecha_solicitud, FORMAT_DATE) : undefined}
+                  value={!!dataConfirmation.fecha_reserva ? moment(dataConfirmation.fecha_reserva, FORMAT_DATE) : undefined}
                 />
               </Form.Item>
             </Col>
@@ -106,6 +106,7 @@ const GroupConfirmReservationView: React.FunctionComponent<IGroupConfirmReservat
                   style={{ width: '100%' }}
                   format="HH:mm"
                   onChange={(e) => setDataConfirmation({ ...dataConfirmation, hora_reserva: e?.format('HH:mm') || '' })}
+                  defaultValue={moment(new Date(), 'HH:mm')}
                 />
               </Form.Item>
             </Col>
@@ -119,7 +120,7 @@ const GroupConfirmReservationView: React.FunctionComponent<IGroupConfirmReservat
                   style={{ width: '100%' }}
                   format={FORMAT_DATE}
                   onChange={(e) => setDataConfirmation({ ...dataConfirmation, fecha_reserva_fin: e?.format(FORMAT_DATE) || '' })}
-                // value={dataConfirmation.fecha_solicitud !== '' ? moment(dataConfirmation.fecha_solicitud, FORMAT_DATE) : undefined}
+                  value={!!dataConfirmation.fecha_reserva_fin ? moment(dataConfirmation.fecha_reserva_fin, FORMAT_DATE) : undefined}
                 />
               </Form.Item>
             </Col>
@@ -133,6 +134,7 @@ const GroupConfirmReservationView: React.FunctionComponent<IGroupConfirmReservat
                   style={{ width: '100%' }}
                   format="HH:mm"
                   onChange={(e) => setDataConfirmation({ ...dataConfirmation, hora_reserva_fin: e?.format('HH:mm') || '' })}
+                  defaultValue={moment(new Date(), 'HH:mm')}
                 />
               </Form.Item>
             </Col>
@@ -245,6 +247,13 @@ const GroupConfirmReservationView: React.FunctionComponent<IGroupConfirmReservat
     setLoading(true);
     getReservationsToConfirm();
     getWorkers();
+    setDataConfirmation({
+      ...dataConfirmation,
+      fecha_reserva: moment().format(FORMAT_DATE),
+      hora_reserva: moment().format('HH:mm'),
+      fecha_reserva_fin: moment().format(FORMAT_DATE),
+      hora_reserva_fin: moment().format('HH:mm')
+    });
     setLoading(false)
   }, []);
 

@@ -776,7 +776,8 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                       }
                       style={{ width: '100%' }}
                       onSelect={(e: SelectValue) => handleSelectOrgBeloging(e.toString())}
-                      value={newGiData.id_GI_org_perteneciente}
+                      // value={newGiData.id_GI_org_perteneciente}
+                      defaultValue={newGiData.razon_social_org_perteneciente || ''}
                     >
                       {organizationsBelonging.length > 0 && organizationsBelonging.map((org, index) => (
                         <Option key={index} value={org._id}>{org.razon_social}</Option>

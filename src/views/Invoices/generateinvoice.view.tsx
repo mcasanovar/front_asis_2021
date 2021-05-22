@@ -12,6 +12,7 @@ import { DEFAULT_PERCENTAGE_IVA, FORMAT_DATE } from '../../constants/var';
 import { CalculateIVA } from '../../libs/calculateIVA';
 import { MapInvoiceToGenerate } from '../../functions/mappers';
 import { generateInvoiceService } from '../../services';
+import moment from 'moment';
 
 interface IGenerateInvoiceProps {
 	onCloseModal: (value: string, message: string) => string | void
@@ -84,6 +85,13 @@ const GenerateInvoice: React.FunctionComponent<IGenerateInvoiceProps> = ({
 
 	//--------------------------------USEEFECT
 	useEffect(() => {
+		setNewDataInvoice({
+			...newDataInvoice,
+			fecha_facturacion: moment().format(FORMAT_DATE)
+		})
+	}, []);
+
+	useEffect(() => {
     if (messageAlert.show) {
       setTimeout(() => {
         setMessageAlert({ ...messageAlert, show: false });
@@ -113,11 +121,11 @@ const GenerateInvoice: React.FunctionComponent<IGenerateInvoiceProps> = ({
 	useEffect(() => {
 		if (companyBusinessName !== ''
 			&& newDataInvoice.fecha_facturacion !== ''
-			&& newDataInvoice.nro_factura !== ''
+			// && newDataInvoice.nro_factura !== ''
 			&& file !== null) {
 			setDisabledConfirm(false)
 		}
-	}, [newDataInvoice.fecha_facturacion, newDataInvoice.nro_factura, file, companyBusinessName]);
+	}, [newDataInvoice.fecha_facturacion, file, companyBusinessName]);
 
 	//----------------------------RENDERS
 	const renderGeneralInvoiceInfo = () => {
@@ -253,21 +261,22 @@ const GenerateInvoice: React.FunctionComponent<IGenerateInvoiceProps> = ({
 							<Row gutter={8}>
 								<Col span={8}>
 									<Form.Item
-										validateStatus={newDataInvoice.fecha_facturacion !== '' ? 'success' : 'error'}
-										help={newDataInvoice.fecha_facturacion !== '' ? '' : 'Seleccione'}
+										// validateStatus={newDataInvoice.fecha_facturacion !== '' ? 'success' : 'error'}
+										// help={newDataInvoice.fecha_facturacion !== '' ? '' : 'Seleccione'}
 										label='Fecha factura'
 									>
 										<DatePicker
 											style={{ width: '100%' }}
 											format={FORMAT_DATE}
 											onChange={(e) => setNewDataInvoice({ ...newDataInvoice, fecha_facturacion: e?.format(FORMAT_DATE) || '' })}
+											value={!newDataInvoice.fecha_facturacion ? moment(new Date(), FORMAT_DATE) : moment(newDataInvoice.fecha_facturacion, FORMAT_DATE)}
 										/>
 									</Form.Item>
 								</Col>
 								<Col span={8}>
 									<Form.Item
-										validateStatus={newDataInvoice.nro_factura !== '' ? 'success' : 'error'}
-										help={newDataInvoice.nro_factura !== '' ? '' : 'Seleccione'}
+										// validateStatus={newDataInvoice.nro_factura !== '' ? 'success' : 'error'}
+										// help={newDataInvoice.nro_factura !== '' ? '' : 'Seleccione'}
 										label='Nro. factura'
 									>
 										<Input

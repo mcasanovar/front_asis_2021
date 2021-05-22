@@ -1,3 +1,6 @@
+import moment from "moment";
+import { FORMAT_DATE } from "../constants/var";
+
 export const PaymentInitialization = {
   _id: '',
   codigo: '',
@@ -26,8 +29,8 @@ export const PaymentInitialization = {
 
 export const ParcialPaymentInitialization = {
   id: '',
-  fecha_pago: '',
-  hora_pago: '',
+  fecha_pago: moment().format(FORMAT_DATE),
+  hora_pago: moment().format('HH:mm'),
   sucursal: '',
   tipo_pago: '',
   monto: 0,

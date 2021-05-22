@@ -108,8 +108,6 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
     return setDisabledConfirm(true)
   }, [dataConfirmation, amount, file]);
 
-  console.log(dataConfirmation)
-
   //----------------------------------------------RENDERS
   const renderInformation = () => {
     return (

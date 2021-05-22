@@ -1,3 +1,6 @@
+import moment from "moment";
+import { FORMAT_DATE } from "../constants/var";
+
 export const InvoicesInitialization = {
   _id: '',
   codigo: '',
@@ -26,7 +29,7 @@ export const InvoicesInitialization = {
   nro_factura: '',
   archivo_factura: '',
   monto_neto: 0,
-  porcentaje_impuesto: 19,
+  porcentaje_impuesto: 0,
   valor_impuesto: 0,
   sub_total: 0,
   exento: 0,
@@ -74,7 +77,7 @@ export const IGroupUploadInvoicesInitialization = {
 export const IGroupConfirmInvoicesInitialization = {
   estado_archivo: '',
   nro_nota_credito: '',
-  fecha_nota_credito: '',
+  fecha_nota_credito: moment().format(FORMAT_DATE),
   monto_nota_credito: 0,
   factura_anular: '',
   observaciones: ''

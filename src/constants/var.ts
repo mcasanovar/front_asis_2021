@@ -16,7 +16,7 @@ export const FORMAT_DATE = 'DD-MM-YYYY';
 
 export const N_PER_PAGE = 12;
 
-export const DEFAULT_PERCENTAGE_IVA = 19;
+export const DEFAULT_PERCENTAGE_IVA = 0;
 
 export const PAYMENT_METHODS = [
   'Efectivo',

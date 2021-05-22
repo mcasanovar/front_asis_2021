@@ -367,7 +367,9 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<FilePdfOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showDownloadResult && record.estado === 'En Revisión' && record.estado_archivo === 'Cargado' &&
+          {showDownloadResult 
+            && (record.estado === 'En Revisión' || record.estado === 'Revisado') 
+            && (record.estado_archivo === 'Cargado' || record.estado_archivo === 'Aprobado') &&
             <Tooltip title='Descargar resultado' color={'#1A9D02'}>
               <Button
                 onClick={() => onClickAction('downloadresult', record._id)}
