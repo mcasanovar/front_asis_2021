@@ -26,6 +26,19 @@ export interface IDetailsEmployees {
   vacaciones_cant: number,
   recuperados_cant: number,
   mediodia_recuperados_cant: number 
+};
+
+export interface IDetailsPayments {
+  codigo: string,
+  fecha: string,
+  categoria_general: string,
+  subcategoria_uno: string,
+  subcategoria_dos: string,
+  tipo_registro: string,
+  medio_pago: string,
+  institucion_bancaria: string,
+  monto_total: number,
+  archivo_adjunto: string
 }
 
 export interface GiModel {
@@ -98,6 +111,7 @@ export interface GiModel {
   dias_vacaciones?: string,
   comentarios?: string,
   detalle_empleado?: IDetailsEmployees
+  detalle_pagos?: IDetailsPayments[]
 };
 
 export interface ConfigurationGIModel {

@@ -1,10 +1,15 @@
-import * as React from 'react';
-import { Col, Input, Row, Form, Table, Collapse } from "antd";
+import React, { useState } from 'react';
+import { Col, Input, Row, Form, Table, Collapse, Tooltip, Button } from "antd";
+import {
+  DownloadOutlined,
+} from "@ant-design/icons";
 
-import TableComponent from "../../component/Table/Table";
 import { GiModel } from '../../models/gi.models';
 import { MilesFormat } from '../../libs/formattedPesos';
 import TextArea from 'antd/lib/input/TextArea';
+import { IResponseExpenses } from '../../models/expenses.models';
+import { downloadFileEmployeeService } from '../../services';
+import { IAlertMessageContent } from '../../models/index.models';
 
 interface IDetailsEmployeeProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -17,6 +22,35 @@ const DetailsEmployee: React.FunctionComponent<IDetailsEmployeeProps> = ({
 }) => {
   const { Panel } = Collapse;
   const { Column } = Table;
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
+
+  const handleDownloadFile = async (filestring: string) => {
+    setLoading(true)
+    const aux: IResponseExpenses = await downloadFileEmployeeService(filestring);
+    if (aux.err === null) {
+      const arr = new Uint8Array(aux.res.data);
+      const blob = new Blob([arr], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const fileName = aux?.filename || 'examen';
+
+      link.setAttribute('href', url);
+      link.setAttribute('download', fileName);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setLoading(false)
+      return
+    }
+    if (aux.err !== '') {
+      setMessageAlert({ message: aux.msg, type: 'error', show: true });
+      setLoading(false)
+      return
+    }
+  };
 
   //-----------RENDERS
   const renderEmployeeInformation = () => {
@@ -161,31 +195,51 @@ const DetailsEmployee: React.FunctionComponent<IDetailsEmployeeProps> = ({
     );
   };
 
+  const renderListInvoices = () => {
+    return (
+      <Table
+        style={{ width: '100%' }}
+        showHeader={true}
+        loading={loading}
+        dataSource={employeesSelected?.detalle_pagos || []}
+        // columns={columns}
+        pagination={{ position: ['bottomCenter'] }}
+      >
+        <Column className='column-money' title="Código" dataIndex="codigo" key="codigo" />
+        <Column className='column-money' title="Fecha" dataIndex="fecha" key="fecha" />
+        <Column className='column-money' title="Subcategoria" dataIndex="subcategoria_dos" key="subcategoria_dos" />
+        <Column className='column-money' title="Medio de pago" dataIndex="medio_pago" key="medio_pago" />
+        <Column className='column-money' title="Institución bancaria" dataIndex="institucion_bancaria" key="institucion_bancaria" />
+        <Column
+          className='column-money'
+          title="Monto Total"
+          dataIndex="monto_total"
+          key="monto_total"
+          render={(text) => `$${MilesFormat(text)}`}
+        />
+        <Column
+          className='column-money'
+          title="Action"
+          render={(_:string, record: any) => (
+            <Tooltip title='Descargar liquidación' color={'#1A9D02'}>
+              <Button
+                onClick={() => handleDownloadFile(record.archivo_adjunto)}
+                style={{ backgroundColor: '#39AE16' }}
+                icon={<DownloadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
+            </Tooltip>
+          )}
+        />
+      </Table>
+    );
+  };
+
   return (
     <Collapse accordion defaultActiveKey={['1']}>
       <Panel header="Empleado" key="1">
         {renderEmployeeInformation()}
       </Panel>
-      {/* <Panel header="Desglose" key="2">
-        <TableComponent
-          onClickAction={(id: string) => { }}
-          onClickDelete={() => { }}
-          useStyle={false}
-        />
-      </Panel>
-      <Panel header="Ausencias" key="3">
-        <TableComponent
-          onClickAction={(id: string) => { }}
-          onClickDelete={() => { }}
-          useStyle={false}
-        />
-      </Panel> */}
       <Panel header="Pagos" key="4">
-        <TableComponent
-          onClickAction={(id: string) => { }}
-          onClickDelete={() => { }}
-          useStyle={false}
-        />
+        {renderListInvoices()}
       </Panel>
     </Collapse>
   );

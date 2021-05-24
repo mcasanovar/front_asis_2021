@@ -11,7 +11,7 @@ import { MapEmployeeToEdit } from '../../functions/mappers';
 
 interface IEditEmployeeViewProps {
   onCloseModal: (value: string, message: string) => string | void
-  employeesSelected: GiModel | undefined
+  employeesSelected: GiModel
 }
 
 const EditEmployeeView: React.FunctionComponent<IEditEmployeeViewProps> = ({
@@ -21,8 +21,14 @@ const EditEmployeeView: React.FunctionComponent<IEditEmployeeViewProps> = ({
   const { Option } = Select;
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [disabledConfirm, setDisabledConfirm] = useState<boolean>(true);
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
-  const [newDataEmployee, setNewDataEmployee] = useState<GiModel>(employeesSelected || GiInitializationData);
+  const [newDataEmployee, setNewDataEmployee] = useState<GiModel>({
+    ...employeesSelected,
+    fecha_inicio_contrato: moment().format(FORMAT_DATE),
+    fecha_fin_contrato: moment().format(FORMAT_DATE),
+    estado_contrato: 'Vigente'
+  });
 
   const handleComparateDates = (enddate: Moment) => {
     const aux = moment().diff(enddate, 'days');
@@ -41,16 +47,7 @@ const EditEmployeeView: React.FunctionComponent<IEditEmployeeViewProps> = ({
     }
   };
 
-  //-------------------------------------------USEEFFECT
-  useEffect(() => {
-    if (messageAlert.show) {
-      setTimeout(() => {
-        setMessageAlert({ ...messageAlert, show: false });
-      }, 2500);
-    }
-  }, [messageAlert]);
-
-  useEffect(() => {
+  const handleStateContract = () => {
     if (newDataEmployee.tipo_contrato === 'Contrato Indefinido') {
       setNewDataEmployee({
         ...newDataEmployee,
@@ -65,6 +62,30 @@ const EditEmployeeView: React.FunctionComponent<IEditEmployeeViewProps> = ({
         fecha_fin_contrato: moment().format(FORMAT_DATE)
       });
     }
+  };
+
+  //-------------------------------------------USEEFFECT
+
+  useEffect(() => {
+    if (!!newDataEmployee._id) {
+      return setNewDataEmployee({
+        ...newDataEmployee,
+        fecha_inicio_contrato: moment().format(FORMAT_DATE),
+        fecha_fin_contrato: moment().format(FORMAT_DATE)
+      })
+    }
+  }, [newDataEmployee._id]);
+
+  useEffect(() => {
+    if (messageAlert.show) {
+      setTimeout(() => {
+        setMessageAlert({ ...messageAlert, show: false });
+      }, 2500);
+    }
+  }, [messageAlert]);
+
+  useEffect(() => {
+    handleStateContract();
   }, [newDataEmployee.tipo_contrato]);
 
   useEffect(() => {
@@ -75,6 +96,13 @@ const EditEmployeeView: React.FunctionComponent<IEditEmployeeViewProps> = ({
       });
     }
   }, [newDataEmployee.fecha_fin_contrato]);
+
+  useEffect(() => {
+    if(!!newDataEmployee.tipo_contrato && !!newDataEmployee.sueldo_bruto){
+      return setDisabledConfirm(false);
+    }
+    return setDisabledConfirm(true)
+  }, [newDataEmployee]);
 
   return (
     <Spin spinning={loading} size='large' tip='Cargando...'>
@@ -116,9 +144,10 @@ const EditEmployeeView: React.FunctionComponent<IEditEmployeeViewProps> = ({
             <Col span={10}>
               <Form.Item
                 label='Tipo de contrato'
+                validateStatus={!!newDataEmployee.tipo_contrato ? 'success' : 'error'}
+                help={!!newDataEmployee.tipo_contrato ? '' : 'Seleccione'}
               >
                 <Select
-                  placeholder='Tipo de contrato'
                   style={{ width: '100%' }}
                   onSelect={(e) => setNewDataEmployee({ ...newDataEmployee, tipo_contrato: e.toString() })}
                   value={newDataEmployee.tipo_contrato}
@@ -137,7 +166,7 @@ const EditEmployeeView: React.FunctionComponent<IEditEmployeeViewProps> = ({
                   style={{ width: '100%' }}
                   format={FORMAT_DATE}
                   onChange={(e) => setNewDataEmployee({ ...newDataEmployee, fecha_inicio_contrato: e?.format(FORMAT_DATE) || '' })}
-                  value={moment(newDataEmployee?.fecha_inicio_contrato, FORMAT_DATE)}
+                  value={!newDataEmployee.fecha_inicio_contrato ? moment(new Date(), FORMAT_DATE) : moment(newDataEmployee?.fecha_inicio_contrato, FORMAT_DATE)}
                 />
               </Form.Item>
             </Col>
@@ -150,7 +179,7 @@ const EditEmployeeView: React.FunctionComponent<IEditEmployeeViewProps> = ({
                     style={{ width: '100%' }}
                     format={FORMAT_DATE}
                     onChange={(e) => setNewDataEmployee({ ...newDataEmployee, fecha_fin_contrato: e?.format(FORMAT_DATE) || '' })}
-                    value={moment(newDataEmployee?.fecha_fin_contrato, FORMAT_DATE)}
+                    value={!newDataEmployee.fecha_fin_contrato ? moment(new Date(), FORMAT_DATE) : moment(newDataEmployee?.fecha_fin_contrato, FORMAT_DATE)}
                   />
                 </Form.Item>
               </Col>
@@ -170,12 +199,14 @@ const EditEmployeeView: React.FunctionComponent<IEditEmployeeViewProps> = ({
             <Col span={6}>
               <Form.Item
                 label='Sueldo bruto'
+                validateStatus={!!newDataEmployee.sueldo_bruto ? 'success' : 'error'}
+                help={!!newDataEmployee.sueldo_bruto ? '' : 'Seleccione'}
               >
                 <InputNumber
                   style={{ width: '100%' }}
                   formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                   parser={value => parseInt(value?.replace(/\$\s?|(,*)/g, '') || '0')}
-                  onChange={(e) => setNewDataEmployee({...newDataEmployee, sueldo_bruto: parseInt(e.toString())})}
+                  onChange={(e) => setNewDataEmployee({ ...newDataEmployee, sueldo_bruto: parseInt(e.toString()) })}
                   value={newDataEmployee.sueldo_bruto}
                 />
               </Form.Item>
@@ -259,10 +290,13 @@ const EditEmployeeView: React.FunctionComponent<IEditEmployeeViewProps> = ({
             </Button>
             <Button
               onClick={() => handleEditEmployee()}
-              style={{ backgroundColor: 'orange', borderColor: 'orange', color: 'white' }}
+              disabled={disabledConfirm}
+              style={!disabledConfirm ?
+                { backgroundColor: 'orange', borderColor: 'orange', color: 'white' } :
+                { backgroundColor: 'grey', borderColor: 'grey', color: 'white' }}
             >
               Guardar
-          </Button>
+            </Button>
           </Col>
         </Row>
       </Form>

@@ -53,9 +53,20 @@ const deleteEmployeeService = async (id: string) => {
   }
 };
 
+const downloadFileEmployeeService = async (filestring: string) => {
+  const extension = `${PREFIX_EMPLOYEES}/downloadfile/${filestring}/`;
+  try {
+    const response = await httpClient.get(extension);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 export { 
   getAllEmployeesService, 
   filterEmployeesService, 
   editEmployeeService, 
-  deleteEmployeeService 
+  deleteEmployeeService,
+  downloadFileEmployeeService
 }

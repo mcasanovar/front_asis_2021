@@ -103,6 +103,7 @@ const downloadFilesService = async (id: string, type: string) => {
     return error.response.data;
   }
 };
+
 const confirmOCService = async (id: string, data: any) => {
   const extension = `${PREFIX_INVOICES}/confirmaroc/${id}`;
   try {

@@ -20,6 +20,7 @@ import PaginationComponent from '../../component/Pagination/Pagination';
 
 import { IReponseAllEmployees } from '../../models/gi.models';
 import { deleteEmployeeService, filterEmployeesService, getAllEmployeesService } from '../../services';
+import { GiInitializationData } from '../../initializations/gi.initialization';
 
 const buttons: IButtonsProps[] = [];
 
@@ -253,7 +254,7 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
           {ActualModal._id === 'edit' &&
             <EditEmployeeView
               onCloseModal={(value, message) => handleCloseModal(value, message)}
-              employeesSelected={employeeSelected}
+              employeesSelected={employeeSelected || {...GiInitializationData}}
             />
           }
           {ActualModal._id === 'details' &&
