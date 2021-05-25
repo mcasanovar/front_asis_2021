@@ -85,13 +85,6 @@ const GenerateInvoice: React.FunctionComponent<IGenerateInvoiceProps> = ({
 
 	//--------------------------------USEEFECT
 	useEffect(() => {
-		setNewDataInvoice({
-			...newDataInvoice,
-			fecha_facturacion: moment().format(FORMAT_DATE)
-		})
-	}, []);
-
-	useEffect(() => {
     if (messageAlert.show) {
       setTimeout(() => {
         setMessageAlert({ ...messageAlert, show: false });
@@ -119,13 +112,24 @@ const GenerateInvoice: React.FunctionComponent<IGenerateInvoiceProps> = ({
 	}, [newDataInvoice]);
 
 	useEffect(() => {
-		if (companyBusinessName !== ''
-			&& newDataInvoice.fecha_facturacion !== ''
-			// && newDataInvoice.nro_factura !== ''
-			&& file !== null) {
-			setDisabledConfirm(false)
+		if(!!newDataInvoice._id){
+			setNewDataInvoice({
+				...newDataInvoice,
+				fecha_facturacion: moment().format(FORMAT_DATE)
+			})
 		}
+	}, [newDataInvoice._id]);
+
+	useEffect(() => {
+		if (!!companyBusinessName &&
+			!!newDataInvoice.fecha_facturacion &&
+			!!file) {
+			return setDisabledConfirm(false)
+		}
+		return setDisabledConfirm(true);
 	}, [newDataInvoice.fecha_facturacion, file, companyBusinessName]);
+
+	console.log(invoiceSelected)
 
 	//----------------------------RENDERS
 	const renderGeneralInvoiceInfo = () => {
