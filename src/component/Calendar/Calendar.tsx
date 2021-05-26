@@ -5,19 +5,22 @@ import moment, { Moment } from 'moment';
 interface ICalendarComponentProps {
   onSelect: (e: Moment) => void | Moment
   onPanelChange: (e: Moment, mode: string) => void | Moment,
-  dateCellRender: (date: Moment) => React.ReactNode 
+  dateCellRender: (date: Moment) => React.ReactNode,
+  monthCellRender: (date: Moment) => React.ReactNode
 }
 
 const CalendarComponent: React.FunctionComponent<ICalendarComponentProps> = ({
   onSelect,
   onPanelChange,
-  dateCellRender
+  dateCellRender,
+  monthCellRender
 }) => {
   return (
     <Calendar 
       onSelect={(e) => onSelect(e)}
       onPanelChange={(e, type) => onPanelChange(e, type)}
       dateCellRender={dateCellRender}
+      monthCellRender={monthCellRender}
     />
   );
 };

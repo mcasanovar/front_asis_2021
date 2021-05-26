@@ -80,6 +80,7 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
           showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
         });
         idregister && setIdEmployeeSelected(idregister);
+        idregister && setEmployeeSelected(employees.find((employee) => employee._id === idregister));
         setOpenModal(true);
         break;
       case 'delete':
@@ -267,6 +268,7 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
             <AbsensesEmployee
               onCloseModal={(value, message) => handleCloseModal(value, message)}
               idEmployee={idEmployeeSelected}
+              employeeSelected={employeeSelected}
             />
           }
         </ModalComponent>}

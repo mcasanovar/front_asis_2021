@@ -1,31 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { Col, Input, Row, Select, TimePicker, Upload, Form, DatePicker, Button, Spin, Tag } from "antd";
+import { Col, Input, Row, Select, TimePicker, Upload, Form, DatePicker, Button, Spin, Tag, Typography } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 
 import { CANCEL, CONFIRM, FORMAT_DATE, RAZON_AUSENCES } from '../../constants/var';
 
 import CalendarComponent from "../../component/Calendar/Calendar";
 import ModalComponent from "../../component/Modal/Modal";
-import moment, { Moment } from 'moment';
+import moment, { Moment, months } from 'moment';
 import { AusencesModel, IResponseAusences } from '../../models/ausences.models';
 import { ausencesInitialization } from '../../initializations/ausences.initialization';
 import { RangePickerProps } from 'antd/lib/date-picker/generatePicker';
 import { MapAbsenseToInsert } from '../../functions/mappers';
 import { getAbsensesByIdAndDateService, insertAbsenseService } from '../../services';
 import { IAlertMessageContent } from '../../models/index.models';
+import { GiModel } from '../../models/gi.models';
 
 interface IAbsensesEmployeeViewProps {
   onCloseModal: (value: string, message: string) => string | void,
-  idEmployee: string
+  idEmployee: string,
+  employeeSelected: GiModel | undefined
+}
+
+interface CurrentDateProps {
+  month: string,
+  year: string
 }
 
 const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> = ({
   onCloseModal,
-  idEmployee
+  idEmployee,
+  employeeSelected
 }) => {
   const { Option } = Select;
-  const { TextArea } = Input;
+  const { TextArea, } = Input;
   const { RangePicker } = DatePicker;
+  const { Title } = Typography;
 
   const [loading, setLoading] = useState<boolean>(false);
   const [absenses, setAbsenses] = useState<AusencesModel[]>([]);
@@ -37,6 +46,7 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [newDataAusence, setNewDataAusence] = useState<AusencesModel>(ausencesInitialization);
   const [file, setFile] = useState<string | Blob | null>(null);
+  const [currentDate, setcurrentDate] = useState<CurrentDateProps>({ month: moment().format('MMMM'), year: moment().format('YYYY') });
 
   const getFileUploaded = (e: any) => {
     e && setFile(e.file)
@@ -44,6 +54,7 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
   };
 
   const handleSelectedDate = (date: Moment, type?: string) => {
+    setcurrentDate({ month: date.format('MMMM'), year: date.format('YYYY') })
     setHackValue(undefined);
     setValue([date, date]);
     setOpenNewAbsense(true);
@@ -94,7 +105,7 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
     formData.append("data", JSON.stringify(absenseMapped));
     file !== null && formData.append("archivo", file);
     const aux: IResponseAusences = await insertAbsenseService(formData);
-    if (aux.err === null) {
+    if (!aux.err) {
       setLoading(false);
       setNewDataAusence(ausencesInitialization);
       setOpenNewAbsense(false);
@@ -115,8 +126,27 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
         <ul className="events">
           {aux.map(item => (
             <li key={item._id}>
-              {/* <Badge color={item.color_ausencia} text={item.tipo_ausencia} /> */}
-              <Tag color={item.color_ausencia} style={{fontWeight: 'bold'}}>{item.tipo_ausencia}</Tag>
+              <Tag color={item.color_ausencia} style={{ fontWeight: 'bold' }}>{item.tipo_ausencia}</Tag>
+            </li>
+          ))}
+        </ul>
+      );
+    }
+  };
+
+  const handleDataRenderMonths = (value: Moment) => {
+    const aux = absenses.filter((absense) => {
+      if(moment(absense.fecha_inicio_ausencia, FORMAT_DATE).format('MMMM') === moment(value.format(FORMAT_DATE), FORMAT_DATE).format('MMMM') &&
+      moment(absense.fecha_inicio_ausencia, FORMAT_DATE).format('YYYY') === moment(value.format(FORMAT_DATE), FORMAT_DATE).format('YYYY')){
+        return absense
+      }
+    });
+    if (aux) {
+      return (
+        <ul className="notes-month">
+          {aux.map(item => (
+            <li key={item._id}>
+              <Tag color={item.color_ausencia} style={{ fontWeight: 'bold' }}>{item.tipo_ausencia}</Tag>
             </li>
           ))}
         </ul>
@@ -162,13 +192,9 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
     }
   }, [messageAlert]);
 
-  return (
-    <>
-      <CalendarComponent
-        onSelect={(e: Moment) => handleSelectedDate(e)}
-        onPanelChange={(e: Moment, type: string) => { }}
-        dateCellRender={handleDataRenderDates}
-      />
+  //-------------------------------------------------RENDERS
+  const renderModalNewAbsense = () => {
+    return (
       <ModalComponent
         visible={openNewAbsense}
         title='Ingreso de Ausencias'
@@ -307,6 +333,20 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
           </Row>
         </Spin>
       </ModalComponent>
+    );
+  };
+
+  return (
+    <>
+      <Title>{`${currentDate.month.toUpperCase()} - ${currentDate.year}`}</Title>
+      {<Title level={4}>{`${employeeSelected?.razon_social} - ${employeeSelected?.codigo}`}</Title>}
+      <CalendarComponent
+        onSelect={(e: Moment) => handleSelectedDate(e)}
+        onPanelChange={(e: Moment, type: string) => { }}
+        dateCellRender={handleDataRenderDates}
+        monthCellRender={handleDataRenderMonths}
+      />
+      {renderModalNewAbsense()}
     </>
   );
 };
