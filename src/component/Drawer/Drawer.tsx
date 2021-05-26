@@ -11,6 +11,11 @@ interface IDrawerComponentProps {
 const DrawerComponent: React.FunctionComponent<IDrawerComponentProps> = (props) => {
   const { SubMenu } = Menu;
 
+  const styleText: React.CSSProperties = {
+    fontWeight: 'bold',
+    fontSize: 16
+  };
+
   return (
     <Menu
       defaultSelectedKeys={['1']}
@@ -18,7 +23,7 @@ const DrawerComponent: React.FunctionComponent<IDrawerComponentProps> = (props) 
       mode="inline"
       theme="dark"
       inlineCollapsed={true}
-      style={{ height: '95.9vh' }}
+      style={{ height: '95.9vh', width: 130 }}
       onClick={(e) => { }}
     >
       <Menu.Item key="1" icon={<PieChartOutlined />}>
@@ -26,48 +31,48 @@ const DrawerComponent: React.FunctionComponent<IDrawerComponentProps> = (props) 
       </Menu.Item>
       <SubMenu key="2" icon={<MailOutlined />} title="Administración">
         <Menu.Item key="gi">
-          <Link to='/gi'>Grupo de Interes</Link>
+          <Link to='/gi' style={{...styleText}}>Grupo de Interes</Link>
         </Menu.Item>
         <Menu.Item key="empleados">
-          <Link to='/employees'>Empleados</Link>
+          <Link to='/employees' style={{...styleText}}>Empleados</Link>
         </Menu.Item>
-        <Menu.Item key="calendario">Calendario</Menu.Item>
+        <Menu.Item key="calendario"  style={{...styleText}}>Calendario</Menu.Item>
       </SubMenu>
       <SubMenu key="3" icon={<AppstoreOutlined />} title="Operaciones">
         <Menu.Item key="solicitudes">
-          <Link to='/solicitudes'>Solicitudes</Link>
+          <Link to='/solicitudes'  style={{...styleText}}>Solicitudes</Link>
         </Menu.Item>
         <Menu.Item key="reservas">
-          <Link to='/reservas'>Reservas</Link>
+          <Link to='/reservas'  style={{...styleText}}>Reservas</Link>
         </Menu.Item>
         <Menu.Item key="evaluaciones">
-          <Link to='/evaluaciones'>Evaluaciones</Link>
+          <Link to='/evaluaciones'  style={{...styleText}}>Evaluaciones</Link>
         </Menu.Item>
         <Menu.Item key="resultados">
-          <Link to='/resultados'>Resultados</Link>
+          <Link to='/resultados'  style={{...styleText}}>Resultados</Link>
         </Menu.Item>
       </SubMenu>
       <SubMenu key="4" icon={<AppstoreOutlined />} title="Finanzas">
-        <SubMenu key="sub8" title="Ingresos">
+        <SubMenu key="sub8" title="Ingresos"  style={{...styleText}}>
           <Menu.Item key="facturaciones">
-            <Link to='/facturaciones'>Facturaciones</Link>
+            <Link to='/facturaciones' style={{...styleText}}>Facturaciones</Link>
           </Menu.Item>
           <Menu.Item key="pagos">
-            <Link to='/pagos'>Pagos</Link>
+            <Link to='/pagos' style={{...styleText}}>Pagos</Link>
           </Menu.Item>
           <Menu.Item key="cobranza">
-            <Link to='/cobranzas'>Cobranza</Link>
+            <Link to='/cobranzas' style={{...styleText}}>Cobranza</Link>
           </Menu.Item>
         </SubMenu>
-        <SubMenu key="sub9" title="Egresos">
+        <SubMenu key="sub9" title="Egresos"  style={{...styleText}}>
           <Menu.Item key="gas_ent">
-            <Link to='/gastos_entradas'>Gastos / Entradas</Link>
+            <Link to='/gastos_entradas' style={{...styleText}}>Gastos / Entradas</Link>
           </Menu.Item>
           <Menu.Item key="salidas">
-            <Link to='/salidas'>Salidas</Link>
+            <Link to='/salidas' style={{...styleText}}>Salidas</Link>
           </Menu.Item>
           <Menu.Item key="existencia">
-            <Link to='/existencia'>Existencia</Link>
+            <Link to='/existencia' style={{...styleText}}>Existencia</Link>
           </Menu.Item>
         </SubMenu>
       </SubMenu>
