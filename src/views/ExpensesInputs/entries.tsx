@@ -127,6 +127,10 @@ const EntriesView: React.FunctionComponent<IEntriesViewProps> = ({
       setDefaultActiveKey('0');
       setMessageAlert({ message: 'Entrada cargada en tabla', type: 'success', show: true });
     }, 2000);
+
+    setTimeout(() => {
+      handleInsertEntries()
+    }, 2500);
   };
 
   const handleDeleteEntry = (id: string) => {
@@ -188,8 +192,8 @@ const EntriesView: React.FunctionComponent<IEntriesViewProps> = ({
         <Row gutter={8}>
           <Col span={6}>
             <Form.Item
-              validateStatus={subCategoryThree.codigo !== '' ? 'success' : 'error'}
-              help={subCategoryThree.codigo !== '' ? '' : 'Seleccione'}
+              validateStatus={!!subCategoryThree.codigo ? 'success' : 'error'}
+              help={!!subCategoryThree.codigo ? '' : 'Seleccione'}
               label='Sub-categoria 3'
             >
               <Select
@@ -246,8 +250,6 @@ const EntriesView: React.FunctionComponent<IEntriesViewProps> = ({
           <Col span={4}>
             <Form.Item
               label='Porcentaje IVA'
-              validateStatus={newDataEntry.porcentaje_impuesto !== 0 ? 'success' : 'error'}
-              help={newDataEntry.porcentaje_impuesto !== 0 ? '' : 'ingrese valor'}
             >
               <InputNumber
                 style={{ width: '100%' }}
@@ -266,8 +268,6 @@ const EntriesView: React.FunctionComponent<IEntriesViewProps> = ({
           <Col span={4}>
             <Form.Item
               label='Valor IVA'
-              validateStatus={newDataEntry.valor_impuesto !== 0 ? 'success' : 'error'}
-              help={newDataEntry.valor_impuesto !== 0 ? '' : 'ingrese valor'}
             >
 
               <InputNumber
@@ -332,18 +332,20 @@ const EntriesView: React.FunctionComponent<IEntriesViewProps> = ({
     );
   };
 
+  console.log([newDataEntry.cantidad, newDataEntry.costo_unitario, subCategoryThree, newDataEntry.costo_total, handleCalculatePendingAmmountEntries()])
+
   //-----------------------------------USEEFECT
   useEffect(() => {
-    if (newDataEntry.cantidad !== 0
-      && newDataEntry.costo_unitario !== 0
-      && newDataEntry.porcentaje_impuesto !== 0
+    if (!!newDataEntry.cantidad
+      && !!newDataEntry.costo_unitario
+      && !!subCategoryThree
       && newDataEntry.costo_total <= handleCalculatePendingAmmountEntries()) {
-      setDisabledAdd(false)
+      return setDisabledAdd(false)
     }
-  }, [newDataEntry.subcategoria_tres,
+    return setDisabledAdd(true)
+  }, [subCategoryThree,
   newDataEntry.cantidad,
   newDataEntry.costo_unitario,
-  newDataEntry.porcentaje_impuesto
   ]);
 
   useEffect(() => {
@@ -361,6 +363,7 @@ const EntriesView: React.FunctionComponent<IEntriesViewProps> = ({
   return (
     <Spin spinning={loading} size='large' tip='Cargando...'>
       {messageAlert.show && <AlertComponent message={messageAlert.message} type={messageAlert.type} />}
+      {<Title level={4}>{`Código : ${expenseSelected?.codigo}`}</Title>}
       {<Title level={4}>{`Proveedor : ${expenseSelected?.razon_social_proveedor}`}</Title>}
       <Form layout='vertical'>
         <Row gutter={8}>
@@ -431,71 +434,71 @@ const EntriesView: React.FunctionComponent<IEntriesViewProps> = ({
             alignItems: 'flex-start',
             width: '100%',
           }}>
-            {reloadTable && 
-            <Table style={{ width: '100%' }} showHeader={true} dataSource={entries} pagination={false}>
-              <Column className='column-money' title="Categoria general" dataIndex="categoria_general" key="categoria_general" />
-              <Column className='column-money' title="Sub-categoria 3" dataIndex="subcategoria_tres" key="subcategoria_tres" />
-              <Column className='column-money' title="Sub-categoria 3" dataIndex="codigo_categoria_tres" key="codigo_categoria_tres" />
-              <Column className='column-money' title="Cantidad" dataIndex="cantidad" key="cantidad" />
-              <Column
-                className='column-money'
-                title="Costo unitario"
-                dataIndex="costo_unitario"
-                key="costo_unitario"
-                render={(_, record: any) => <>{`$ ${MilesFormat(record.costo_unitario)}`}</>}
-              />
-              <Column
-                className='column-money'
-                title="Impuesto"
-                dataIndex="porcentaje_impuesto"
-                key="porcentaje_impuesto"
-                render={(_, record: any) => <>{`${record.porcentaje_impuesto}%`}</>}
-              />
-              <Column
-                className='column-money'
-                title="Valor impuesto"
-                dataIndex="valor_impuesto"
-                key="valor_impuesto"
-                render={(_, record: any) => <>{`$ ${MilesFormat(record.valor_impuesto)}`}</>}
-              />
-              <Column
-                className='column-money'
-                title="Costo total"
-                dataIndex="costo_total"
-                key="costo_total"
-                render={(_, record: any) => <>{`$ ${MilesFormat(record.costo_total)}`}</>}
-              />
-              <Column
-                title='Actions'
-                dataIndex='actions'
-                key='actions'
-                className='column-money'
-                render={(__, record: any, index) => (
-                  <>
-                    <Popover
-                      content={<Button style={{ backgroundColor: '#E6100D', color: 'white' }} onClick={() => handleDeleteEntry(record._id)}>
-                        Confirmar anulación</Button>}
-                      title="¿Seguro que desea anular este registro?"
-                      trigger="click"
-                      visible={(deleteConfirmation._id === record._id && deleteConfirmation.show === true) ? true : false}
-                      onVisibleChange={() => setDeleteConfirmation({ _id: record._id, show: !deleteConfirmation.show })}
-                    >
-                      <Button
-                        onClick={() => { }}
-                        style={{ backgroundColor: '#E6100D' }}
-                        icon={<DeleteOutlined style={{ fontSize: '1.1rem', color: 'white' }} />}
-                      />
-                    </Popover>
-                  </>
-                )}
-              />
-            </Table>
+            {reloadTable &&
+              <Table style={{ width: '100%' }} showHeader={true} dataSource={entries} pagination={false}>
+                <Column className='column-money' title="Categoria general" dataIndex="categoria_general" key="categoria_general" />
+                <Column className='column-money' title="Sub-categoria 3" dataIndex="subcategoria_tres" key="subcategoria_tres" />
+                <Column className='column-money' title="Sub-categoria 3" dataIndex="codigo_categoria_tres" key="codigo_categoria_tres" />
+                <Column className='column-money' title="Cantidad" dataIndex="cantidad" key="cantidad" />
+                <Column
+                  className='column-money'
+                  title="Costo unitario"
+                  dataIndex="costo_unitario"
+                  key="costo_unitario"
+                  render={(_, record: any) => <>{`$ ${MilesFormat(record.costo_unitario)}`}</>}
+                />
+                <Column
+                  className='column-money'
+                  title="Impuesto"
+                  dataIndex="porcentaje_impuesto"
+                  key="porcentaje_impuesto"
+                  render={(_, record: any) => <>{`${record.porcentaje_impuesto}%`}</>}
+                />
+                <Column
+                  className='column-money'
+                  title="Valor impuesto"
+                  dataIndex="valor_impuesto"
+                  key="valor_impuesto"
+                  render={(_, record: any) => <>{`$ ${MilesFormat(record.valor_impuesto)}`}</>}
+                />
+                <Column
+                  className='column-money'
+                  title="Costo total"
+                  dataIndex="costo_total"
+                  key="costo_total"
+                  render={(_, record: any) => <>{`$ ${MilesFormat(record.costo_total)}`}</>}
+                />
+                <Column
+                  title='Actions'
+                  dataIndex='actions'
+                  key='actions'
+                  className='column-money'
+                  render={(__, record: any, index) => (
+                    <>
+                      <Popover
+                        content={<Button style={{ backgroundColor: '#E6100D', color: 'white' }} onClick={() => handleDeleteEntry(record._id)}>
+                          Confirmar anulación</Button>}
+                        title="¿Seguro que desea anular este registro?"
+                        trigger="click"
+                        visible={(deleteConfirmation._id === record._id && deleteConfirmation.show === true) ? true : false}
+                        onVisibleChange={() => setDeleteConfirmation({ _id: record._id, show: !deleteConfirmation.show })}
+                      >
+                        <Button
+                          onClick={() => { }}
+                          style={{ backgroundColor: '#E6100D' }}
+                          icon={<DeleteOutlined style={{ fontSize: '1.1rem', color: 'white' }} />}
+                        />
+                      </Popover>
+                    </>
+                  )}
+                />
+              </Table>
             }
           </Col>
         </Row>
       </Form>
       <br />
-      <Row gutter={8} style={{
+      {/* <Row gutter={8} style={{
         display: 'flex',
         flexDirection: 'row',
         width: '100%',
@@ -519,7 +522,7 @@ const EntriesView: React.FunctionComponent<IEntriesViewProps> = ({
             Confirmar
           </Button>
         </Col>
-      </Row>
+      </Row> */}
     </Spin>
   );
 };

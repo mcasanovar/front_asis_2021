@@ -29,7 +29,7 @@ export const RequestInitialization: RequestModel = {
   nombre_servicio: '',
   tipo_servicio: '',
   monto_neto: 0,
-  porcentaje_impuesto: 19,
+  porcentaje_impuesto: 0,
   valor_impuesto: 0,
   monto_total: 0,
   exento: 0,

@@ -15,7 +15,7 @@ import NewEditExpenseView from './newexpense';
 import DetailsExpenseView from './detailsexpense';
 import EntriesView from './entries';
 
-import { downloadFileExpenseService, filterExpensesService, getAllExpensesService } from '../../services';
+import { deleteExpenseService, downloadFileExpenseService, filterExpensesService, getAllExpensesService } from '../../services';
 import { MilesFormat } from '../../libs/formattedPesos';
 import PaginationComponent from '../../component/Pagination/Pagination';
 
@@ -23,7 +23,7 @@ interface IExpensesInputsViewProps {
   authorized: boolean
 }
 
-const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({authorized}) => {
+const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [
     {
@@ -105,6 +105,16 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
         });
         idregister && setExpenseSelected(expenses.find((expense) => expense._id === idregister));
         setOpenModal(true);
+        break;
+      case 'delete':
+        idregister && setIdExpenseSelected(idregister)
+        setActualModal({
+          _id: id,
+          title: '',
+          size: 'small',
+          widthModal: 0,
+          showButtons: []
+        })
         break;
       default:
         break;
@@ -194,6 +204,16 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
     }
   };
 
+  async function deleteExpense(id: string){
+    const aux: IResponseExpenses = await deleteExpenseService(idExpenseSelected);
+    getExpenses(1)
+    return setMessageAlert({
+      message: !aux.err ? aux.msg : aux.err,
+      type: !aux.err ? 'success' : 'error',
+      show: true
+    });
+  };
+
   //--------------USEEFECT
   useEffect(() => {
     if (messageAlert.show) {
@@ -214,10 +234,14 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
       downloadFile(idExpenseSelected);
       return
     }
+    if(ActualModal && ActualModal._id === 'delete'){
+      setLoading(true)
+      deleteExpense(idExpenseSelected);
+    }
   }, [ActualModal]);
 
-  if(!authorized){
-    return <Redirect to='./login'/>
+  if (!authorized) {
+    return <Redirect to='./login' />
   }
 
   return (
@@ -247,7 +271,7 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
       />
       <TableComponent
         onClickAction={(id: string, _id?: string) => handleCLickActionTable(id, _id)}
-        onClickDelete={() => { }}
+        onClickDelete={(id, _id) => handleCLickActionTable(id, _id)}
         columns={EXPENSES_COLUMNS_TABLE}
         data={handleTransformPrice(expenses)}
         loading={loading}

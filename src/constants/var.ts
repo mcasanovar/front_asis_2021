@@ -5082,6 +5082,10 @@ export const CATEGORIES_REQUESTS: ICategory1[] = [
                 id: 13,
                 nivel_4: "Evaluación Psicológica Tradicional",
               },
+              {
+                id: 14,
+                nivel_4: "Protocolo 5D",
+              },
             ],
           },
           {

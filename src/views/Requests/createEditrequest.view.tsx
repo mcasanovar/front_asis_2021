@@ -8,7 +8,7 @@ import AlertComponent from "../../component/Alert/Alert";
 
 import { ICategory1, IResponseRequest, RequestModel } from '../../models/request.models';
 import { RequestInitialization } from '../../initializations/request.initialization';
-import { CATEGORIES_REQUESTS, FORMAT_DATE, SERVICES_TYPE, SERVICES_PLACE, SUCURSAL } from '../../constants/var';
+import { CATEGORIES_REQUESTS, FORMAT_DATE, SERVICES_TYPE, SERVICES_PLACE, SUCURSAL, DEFAULT_PERCENTAGE_IVA } from '../../constants/var';
 import { capitalize } from '../../libs/capitalize';
 import { MilesFormat } from "../../libs/formattedPesos";
 import { CalculateIVA } from "../../libs/calculateIVA";
@@ -489,7 +489,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                 label='Porcentaje impuesto'
               >
                 <InputNumber
-                  defaultValue={19}
+                  defaultValue={DEFAULT_PERCENTAGE_IVA}
                   min={0}
                   max={100}
                   formatter={value => `${value}%`}

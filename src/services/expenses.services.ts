@@ -78,11 +78,22 @@ const getExpenseByCategory = async (category: string, subcategoryone: string, su
   }
 };
 
+const deleteExpenseService = async (id: string) => {
+  const extension = `${PREFIX_EXPENSES}/${id}`;
+  try {
+    const response = await httpClient.delete(extension);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}; 
+
 export {
   insertExpenseService,
   getAllExpensesService,
   downloadFileExpenseService,
   filterExpensesService,
   insertEntriesService,
-  getExpenseByCategory
+  getExpenseByCategory,
+  deleteExpenseService
 }

@@ -31,7 +31,7 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
   const { TextArea } = Input;
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [newDataExpense, setNewDataExpense] = useState<ExpensesModel>(expenseSelected || ExpensesInitialization);
+  const [newDataExpense, setNewDataExpense] = useState<ExpensesModel>(ExpensesInitialization);
   const [suppliers, setSuppliers] = useState<GiModel[]>([]);
   const [disabledConfirm, setDisabledConfirm] = useState<boolean>(true);
   const [requests, setRequests] = useState<RequestModel[]>([]);

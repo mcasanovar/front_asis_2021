@@ -121,11 +121,12 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
     setLoading(true)
     const aux: IResponseAllEvaluations = await getAllEvaluationsService(pagenumber, N_PER_PAGE);
     if (!aux.err) {
+      console.log(aux.evaluaciones)
       const reservationsMapped = aux.evaluaciones.map((evaluation) => {
         return {
           ...evaluation,
           fecha_evaluacion: `${evaluation.fecha_evaluacion} ${evaluation.hora_inicio_evaluacion}`,
-          fecha_reserva_fin: `${evaluation.fecha_evaluacion_fin} ${evaluation.hora_termino_evaluacion}`
+          fecha_evaluacion_fin: `${evaluation.fecha_evaluacion_fin} ${evaluation.hora_termino_evaluacion}`
         }
       });
       setActualPage(aux.pagina_actual);
