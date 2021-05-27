@@ -230,9 +230,9 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
   }, [type, primaryClient]);
 
   useEffect(() => {
-    // setNewRequestData({ ...newRequestData, fecha_system: moment().format(FORMAT_DATE), hora_system: moment().format('HH:mm') });
     handleSelectRequestDate(moment());
-    if (workers && workers.length > 0) return setLoading(false);
+    if (!workers.length) return setLoading(true);
+    if (!!workers.length) return setLoading(false);
   }, [workers]);
 
   useEffect(() => {
