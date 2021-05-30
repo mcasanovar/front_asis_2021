@@ -22,6 +22,11 @@ interface IGiViewProps {
   authorized: boolean
 }
 
+interface IFilterSelected {
+  headerFilter: number,
+  filter: string
+}
+
 const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [
@@ -61,6 +66,8 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
   const [optionFilter, setOptionFilter] = useState<number>(0);
   const [actualPage, setActualPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(1);
+  const [filterMode, setFilterMode] = useState<boolean>(false);
+  const [filterSelected, setFilterSelected] = useState<IFilterSelected>();
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -130,10 +137,14 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
 
   const handleClickSearch = async () => {
     setLoading(true)
+    filterGIs();
+  };
+
+  async function filterGIs(pageNumber: number = 1, option: number = optionFilter, textFilter: string = filterText) {
     const response: IReponseAllGIs = await filterGisService(
-      optionFilter,
-      filterText,
-      1,
+      option,
+      textFilter,
+      pageNumber,
       N_PER_PAGE
     );
 
@@ -145,12 +156,21 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
     setGIs(response.gis);
     setActualPage(response.pagina_actual);
     setTotalItems(response.total_items);
+    setFilterMode(true);
+    setFilterSelected({headerFilter: optionFilter, filter: filterText});
     setLoading(false)
-  };
+  }
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    getGis(newpage);
+    if(filterMode){
+      filterGIs(newpage, filterSelected?.headerFilter, filterSelected?.filter);
+      return
+    }
+    if(!filterMode){
+      getGis(newpage);
+      return
+    }
   };
 
   async function getGis(pagenumber: number) {
@@ -174,6 +194,13 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
       return setLoading(false);
     }
     return setMessageAlert({ message: aux.res, type: 'error', show: true });
+  };
+
+  const handleClickClean = () => {
+    setLoading(true);
+    setFilterMode(false);
+    getGis(1);
+    setFilterText('');
   };
 
   //--------------USEEFECT
@@ -204,8 +231,6 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
     }
   }, [ActualModal]);
 
-  console.log(authorized)
-
   if (!authorized) {
     return <Redirect to='./login' />
   }
@@ -233,6 +258,7 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
         setFilterText={setFilterText}
         onClickSearch={() => handleClickSearch()}
         setOptionFilter={setOptionFilter}
+        onClickClean={() => handleClickClean()}
       />
       <TableComponent
         data={GIs}

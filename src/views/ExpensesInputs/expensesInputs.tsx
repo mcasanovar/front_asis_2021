@@ -23,6 +23,11 @@ interface IExpensesInputsViewProps {
   authorized: boolean
 }
 
+interface IFilterSelected {
+  headerFilter: string,
+  filter: string
+}
+
 const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [
@@ -46,6 +51,8 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
   const [optionFilter, setOptionFilter] = useState<number>(0);
   const [actualPage, setActualPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(1);
+  const [filterMode, setFilterMode] = useState<boolean>(false);
+  const [filterObjectSelected, setFilterObjectSelected] = useState<IFilterSelected | null>();
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -123,7 +130,14 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    getExpenses(newpage);
+    if(filterMode){
+      filterExpenses(filterObjectSelected?.filter || '', filterObjectSelected?.headerFilter || '', newpage);
+      return
+    }
+    if(!filterMode){
+      getExpenses(newpage);
+      return
+    }
   };
 
   const handleTransformPrice = (expenses: ExpensesModel[]) => {
@@ -140,16 +154,17 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
     setLoading(true)
     const headfilter = FILTERS_EXPENSES.find((element) => element.key === optionFilter);
     if (!headfilter) return
+    setFilterMode(true);
+    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
     filterExpenses(filterText, headfilter.name)
-    setLoading(false)
   };
 
-  async function filterExpenses(date: string, headFilter: string) {
+  async function filterExpenses(date: string, headFilter: string, pageNumber: number = 1) {
     const aux: IResponseAllExpenses = await filterExpensesService(
       2,
       date,
       headFilter,
-      1,
+      pageNumber,
       N_PER_PAGE
     );
 
@@ -157,12 +172,14 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
       setExpenses(aux.gastos);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
+      setLoading(false)
       return
     }
     if (aux.err) {
-      return setMessageAlert({ message: aux.err, type: 'error', show: true });
+      setMessageAlert({ message: aux.err, type: 'error', show: true });
+      setLoading(false)
+      return
     }
-    setLoading(false)
   };
 
   async function getExpenses(pagenumber: number) {
@@ -212,6 +229,14 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
       type: !aux.err ? 'success' : 'error',
       show: true
     });
+  };
+
+  const handleClickClean = () => {
+    setLoading(true);
+    setFilterMode(false);
+    setFilterText('');
+    setFilterObjectSelected(null);
+    getExpenses(1);
   };
 
   //--------------USEEFECT
@@ -267,6 +292,7 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
         setFilterText={setFilterText}
         onClickSearch={() => handleClickSearch()}
         setOptionFilter={setOptionFilter}
+        onClickClean={() => handleClickClean()}
 
       />
       <TableComponent

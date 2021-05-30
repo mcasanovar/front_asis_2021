@@ -22,6 +22,11 @@ interface IOutputsViewProps {
   authorized: boolean
 }
 
+interface IFilterSelected {
+  headerFilter: string,
+  filter: string
+}
+
 const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({authorized}) => {
 
   const buttons: IButtonsProps[] = [
@@ -45,6 +50,8 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({authorized}) =
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [actualPage, setActualPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(1);
+  const [filterMode, setFilterMode] = useState<boolean>(false);
+  const [filterObjectSelected, setFilterObjectSelected] = useState<IFilterSelected | null>();
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -81,7 +88,14 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({authorized}) =
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    getOutputs(newpage);
+    if(filterMode){
+      filterOutputs(filterObjectSelected?.filter || '', filterObjectSelected?.headerFilter || '', newpage);
+      return
+    }
+    if(!filterMode){
+      getOutputs(newpage);
+      return
+    }
   };
 
   const handleCloseModal = (value: string, message: string) => {
@@ -108,15 +122,17 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({authorized}) =
     setLoading(true)
     const headfilter = FILTERS_OUTPUT.find((element) => element.key === optionFilter);
     if (!headfilter) return
+    setFilterMode(true);
+    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
     filterOutputs(filterText, headfilter.name)
   };
 
-  async function filterOutputs(date: string, headFilter: string) {
+  async function filterOutputs(date: string, headFilter: string, pageNumber: number = 1) {
     const aux: IResponseAllOutputs = await filterOutputsService(
       2,
       date,
       headFilter,
-      1,
+      pageNumber,
       N_PER_PAGE
     );
 
@@ -124,11 +140,14 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({authorized}) =
       setOutputs(aux.salidas);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
+      setLoading(false)
+      return
     }
     if (aux.err) {
       setMessageAlert({ message: aux.err, type: 'error', show: true });
+      setLoading(false);
+      return
     }
-    setLoading(false)
   }
 
   async function getOutputs(pagenumber: number) {
@@ -153,6 +172,14 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({authorized}) =
     }
     setMessageAlert({ message: aux.msg, type: 'error', show: true });
     return setLoading(false);
+  };
+
+  const handleClickClean = () => {
+    setLoading(true);
+    setFilterMode(false);
+    setFilterText('');
+    setFilterObjectSelected(null);
+    getOutputs(1);
   };
 
   //----------------------------------------------USEEFECT
@@ -203,6 +230,7 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({authorized}) =
         setFilterText={setFilterText}
         onClickSearch={() => handleClickSearch()}
         setOptionFilter={setOptionFilter}
+        onClickClean={() => handleClickClean()}
 
       />
       <TableComponent

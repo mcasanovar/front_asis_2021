@@ -24,6 +24,12 @@ interface IRequestViewProps {
   authorized: boolean
 }
 
+interface IFilterSelected {
+  headerFilter: string,
+  filter: string
+}
+
+
 const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [
@@ -54,6 +60,9 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
   const [optionFilter, setOptionFilter] = useState<number>(0);
   const [actualPage, setActualPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(1);
+  const [filterMode, setFilterMode] = useState<boolean>(false);
+  const [filterSelected, setFilterSelected] = useState<string>('');
+  const [filterObjectSelected, setFilterObjectSelected] = useState<IFilterSelected | null>();
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -131,6 +140,9 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
 
   const handleFilterByDate = (date: string) => {
     setLoading(true);
+    setFilterMode(true);
+    setFilterSelected(date);
+    setFilterObjectSelected(null)
     filterRequests(date, 'fecha_solicitud')
   };
 
@@ -138,12 +150,21 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
     setLoading(true)
     const headfilter = FILTERS_REQUEST.find((element) => element.key === optionFilter);
     if (!headfilter) return
-    filterRequests(filterText, headfilter.name)
+    setFilterMode(true);
+    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
+    await filterRequests(filterText, headfilter.name)
   };
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    getRequests(newpage);
+    if(filterMode){
+      !filterObjectSelected && filterRequests(filterSelected, 'fecha_solicitud', newpage)
+      !!filterObjectSelected && filterRequests(filterObjectSelected.filter, filterObjectSelected.headerFilter, newpage)
+    }
+    if(!filterMode){
+      getRequests(newpage);
+      return
+    }
   };
 
   async function getRequests(pagenumber: number) {
@@ -169,12 +190,12 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
     return setMessageAlert({ message: aux.msg, type: 'error', show: true });
   };
 
-  async function filterRequests(date: string, headFilter: string) {
+  async function filterRequests(date: string, headFilter: string, pageNumber: number = 1) {
     const aux: IResponseAllRequests = await filterRequestsService(
       2,
       date,
       headFilter,
-      1,
+      pageNumber,
       N_PER_PAGE
     );
 
@@ -182,13 +203,24 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
       setRequests(aux.solicitudes);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
+      setLoading(false)
+      return
     }
     if (aux.err) {
       setMessageAlert({ message: aux.err, type: 'error', show: true });
+      setLoading(false)
+      return
     }
-
-    setLoading(false)
   }
+
+  const handleClickClean = () => {
+    setLoading(true);
+    setFilterMode(false);
+    setFilterText('');
+    setFilterObjectSelected(null);
+    setFilterSelected('');
+    getRequests(1);
+  };
 
   //--------------USEEFECT
   useEffect(() => {
@@ -246,6 +278,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
         onClickSearch={() => handleClickSearch()}
         onClickDateFilter={(date) => handleFilterByDate(date)}
         setOptionFilter={setOptionFilter}
+        onClickClean={() => handleClickClean()}
       />
       <TableComponent
         data={requests}

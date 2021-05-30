@@ -22,6 +22,11 @@ interface IRequestsPaymentViewProps {
   authorized: boolean
 }
 
+interface IFilterSelected {
+  headerFilter: string,
+  filter: string
+}
+
 const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [
@@ -44,6 +49,8 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
   const [optionFilter, setOptionFilter] = useState<number>(0);
   const [actualPage, setActualPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(1);
+  const [filterMode, setFilterMode] = useState<boolean>(false);
+  const [filterObjectSelected, setFilterObjectSelected] = useState<IFilterSelected | null>();
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -64,7 +71,14 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    getRequestPayment(newpage);
+    if(filterMode){
+      filterRequestPayment(filterObjectSelected?.filter || '', filterObjectSelected?.headerFilter || '', newpage);
+      return
+    }
+    if(!filterMode){
+      getRequestPayment(newpage);
+      return
+    }
   };
 
   const handleCLickActionTable = (id: string, idregister: string | undefined) => {
@@ -80,16 +94,6 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
         idregister && setRequestpaymentSelected(requestpayment.find((request) => request._id === idregister));
         setOpenModal(true);
         break;
-      // case 'requestpaymentcard':
-      //   setActualModal({
-      //     _id: id,
-      //     title: 'Envio carta de cobranza',
-      //     size: 'small',
-      //     widthModal: 1200,
-      //     showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
-      //   })
-      //   setOpenModal(true);
-      //   break;
       default:
         break;
     }
@@ -108,16 +112,17 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
     setLoading(true)
     const headfilter = FILTERS_REQUEST_PAYMENT.find((element) => element.key === optionFilter);
     if (!headfilter) return
+    setFilterMode(true);
+    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
     filterRequestPayment(filterText, headfilter.name)
-    setLoading(false)
   };
 
-  async function filterRequestPayment(date: string, headFilter: string) {
+  async function filterRequestPayment(date: string, headFilter: string, pageNumber: number = 1) {
     const aux: IResponseAllRequestPayment = await filterRequestPaymentService(
       2,
       date,
       headFilter,
-      1,
+      pageNumber,
       N_PER_PAGE
     );
 
@@ -125,12 +130,14 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
       setRequestpayment(aux.cobranzas);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
+      setLoading(false)
       return
     }
     if (aux.err) {
-      return setMessageAlert({ message: aux.err, type: 'error', show: true });
+      setMessageAlert({ message: aux.err, type: 'error', show: true });
+      setLoading(false);
+      return
     }
-    setLoading(false)
   };
 
   async function getRequestPayment(pagenumber: number) {
@@ -145,6 +152,14 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
     }
     setLoading(false)
     return setMessageAlert({ message: 'No se ha podido cargar las cobranzas', type: 'error', show: true });
+  };
+
+  const handleClickClean = () => {
+    setLoading(true);
+    setFilterMode(false);
+    setFilterText('');
+    setFilterObjectSelected(null);
+    getRequestPayment(1);
   };
 
   //--------------USEEFECT
@@ -188,6 +203,7 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
         setFilterText={setFilterText}
         onClickSearch={() => handleClickSearch()}
         setOptionFilter={setOptionFilter}
+        onClickClean={() => handleClickClean()}
 
       />
       <TableComponent

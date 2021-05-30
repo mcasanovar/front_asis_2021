@@ -233,13 +233,41 @@ const DetailsEmployee: React.FunctionComponent<IDetailsEmployeeProps> = ({
     );
   };
 
+  const renderDetailsEmployee = () => {
+    return (
+      <Table
+        style={{ width: '100%' }}
+        showHeader={true}
+        loading={loading}
+        dataSource={[{...employeesSelected?.detalle_empleado}]|| []}
+        
+        pagination={false}
+      >
+        <Column className='column-money' title="Dias Recuperados" dataIndex="dias_recuperados" key="dias_recuperados" />
+        <Column className='column-money' title="Dias Acumulados" dataIndex="dias_acumulados" key="dias_acumulados" />
+        <Column className='column-money' title="Total Ausencias" dataIndex="dias_total_ausencias" key="dias_total_ausencias" />
+        <Column className='column-money' title="Dias Pendientes" dataIndex="dias_pendientes" key="dias_pendientes" />
+        <Column className='column-money' title="Dias Recuperados" dataIndex="recuperados_cant" key="recuperados_cant" />
+        <Column className='column-money' title="Medio-Dia Recuperados" dataIndex="mediodia_recuperados_cant" key="mediodia_recuperados_cant" />
+        <Column className='column-money' title="Enfermedad" dataIndex="enfermedad_cant" key="enfermedad_cant" />
+        <Column className='column-money' title="Maternidad" dataIndex="maternidad_cant" key="maternidad_cant" />
+        <Column className='column-money' title="Medio-Dia" dataIndex="mediodia_cant" key="mediodia_cant" />
+        <Column className='column-money' title="Trámites" dataIndex="tramites_cant" key="tramites_cant" />
+        <Column className='column-money' title="Vacaciones" dataIndex="vacaciones_cant" key="vacaciones_cant" />
+      </Table>
+    );
+  };
+
   return (
     <Collapse accordion defaultActiveKey={['1']}>
       <Panel header="Empleado" key="1">
         {renderEmployeeInformation()}
       </Panel>
-      <Panel header="Pagos" key="4">
+      <Panel header="Pagos" key="2">
         {renderListInvoices()}
+      </Panel>
+      <Panel header="Detalle" key="3">
+        {renderDetailsEmployee()}
       </Panel>
     </Collapse>
   );

@@ -19,6 +19,11 @@ interface IExistenceViewProps {
   authorized: boolean
 }
 
+interface IFilterSelected {
+  headerFilter: string,
+  filter: string
+}
+
 const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({authorized}) => {
 
   const buttons: IButtonsProps[] = [];
@@ -33,6 +38,8 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({authorized
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [actualPage, setActualPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(1);
+  const [filterMode, setFilterMode] = useState<boolean>(false);
+  const [filterObjectSelected, setFilterObjectSelected] = useState<IFilterSelected | null>();
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -79,22 +86,31 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({authorized
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    getExistences(newpage);
+    if(filterMode){
+      filterExistences(filterObjectSelected?.filter || '', filterObjectSelected?.headerFilter || '', newpage);
+      return
+    }
+    if(!filterMode){
+      getExistences(newpage);
+      return
+    }
   };
 
   const handleClickSearch = async () => {
     setLoading(true)
     const headfilter = FILTERS_EXISTENCE.find((element) => element.key === optionFilter);
     if (!headfilter) return
+    setFilterMode(true);
+    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
     filterExistences(filterText, headfilter.name)
   };
 
-  async function filterExistences(date: string, headFilter: string) {
+  async function filterExistences(date: string, headFilter: string, pageNumber: number = 1) {
     const aux: IResponseAllExistence = await filterExistencesService(
       2,
       date,
       headFilter,
-      1,
+      pageNumber,
       N_PER_PAGE
     );
 
@@ -102,11 +118,14 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({authorized
       setExistences(aux.existencias);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
+      setLoading(false)
+      return
     }
     if (aux.err) {
       setMessageAlert({ message: aux.err, type: 'error', show: true });
+      setLoading(false)
+      return
     }
-    setLoading(false)
   }
 
   async function getExistences(pagenumber: number) {
@@ -118,8 +137,16 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({authorized
       setLoading(false);
       return
     }
-    return setMessageAlert({ message: 'No se ha podido cargar las existencias', type: 'error', show: true });
-    setLoading(false)
+    setMessageAlert({ message: 'No se ha podido cargar las existencias', type: 'error', show: true });
+    return setLoading(false)
+  };
+
+  const handleClickClean = () => {
+    setLoading(true);
+    setFilterMode(false);
+    setFilterText('');
+    setFilterObjectSelected(null);
+    getExistences(1);
   };
 
   //----------------------------------------------USEEFECT
@@ -155,6 +182,7 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({authorized
         setFilterText={setFilterText}
         onClickSearch={() => handleClickSearch()}
         setOptionFilter={setOptionFilter}
+        onClickClean={() => handleClickClean()}
       />
       <TableComponent
         onClickAction={(id: string, _id?: string) => handleCLickActionTable(id, _id)}

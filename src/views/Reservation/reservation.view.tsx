@@ -23,6 +23,11 @@ interface IReservationViewProps {
   authorized: boolean
 }
 
+interface IFilterSelected {
+  headerFilter: string,
+  filter: string
+}
+
 const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [
@@ -46,6 +51,9 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
   const [optionFilter, setOptionFilter] = useState<number>(0);
   const [actualPage, setActualPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(1);
+  const [filterMode, setFilterMode] = useState<boolean>(false);
+  const [filterSelected, setFilterSelected] = useState<string>('');
+  const [filterObjectSelected, setFilterObjectSelected] = useState<IFilterSelected | null>();
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -104,15 +112,19 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
 
   const handleFilterByDate = (date: string) => {
     setLoading(true);
-    filterRequests(date, 'fecha_reserva');
-    setLoading(false)
+    setFilterMode(true);
+    setFilterSelected(date);
+    setFilterObjectSelected(null)
+    filterReservation(date, 'fecha_reserva');
   };
 
   const handleClickSearch = async () => {
     setLoading(true)
     const headfilter = FILTERS_RESERVATION.find((element) => element.key === optionFilter);
     if (!headfilter) return
-    filterRequests(filterText, headfilter.name)
+    setFilterMode(true);
+    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
+    await filterReservation(filterText, headfilter.name)
     setLoading(false)
   };
 
@@ -127,7 +139,15 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    getReservations(newpage);
+    if(filterMode){
+      !filterObjectSelected && filterReservation(filterSelected, 'fecha_reserva', newpage);
+      !!filterObjectSelected && filterReservation(filterObjectSelected.filter, filterObjectSelected.headerFilter, newpage)
+      return
+    }
+    if(!filterMode){
+      getReservations(newpage);
+      return
+    }
   };
 
   async function getReservations(pagenumber: number) {
@@ -151,12 +171,12 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
     return setMessageAlert({ message: 'No se ha podido cargar las reservas', type: 'error', show: true });
   };
 
-  async function filterRequests(date: string, headFilter: string) {
+  async function filterReservation(date: string, headFilter: string, pageNumber: number = 1) {
     const aux: IResponseAllReservations = await filterReservationsService(
       2,
       date,
       headFilter,
-      1,
+      pageNumber,
       N_PER_PAGE
     );
 
@@ -182,6 +202,15 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
       setMessageAlert({ message: aux.msg, type: 'error', show: true });
     }
     return setMessageAlert({ message: aux.err, type: 'error', show: true });
+  };
+
+  const handleClickClean = () => {
+    setLoading(true);
+    setFilterMode(false);
+    setFilterText('');
+    setFilterObjectSelected(null);
+    setFilterSelected('');
+    getReservations(1);
   };
 
   //--------------USEEFECT
@@ -241,6 +270,7 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
         setFilterText={setFilterText}
         onClickSearch={() => handleClickSearch()}
         setOptionFilter={setOptionFilter}
+        onClickClean={() => handleClickClean()}
 
       />
       <TableComponent

@@ -100,9 +100,9 @@ const LoginView: React.FunctionComponent<ILoginViewProps> = ({ authorized }) => 
               />
             </Form.Item>
 
-            <Form.Item name="remember" valuePropName="checked">
+            {/* <Form.Item name="remember" valuePropName="checked">
               <Checkbox disabled={loading}>Recordarme</Checkbox>
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item>
               <Button

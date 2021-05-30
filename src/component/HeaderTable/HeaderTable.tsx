@@ -1,5 +1,6 @@
-import * as React from 'react';
-import { Select, Input, DatePicker } from 'antd';
+import React from 'react';
+import { Select, Input, DatePicker, Button } from 'antd';
+import { ReloadOutlined } from '@ant-design/icons'
 
 import { IButtonsProps } from '../../models/index.models';
 
@@ -22,7 +23,11 @@ interface IHeaderTableProps {
   dataFilter?: IFiltersGI[] | IFiltersEvaluation[] | IFiltersResults[],
   filterText?: string,
   setFilterText: React.Dispatch<React.SetStateAction<string>>
-  setOptionFilter: React.Dispatch<React.SetStateAction<number>>
+  setOptionFilter: React.Dispatch<React.SetStateAction<number>>,
+  notFIlter?: boolean,
+  notSearch?: boolean,
+  notClean?: boolean,
+  onClickClean: () => void
 }
 
 const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
@@ -38,7 +43,11 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
   setFilterText,
   onClickSearch,
   onClickDateFilter,
-  setOptionFilter
+  setOptionFilter,
+  notFIlter = false,
+  notSearch = false,
+  notClean = false,
+  onClickClean
 }) => {
 
   const { Option } = Select;
@@ -55,32 +64,45 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
         {/* section button and textinput */}
         <div className="container-header-table-section2">
           {showDateFilter &&
-            <DatePicker 
+            <DatePicker
               style={{ width: 150, marginRight: '10px' }}
-              onSelect={(e) => onClickDateFilter(e.format(FORMAT_DATE))} 
+              onSelect={(e) => onClickDateFilter(e.format(FORMAT_DATE))}
             />
           }
-          <Select
-            showSearch
-            style={{ width: 160, paddingRight: 5 }}
-            placeholder="Filtro"
-            optionFilterProp="children"
-            onSelect={(e) => setOptionFilter(parseInt(e.toString()))}
-          >
-            {dataFilter.length > 0 && dataFilter.map((item) => (
-              <Option value={item.key}>{item.value}</Option>
-            ))}
-          </Select>
-          <Search 
-            placeholder="Buscar..." 
-            enterButton="Buscar" 
-            size="middle" 
-            loading={false}
-            style={{ width: 600, height: '2rem', marginLeft: 0 }}
-            onChange={(e) => setFilterText(e.currentTarget.value)}
-            onSearch={() => onClickSearch()}
-            value={filterText}
-          />
+          {!notFIlter &&
+            <Select
+              showSearch
+              style={{ width: 160, paddingRight: 5 }}
+              placeholder="Filtro"
+              optionFilterProp="children"
+              onSelect={(e) => setOptionFilter(parseInt(e.toString()))}
+            >
+              {dataFilter.length > 0 && dataFilter.map((item) => (
+                <Option value={item.key}>{item.value}</Option>
+              ))}
+            </Select>
+          }
+          {!notSearch &&
+            <Search
+              placeholder="Buscar..."
+              enterButton="Buscar"
+              size="middle"
+              loading={false}
+              style={{ width: 600, height: '2rem', marginLeft: 0 }}
+              onChange={(e) => setFilterText(e.currentTarget.value)}
+              onSearch={() => onClickSearch()}
+              value={filterText}
+            />
+          }
+          {!notClean &&
+            <Button
+              type="primary"
+              icon={<ReloadOutlined />}
+              size='middle'
+              style={{ backgroundColor: '#1890FF', height: '2rem', width: '3rem' }}
+              onClick={() => onClickClean()}
+            />
+          }
         </div>
         <div></div>
         {/* section buttons right */}
