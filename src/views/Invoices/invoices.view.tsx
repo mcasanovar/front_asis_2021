@@ -30,6 +30,11 @@ interface IInvoicesViewProps {
   authorized: boolean
 }
 
+interface IFilterSelected {
+  headerFilter: string,
+  filter: string
+}
+
 const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [];
@@ -46,6 +51,8 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
   const [optionFilter, setOptionFilter] = useState<number>(0);
   const [actualPage, setActualPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(1);
+  const [filterMode, setFilterMode] = useState<boolean>(false);
+  const [filterObjectSelected, setFilterObjectSelected] = useState<IFilterSelected | null>();
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -183,7 +190,14 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    getInvoices(newpage);
+    if(filterMode){
+      filterInvoices(filterObjectSelected?.filter || '', filterObjectSelected?.headerFilter || '', newpage)
+      return
+    }
+    if(!filterMode){
+      getInvoices(newpage);
+      return
+    }
   };
 
   const handleCloseModal = (value: string, message: string) => {
@@ -235,12 +249,12 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
     return setMessageAlert({ message: 'No se ha podido cargar las facturaciones', type: 'error', show: true });
   };
 
-  async function filterInvoices(date: string, headFilter: string) {
+  async function filterInvoices(date: string, headFilter: string, pageNumber: number = 1) {
     const aux: IResponseAllInvoices = await filterInvoicesService(
       2,
       date,
       headFilter,
-      1,
+      pageNumber,
       N_PER_PAGE
     );
 
@@ -261,8 +275,9 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
     setLoading(true)
     const headfilter = FILTERS_INVOICES.find((element) => element.key === optionFilter);
     if (!headfilter) return
+    setFilterMode(true);
+    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
     filterInvoices(filterText, headfilter.name)
-    setLoading(false)
   };
 
   const handleTransformPrice = (invoices: InvoicesModel[]) => {
@@ -273,6 +288,14 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
       }
     });
     return aux;
+  };
+
+  const handleClickClean = () => {
+    setLoading(true);
+    setFilterMode(false);
+    setFilterText('');
+    setFilterObjectSelected(null);
+    getInvoices(1);
   };
 
   //--------------USEEFECT
@@ -337,6 +360,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
         onClickSearch={() => handleClickSearch()}
         onClickDateFilter={() => { }}
         setOptionFilter={setOptionFilter}
+        onClickClean={() => handleClickClean()}
 
       />
       <TableComponent

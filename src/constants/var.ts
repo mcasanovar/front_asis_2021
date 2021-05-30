@@ -5513,7 +5513,7 @@ export const FILTERS_RESERVATION: IFiltersReservation[] = [
   {
     key: 1,
     value: 'Rut CP',
-    name: 'rut_CP'
+    name: 'rut_cp'
   },
   {
     key: 2,
@@ -5523,7 +5523,7 @@ export const FILTERS_RESERVATION: IFiltersReservation[] = [
   {
     key: 3,
     value: 'Razon Social CP',
-    name: 'razon_social_CP'
+    name: 'razon_social_cp'
   },
   {
     key: 4,

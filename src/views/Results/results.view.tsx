@@ -22,6 +22,11 @@ interface IResultsViewProps {
   authorized: boolean
 }
 
+interface IFilterSelected {
+  headerFilter: string,
+  filter: string
+}
+
 const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [];
@@ -37,6 +42,9 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
   const [resultSelected, setResultSelected] = useState<ResultModel>();
   const [actualPage, setActualPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(1);
+  const [filterMode, setFilterMode] = useState<boolean>(false);
+  const [filterSelected, setFilterSelected] = useState<string>('');
+  const [filterObjectSelected, setFilterObjectSelected] = useState<IFilterSelected | null>();
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -181,12 +189,12 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
     }
   };
 
-  async function filterEvaluations(date: string, headFilter: string) {
+  async function filterResults(date: string, headFilter: string, pageNumber: number = 1) {
     const aux: IResponseAllResults = await filterResultsService(
       2,
       date,
       headFilter,
-      1,
+      pageNumber,
       N_PER_PAGE
     );
 
@@ -211,19 +219,39 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
     setLoading(true)
     const headfilter = FILTERS_RESULT.find((element) => element.key === optionFilter);
     if (!headfilter) return
-    filterEvaluations(filterText, headfilter.name)
+    setFilterMode(true);
+    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
+    filterResults(filterText, headfilter.name)
     setLoading(false)
   };
 
   const handleFilterByDate = (date: string) => {
     setLoading(true);
-    filterEvaluations(date, 'fecha_resultado');
-    setLoading(false)
+    setFilterMode(true);
+    setFilterSelected(date);
+    setFilterObjectSelected(null);
+    filterResults(date, 'fecha_resultado');
   };
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    getResults(newpage);
+    if(filterMode){
+      !filterObjectSelected && filterResults(filterSelected, 'fecha_resultado', newpage);
+      !!filterObjectSelected && filterResults(filterObjectSelected.filter, filterObjectSelected.headerFilter, newpage)
+    }
+    if(!filterMode){
+      getResults(newpage);
+      return
+    }
+  };
+
+  const handleClickClean = () => {
+    setLoading(true);
+    setFilterMode(false);
+    setFilterText('');
+    setFilterObjectSelected(null);
+    setFilterSelected('');
+    getResults(1);
   };
 
   //--------------USEEFECT
@@ -289,6 +317,7 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
         setFilterText={setFilterText}
         onClickSearch={() => handleClickSearch()}
         setOptionFilter={setOptionFilter}
+        onClickClean={() => handleClickClean()}
 
       />
       <TableComponent

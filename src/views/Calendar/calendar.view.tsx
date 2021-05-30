@@ -183,6 +183,8 @@ const CalendarScreen: React.FunctionComponent<ICalendarScreenProps> = ({
         setOptionFilter={setOptionFilter}
         notFIlter
         notSearch
+        notClean
+        onClickClean={() => {}}
       />
       <br />
       <br />

@@ -24,6 +24,11 @@ interface IEvaluationsViewProps {
   authorized: boolean
 }
 
+interface IFilterSelected {
+  headerFilter: string,
+  filter: string
+}
+
 const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [];
@@ -39,6 +44,9 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
   const [optionFilter, setOptionFilter] = useState<number>(0);
   const [actualPage, setActualPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(1);
+  const [filterMode, setFilterMode] = useState<boolean>(false);
+  const [filterSelected, setFilterSelected] = useState<string>('');
+  const [filterObjectSelected, setFilterObjectSelected] = useState<IFilterSelected | null>();
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -177,12 +185,12 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
     }
   };
 
-  async function filterEvaluations(date: string, headFilter: string) {
+  async function filterEvaluations(date: string, headFilter: string, pageNumber: number = 1) {
     const aux: IResponseAllEvaluations = await filterEvaluationsService(
       2,
       date,
       headFilter,
-      1,
+      pageNumber,
       N_PER_PAGE
     );
 
@@ -208,21 +216,41 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
 
   const handleFilterByDate = (date: string) => {
     setLoading(true);
+    setFilterMode(true);
+    setFilterSelected(date);
+    setFilterObjectSelected(null)
     filterEvaluations(date, 'fecha_evaluacion');
-    setLoading(false)
   };
 
   const handleClickSearch = async () => {
     setLoading(true)
     const headfilter = FILTERS_EVALUATION.find((element) => element.key === optionFilter);
     if (!headfilter) return
+    setFilterMode(true);
+    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
     filterEvaluations(filterText, headfilter.name)
-    setLoading(false)
   };
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    getEvaluations(newpage);
+    if(filterMode){
+      !filterObjectSelected && filterEvaluations(filterSelected, 'fecha_evaluacion', newpage);
+      !!filterObjectSelected && filterEvaluations(filterObjectSelected.filter, filterObjectSelected.headerFilter, newpage)
+      return
+    }
+    if(!filterMode){
+      getEvaluations(newpage);
+      return
+    }
+  };
+
+  const handleClickClean = () => {
+    setLoading(true);
+    setFilterMode(false);
+    setFilterText('');
+    setFilterObjectSelected(null);
+    setFilterSelected('');
+    getEvaluations(1);
   };
 
   //--------------USEEFECT
@@ -287,6 +315,7 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
         onClickSearch={() => handleClickSearch()}
         onClickDateFilter={(date) => handleFilterByDate(date)}
         setOptionFilter={setOptionFilter}
+        onClickClean={() => handleClickClean()}
       />
       <TableComponent
         onClickAction={(id: string, _id?: string) => handleCLickActionTable(id, _id)}

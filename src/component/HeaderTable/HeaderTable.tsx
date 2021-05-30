@@ -1,5 +1,6 @@
 import React from 'react';
-import { Select, Input, DatePicker } from 'antd';
+import { Select, Input, DatePicker, Button } from 'antd';
+import { ReloadOutlined } from '@ant-design/icons'
 
 import { IButtonsProps } from '../../models/index.models';
 
@@ -24,7 +25,9 @@ interface IHeaderTableProps {
   setFilterText: React.Dispatch<React.SetStateAction<string>>
   setOptionFilter: React.Dispatch<React.SetStateAction<number>>,
   notFIlter?: boolean,
-  notSearch?: boolean
+  notSearch?: boolean,
+  notClean?: boolean,
+  onClickClean: () => void
 }
 
 const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
@@ -42,7 +45,9 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
   onClickDateFilter,
   setOptionFilter,
   notFIlter = false,
-  notSearch = false
+  notSearch = false,
+  notClean = false,
+  onClickClean
 }) => {
 
   const { Option } = Select;
@@ -87,6 +92,15 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
               onChange={(e) => setFilterText(e.currentTarget.value)}
               onSearch={() => onClickSearch()}
               value={filterText}
+            />
+          }
+          {!notClean &&
+            <Button
+              type="primary"
+              icon={<ReloadOutlined />}
+              size='middle'
+              style={{ backgroundColor: '#1890FF', height: '2rem', width: '3rem' }}
+              onClick={() => onClickClean()}
             />
           }
         </div>

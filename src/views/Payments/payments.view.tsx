@@ -25,6 +25,11 @@ interface IPaymentsViewProps {
   authorized: boolean
 }
 
+interface IFilterSelected {
+  headerFilter: string,
+  filter: string
+}
+
 const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [
@@ -47,6 +52,8 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
   const [optionFilter, setOptionFilter] = useState<number>(0);
   const [actualPage, setActualPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(1);
+  const [filterMode, setFilterMode] = useState<boolean>(false);
+  const [filterObjectSelected, setFilterObjectSelected] = useState<IFilterSelected | null>();
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -95,7 +102,14 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    getPayments(newpage);
+    if(filterMode){
+      filterPayments(filterObjectSelected?.filter || '', filterObjectSelected?.headerFilter || '', newpage)
+      return
+    }
+    if(!filterMode){
+      getPayments(newpage);
+      return
+    }
   };
 
   const handleCloseModal = (value: string, message: string) => {
@@ -122,16 +136,17 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
     setLoading(true)
     const headfilter = FILTERS_PAYMENTS.find((element) => element.key === optionFilter);
     if (!headfilter) return
+    setFilterMode(true);
+    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
     filterPayments(filterText, headfilter.name)
-    setLoading(false)
   };
 
-  async function filterPayments(date: string, headFilter: string) {
+  async function filterPayments(date: string, headFilter: string, pageNumber: number = 1) {
     const aux: IResponseAllPayments = await filterPaymentsService(
       2,
       date,
       headFilter,
-      1,
+      pageNumber,
       N_PER_PAGE
     );
 
@@ -139,12 +154,14 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
       setPayments(aux.pagos);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
+      setLoading(false)
       return
     }
     if (aux.err) {
-      return setMessageAlert({ message: aux.err, type: 'error', show: true });
+      setMessageAlert({ message: aux.err, type: 'error', show: true });
+      setLoading(false)
+      return
     }
-    setLoading(false)
   };
 
   async function getPayments(pagenumber: number) {
@@ -159,6 +176,14 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
     }
     setLoading(false);
     return setMessageAlert({ message: 'No se ha podido cargar los pagos', type: 'error', show: true });
+  };
+
+  const handleClickClean = () => {
+    setLoading(true);
+    setFilterMode(false);
+    setFilterText('');
+    setFilterObjectSelected(null);
+    getPayments(1);
   };
 
   //--------------USEEFECT
@@ -181,7 +206,7 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
 
   return (
     <div className='container-gi'>
-      <SubBarComponent title='Facturas' />
+      <SubBarComponent title='Pagos' />
       {messageAlert.show &&
         <AlertComponent
           message={messageAlert.message}
@@ -202,6 +227,7 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
         setFilterText={setFilterText}
         onClickSearch={() => handleClickSearch()}
         setOptionFilter={setOptionFilter}
+        onClickClean={() => handleClickClean()}
       />
       <TableComponent
         onClickAction={(id: string, _id?: string) => handleCLickActionTable(id, _id)}

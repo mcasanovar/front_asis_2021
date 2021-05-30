@@ -28,6 +28,11 @@ interface IEmployeesProps {
   authorized: boolean
 }
 
+interface IFilterSelected {
+  headerFilter: string,
+  filter: string
+}
+
 const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => {
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -41,6 +46,9 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
   const [idEmployeeSelected, setIdEmployeeSelected] = useState<string>('');
   const [actualPage, setActualPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(1);
+  const [filterMode, setFilterMode] = useState<boolean>(false);
+  const [filterSelected, setFilterSelected] = useState<IFilterSelected>();
+  
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -118,17 +126,24 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
   };
 
   const handleClickSearch = async () => {
-    setLoading(true)
+    setLoading(true);
     const headfilter = FILTERS_EMPLOYEES.find((element) => element.key === optionFilter);
     if (!headfilter) return
-    filterEmployees(filterText, headfilter.name)
-    setLoading(false)
+    await filterEmployees(filterText, headfilter.name)
+    setFilterMode(true);
+    setFilterSelected({headerFilter: headfilter.name, filter: filterText});
   };
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    getEmployees(newpage);
-    setLoading(false)
+    if(filterMode){
+      filterEmployees(filterSelected?.filter || '', filterSelected?.headerFilter || '');
+      return
+    }
+    if(!filterMode){
+      getEmployees(newpage);
+      return
+    }
   };
 
   async function hanbleDeleteEmployee(id: string) {
@@ -149,8 +164,10 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
       setEmployees(aux.empleados);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
+      setLoading(false)
+      return
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   async function filterEmployees(date: string, headFilter: string) {
@@ -166,12 +183,21 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
       setEmployees(aux.empleados);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
+      setLoading(false)
       return
     }
     if (aux.err) {
-      return setMessageAlert({ message: aux.err, type: 'error', show: true });
+      setMessageAlert({ message: aux.err, type: 'error', show: true });
+      return setLoading(false)
     }
-    setLoading(false)
+  };
+
+  const handleClickClean = () => {
+    setLoading(true);
+    getEmployees(1);
+    setFilterMode(false);
+    setFilterText('');
+    setFilterSelected({headerFilter: '', filter: ''});
   };
 
   //--------------USEEFECT
@@ -222,6 +248,7 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
         setFilterText={setFilterText}
         onClickSearch={() => handleClickSearch()}
         setOptionFilter={setOptionFilter}
+        onClickClean={() => handleClickClean()}
       />
       <TableComponent
         onClickAction={(id: string, _id?: string) => handleCLickActionTable(id, _id)}
