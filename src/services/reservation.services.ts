@@ -21,6 +21,16 @@ const getGroupReservationsService = async () => {
   }
 };
 
+const getReservationsByDateService = async (month: string | null = null, year: string | null = null) => {
+  const extension = `${PREFIX_RESERVATION}/date`;
+  try {
+    const response = await httpClient.post(extension, { month, year });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 const filterReservationsService = async (
   identificador: number,
   filtro: string,
@@ -98,6 +108,7 @@ export {
   getGroupReservationsService,
   filterReservationsService,
   confirmReservationService,
+  getReservationsByDateService,
   confirmGroupReservationsService,
   getOneReservationService,
   editReservationService,

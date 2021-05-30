@@ -31,6 +31,16 @@ const getAllRequestsService = async (pageNumber: number, nPerPage: number) => {
   }
 };
 
+const getRequestsByDateService = async (month: string | null = null, year: string | null = null) => {
+  const extension = `${PREFIX_REQUEST}/date`;
+  try {
+    const response = await httpClient.post(extension, { month, year });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 const getOneRequestService = async (id: string) => {
   const extension = `${PREFIX_REQUEST}/${id}`;
   try {
@@ -125,6 +135,7 @@ const filterRequestsService = async (
 export {
   getAllRequestsService,
   getAllRequestToConfirmService,
+  getRequestsByDateService,
   insertRequestService,
   getOneRequestService,
   editRequestService,

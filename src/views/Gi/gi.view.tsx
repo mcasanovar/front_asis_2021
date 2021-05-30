@@ -204,8 +204,6 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
     }
   }, [ActualModal]);
 
-  console.log(authorized)
-
   if (!authorized) {
     return <Redirect to='./login' />
   }

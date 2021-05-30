@@ -36,7 +36,9 @@ const DrawerComponent: React.FunctionComponent<IDrawerComponentProps> = (props) 
         <Menu.Item key="empleados">
           <Link to='/employees' style={{...styleText}}>Empleados</Link>
         </Menu.Item>
-        <Menu.Item key="calendario"  style={{...styleText}}>Calendario</Menu.Item>
+        <Menu.Item key="calendario" style={{...styleText}}>
+          <Link to='/calendario' style={{...styleText}}>Calendario</Link>
+        </Menu.Item>
       </SubMenu>
       <SubMenu key="3" icon={<AppstoreOutlined />} title="Operaciones">
         <Menu.Item key="solicitudes">

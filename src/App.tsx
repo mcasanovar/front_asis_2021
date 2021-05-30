@@ -21,6 +21,7 @@ import RequestsPaymentView from "./views/RequestsPayment/requestsPayments";
 import ExpensesInputsView from "./views/ExpensesInputs/expensesInputs";
 import OutputsView from "./views/outputs/outputs.view";
 import ExistenceView from "./views/Existence/existence.view";
+import CalendarView from './views/Calendar/calendar.view';
 
 import LoginView from './views/Login/Login';
 
@@ -56,6 +57,7 @@ function App(): JSX.Element {
               <Route exact path='/' component={() => <GiView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
               <Route exact path='/login' component={() => <LoginView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
               <Route exact path='/gi' component={() => <GiView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+              <Route exact path='/calendario' component={() => <CalendarView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
               <Route exact path='/employees' component={() => <EmployeesView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
               <Route exact path='/solicitudes' component={() => <RequestsView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
               <Route exact path='/reservas' component={() => <ReservationView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
@@ -75,6 +77,7 @@ function App(): JSX.Element {
           <Route exact path='/' component={() => <LoginView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
           <Route exact path='/login' component={() => <LoginView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
           <Route exact path='/gi' component={() => <GiView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
+          <Route exact path='/calendario' component={() => <CalendarView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
           <Route exact path='/solicitudes' component={() => <RequestsView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
           <Route exact path='/reservas' component={() => <ReservationView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />
           <Route exact path='/evaluaciones' component={() => <EvaluationView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} />

@@ -33,6 +33,15 @@ h4 {
   justify-content: space-between;
 }
 
+.calendario-module {
+  display: flex;
+  flex-direction: column;
+  max-height: 1600;
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
 .post{
   background-color: #eee;
   margin: 2rem;

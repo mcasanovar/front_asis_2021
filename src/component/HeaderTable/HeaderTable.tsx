@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Select, Input, DatePicker } from 'antd';
 
 import { IButtonsProps } from '../../models/index.models';
@@ -22,7 +22,9 @@ interface IHeaderTableProps {
   dataFilter?: IFiltersGI[] | IFiltersEvaluation[] | IFiltersResults[],
   filterText?: string,
   setFilterText: React.Dispatch<React.SetStateAction<string>>
-  setOptionFilter: React.Dispatch<React.SetStateAction<number>>
+  setOptionFilter: React.Dispatch<React.SetStateAction<number>>,
+  notFIlter?: boolean,
+  notSearch?: boolean
 }
 
 const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
@@ -38,7 +40,9 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
   setFilterText,
   onClickSearch,
   onClickDateFilter,
-  setOptionFilter
+  setOptionFilter,
+  notFIlter = false,
+  notSearch = false
 }) => {
 
   const { Option } = Select;
@@ -55,32 +59,36 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
         {/* section button and textinput */}
         <div className="container-header-table-section2">
           {showDateFilter &&
-            <DatePicker 
+            <DatePicker
               style={{ width: 150, marginRight: '10px' }}
-              onSelect={(e) => onClickDateFilter(e.format(FORMAT_DATE))} 
+              onSelect={(e) => onClickDateFilter(e.format(FORMAT_DATE))}
             />
           }
-          <Select
-            showSearch
-            style={{ width: 160, paddingRight: 5 }}
-            placeholder="Filtro"
-            optionFilterProp="children"
-            onSelect={(e) => setOptionFilter(parseInt(e.toString()))}
-          >
-            {dataFilter.length > 0 && dataFilter.map((item) => (
-              <Option value={item.key}>{item.value}</Option>
-            ))}
-          </Select>
-          <Search 
-            placeholder="Buscar..." 
-            enterButton="Buscar" 
-            size="middle" 
-            loading={false}
-            style={{ width: 600, height: '2rem', marginLeft: 0 }}
-            onChange={(e) => setFilterText(e.currentTarget.value)}
-            onSearch={() => onClickSearch()}
-            value={filterText}
-          />
+          {!notFIlter &&
+            <Select
+              showSearch
+              style={{ width: 160, paddingRight: 5 }}
+              placeholder="Filtro"
+              optionFilterProp="children"
+              onSelect={(e) => setOptionFilter(parseInt(e.toString()))}
+            >
+              {dataFilter.length > 0 && dataFilter.map((item) => (
+                <Option value={item.key}>{item.value}</Option>
+              ))}
+            </Select>
+          }
+          {!notSearch &&
+            <Search
+              placeholder="Buscar..."
+              enterButton="Buscar"
+              size="middle"
+              loading={false}
+              style={{ width: 600, height: '2rem', marginLeft: 0 }}
+              onChange={(e) => setFilterText(e.currentTarget.value)}
+              onSearch={() => onClickSearch()}
+              value={filterText}
+            />
+          }
         </div>
         <div></div>
         {/* section buttons right */}

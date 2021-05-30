@@ -44,6 +44,14 @@ const DetailsEvaluationView: React.FunctionComponent<IDetailsEvaluationViewProps
   }, []);
 
   useEffect(() => {
+    if (messageAlert.show) {
+      setTimeout(() => {
+        setMessageAlert({ ...messageAlert, show: false });
+      }, 3000);
+    }
+  }, [messageAlert]);
+
+  useEffect(() => {
     if (newEvaluationData._id !== '') return setLoading(false)
   }, [newEvaluationData._id]);
 
