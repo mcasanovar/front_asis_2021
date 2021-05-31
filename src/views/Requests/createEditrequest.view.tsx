@@ -202,6 +202,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
       return
     }
     const request: RequestModel = aux.res;
+    console.log(aux.res)
     setNewRequestData({ ...request, observacion_solicitud: '' });
 
     getGIByRut(request.rut_CP, 1);
@@ -293,6 +294,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
   // newRequestData.nro_contrato_seleccionado_cp,
   // newRequestData.faena_seleccionada_cp
   ]);
+
 
 
   //---RENDERS

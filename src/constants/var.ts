@@ -5086,6 +5086,10 @@ export const CATEGORIES_REQUESTS: ICategory1[] = [
                 id: 14,
                 nivel_4: "Protocolo 5D",
               },
+              {
+                id: 15,
+                nivel_4: "Potencial de Cargo",
+              },
             ],
           },
           {
