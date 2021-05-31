@@ -252,7 +252,8 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
             || record.grupo_interes === 'Empleados' 
             || record.grupo_interes === 'Clientes'
             || record.grupo_interes === 'Colaboradores'
-            || record.grupo_interes === 'admin') &&
+            || record.grupo_interes === 'admin'
+            || record.codigo.includes('SAL')) &&
             <Tooltip title='Editar' color={'#F68923'}>
               <Button
                 onClick={() => onClickAction('edit', record._id)}

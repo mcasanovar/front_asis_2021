@@ -237,13 +237,13 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
             </Col>
           </Row>
           <Row>
-            <Col span={24}>
+            <Col span={12}>
               <Form.Item
                 label='Observaciones'
                 style={{ width: '100%', height: '100%' }}
               >
-                <TextArea
-                  rows={2}
+                <Input
+                  maxLength={45}
                   onChange={(e) => setNewExamData({ ...newExamData, obs_examen_psicotecnico: e.currentTarget.value })}
                   value={newExamData.obs_examen_psicotecnico}
                 />
@@ -587,13 +587,13 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
             </Col>
           </Row>
           <Row>
-            <Col span={24}>
+            <Col span={12}>
               <Form.Item
                 label='Observaciones'
                 style={{ width: '100%', height: '100%' }}
               >
-                <TextArea
-                  rows={2}
+                <Input
+                  maxLength={48}
                   onChange={(e) => setNewExamData({ ...newExamData, obs_examen_sensometrico: e.currentTarget.value })}
                   value={newExamData.obs_examen_sensometrico}
                 />
@@ -773,14 +773,26 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
             </Col>
           </Row>
           <Row gutter={8}>
+            <Col span={10}>
+              <Form.Item
+                label='Observación'
+                style={{ width: '100%', height: '100%' }}
+              >
+                <Input
+                  maxLength={30}
+                  onChange={(e) => setNewExamData({ ...newExamData, obs_evaluacion_psicologica: e.currentTarget.value })} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={8}>
             <Col span={24}>
               <Form.Item
-                label='Observaciones'
+                label='Perfil Psicológico'
                 style={{ width: '100%', height: '100%' }}
               >
                 <TextArea
                   rows={5}
-                  onChange={(e) => setNewExamData({ ...newExamData, observacion_psicologica: e.currentTarget.value, obs_evaluacion_psicologica: e.currentTarget.value })} />
+                  onChange={(e) => setNewExamData({ ...newExamData, observacion_psicologica: e.currentTarget.value })} />
               </Form.Item>
             </Col>
           </Row>
@@ -1339,6 +1351,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<IPsicosensotecnicoExamV
                 >
                   <TextArea
                     rows={3}
+                    maxLength={300}
                     onChange={(e) => setNewExamData({ ...newExamData, conclusion_recomendacion: e.currentTarget.value })}
                     id='error_5'
                   />

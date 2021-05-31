@@ -1,5 +1,6 @@
 import { httpClient, httpClientFormData } from "../libs/axios";
 import { PREFIX_OUTPUT } from "../constants/var";
+import { OutputModel } from "../models/outputs.models";
 
 const getAllOutputsService = async (pageNumber: number, nPerPage: number) => {
   const extension = `${PREFIX_OUTPUT}/pagination`;
@@ -15,6 +16,16 @@ const insertOutputService = async (data: any) => {
   const extension = `${PREFIX_OUTPUT}`;
   try {
     const response = await httpClient.post(extension, data);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+const editOutputService = async (id: string, data: any) => {
+  const extension = `${PREFIX_OUTPUT}/${id}`;
+  try {
+    const response = await httpClient.put(extension, data);
     return response.data;
   } catch (error) {
     return error.response.data;
@@ -53,6 +64,12 @@ const filterOutputsService = async (
   }
 };
 
-export { getAllOutputsService, insertOutputService, deleteOutputService, filterOutputsService }
+export { 
+  getAllOutputsService, 
+  insertOutputService,
+  editOutputService, 
+  deleteOutputService, 
+  filterOutputsService 
+}
 
 
