@@ -9,6 +9,7 @@ import ModalComponent from "../../component/Modal/Modal";
 import TableComponent from "../../component/Table/Table";
 import DetailsOutputView from './detailsoutput.view';
 import PaginationComponent from '../../component/Pagination/Pagination';
+import EditOutputView from './editoutput.view';
 
 import AlertComponent from "../../component/Alert/Alert";
 
@@ -17,6 +18,7 @@ import { IResponseAllOutputs, IResponseOutputs, OutputModel } from '../../models
 import { deleteOutputService, filterOutputsService, getAllOutputsService } from '../../services';
 import { FILTERS_OUTPUT, N_PER_PAGE, OUTPUT_COLUMNS_TABLE } from '../../constants/var';
 import { MilesFormat } from '../../libs/formattedPesos';
+import { OutputsInitialization } from '../../initializations/output.initializations';
 
 interface IOutputsViewProps {
   authorized: boolean
@@ -27,7 +29,7 @@ interface IFilterSelected {
   filter: string
 }
 
-const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({authorized}) => {
+const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [
     {
@@ -71,6 +73,17 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({authorized}) =
         idregister && setOutputSelected(outputs.find((output) => output._id === idregister));
         setOpenModal(true);
         break;
+      case 'edit':
+        setActualModal({
+          _id: id,
+          title: 'Editar Salida',
+          size: 'small',
+          widthModal: 1200,
+          showButtons: []
+        });
+        idregister && setOutputSelected(outputs.find((output) => output._id === idregister));
+        setOpenModal(true);
+        break;
       case 'delete':
         idregister && setIdSelectedOuput(idregister)
         setActualModal({
@@ -88,11 +101,11 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({authorized}) =
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    if(filterMode){
+    if (filterMode) {
       filterOutputs(filterObjectSelected?.filter || '', filterObjectSelected?.headerFilter || '', newpage);
       return
     }
-    if(!filterMode){
+    if (!filterMode) {
       getOutputs(newpage);
       return
     }
@@ -123,7 +136,7 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({authorized}) =
     const headfilter = FILTERS_OUTPUT.find((element) => element.key === optionFilter);
     if (!headfilter) return
     setFilterMode(true);
-    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
+    setFilterObjectSelected({ headerFilter: headfilter.name, filter: filterText });
     filterOutputs(filterText, headfilter.name)
   };
 
@@ -203,8 +216,8 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({authorized}) =
     }
   }, [ActualModal]);
 
-  if(!authorized){
-    return <Redirect to='./login'/>
+  if (!authorized) {
+    return <Redirect to='./login' />
   }
 
   return (
@@ -241,9 +254,10 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({authorized}) =
         data={handleTransformValues(outputs)}
         showDelete
         showDetails
+        showEdit
         enablePagination={false}
       />
-      <br/>
+      <br />
       <PaginationComponent
         actualPage={actualPage}
         onChange={(newpage: number) => handleChangePagination(newpage)}
@@ -262,6 +276,12 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({authorized}) =
         >
           {ActualModal._id === 'newoutput' &&
             <CreateOutputView
+              onCloseModal={(value, message) => handleCloseModal(value, message)}
+            />
+          }
+          {ActualModal._id === 'edit' &&
+            <EditOutputView
+              outputSelected={outputSelected || OutputsInitialization}
               onCloseModal={(value, message) => handleCloseModal(value, message)}
             />
           }
