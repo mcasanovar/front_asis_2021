@@ -19,7 +19,7 @@ const config = {
 };
 
 const configFormData = {
-  baseURL: process.env.REACT_APP_API_DEV,
+  // baseURL: process.env.REACT_APP_API_DEV,
   // baseURL: process.env.REACT_APP_API_STAGING,
   baseURL: process.env.REACT_APP_API_PROD,
   withCredentials: false,
