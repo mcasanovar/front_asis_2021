@@ -19,7 +19,8 @@ import {
   CreditCardOutlined,
   DollarOutlined,
   CloudDownloadOutlined,
-  FileSearchOutlined
+  FileSearchOutlined,
+  SendOutlined
 } from "@ant-design/icons";
 import { IColumnTable, ITableDeleteObject } from '../../models/index.models';
 import { GiModel } from '../../models/gi.models';
@@ -35,18 +36,18 @@ import { OutputModel } from '../../models/outputs.models';
 import { ExistenceModel } from '../../models/existence.models';
 
 interface ITableComponentProps {
-  data?: GiModel[] 
-    | RequestModel[] 
-    | ReservationModel[] 
-    | EvaluationModel[] 
-    | ResultModel[]
-    | InvoicesModel[]
-    | PaymentModel[]
-    | RequestPaymentModel[]
-    | ExpensesModel[]
-    | OutputModel[]
-    | ExistenceModel[]
-    | undefined,
+  data?: GiModel[]
+  | RequestModel[]
+  | ReservationModel[]
+  | EvaluationModel[]
+  | ResultModel[]
+  | InvoicesModel[]
+  | PaymentModel[]
+  | RequestPaymentModel[]
+  | ExpensesModel[]
+  | OutputModel[]
+  | ExistenceModel[]
+  | undefined,
   columns?: IColumnTable[],
   onClickAction: (id: string, _id?: string) => (string | void) | (string | undefined),
   onClickDelete: (id: string, _id: string) => string | void,
@@ -83,7 +84,8 @@ interface ITableComponentProps {
   showGeneratePayment?: boolean,
   showRequestPaymentCard?: boolean,
   ShowDownloadExpense?: boolean,
-  ShowEntries?: boolean
+  ShowEntries?: boolean,
+  showSendMailTemplate?: boolean
 }
 
 const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
@@ -124,7 +126,8 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
   showGeneratePayment = false,
   showRequestPaymentCard = false,
   ShowDownloadExpense = false,
-  ShowEntries = false
+  ShowEntries = false,
+  showSendMailTemplate = false
 }) => {
   const [deleteConfirmation, setDeleteConfirmation] = useState<ITableDeleteObject>({ _id: '', show: false });
   const [selectionType] = useState<'checkbox' | 'radio'>('checkbox');
@@ -247,13 +250,13 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<EyeOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showEdit 
-            && (record.estado === 'Ingresado' 
-            || record.grupo_interes === 'Empleados' 
-            || record.grupo_interes === 'Clientes'
-            || record.grupo_interes === 'Colaboradores'
-            || record.grupo_interes === 'admin'
-            || record.codigo.includes('SAL')) &&
+          {showEdit
+            && (record.estado === 'Ingresado'
+              || record.grupo_interes === 'Empleados'
+              || record.grupo_interes === 'Clientes'
+              || record.grupo_interes === 'Colaboradores'
+              || record.grupo_interes === 'admin'
+              || record.codigo.includes('SAL')) &&
             <Tooltip title='Editar' color={'#F68923'}>
               <Button
                 onClick={() => onClickAction('edit', record._id)}
@@ -359,7 +362,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<FileDoneOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showUploadResult && record.estado === 'En Revisión' 
+          {showUploadResult && record.estado === 'En Revisión'
             && (record.estado_archivo === 'Sin Documento' || record.estado_archivo === 'Rechazado') &&
             <Tooltip title='Subir Resultado' color={'#0EB0A1'}>
               <Button
@@ -368,8 +371,8 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<FilePdfOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showDownloadResult 
-            && (record.estado === 'En Revisión' || record.estado === 'Revisado') 
+          {showDownloadResult
+            && (record.estado === 'En Revisión' || record.estado === 'Revisado')
             && (record.estado_archivo === 'Cargado' || record.estado_archivo === 'Aprobado') &&
             <Tooltip title='Descargar resultado' color={'#1A9D02'}>
               <Button
@@ -394,9 +397,9 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<MailOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showUploadOC && record.estado === 'Ingresado' 
+          {showUploadOC && record.estado === 'Ingresado'
             && (record.estado_archivo === 'Sin Documento' || record.estado_archivo === 'Rechazado')
-            && record.oc === 'Si' &&  
+            && record.oc === 'Si' &&
             <Tooltip title='Subir OC' color={'#50ACF5'}>
               <Button
                 onClick={() => onClickAction('uploadoc', record._id)}
@@ -428,9 +431,9 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<DownloadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showInvoice && record.estado === 'En Facturacion' 
+          {showInvoice && record.estado === 'En Facturacion'
             && (record.estado_archivo === 'Sin Documento' || record.estado_archivo === 'Aprobado' || record.estado_archivo === 'Rechazado')
-            && 
+            &&
             <Tooltip title='Factura' color={'#50ACF5'}>
               <Button
                 onClick={() => onClickAction('generateinvoice', record._id)}
@@ -478,12 +481,20 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<DownloadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {ShowEntries && record.inventario === 'Si' && 
+          {ShowEntries && record.inventario === 'Si' &&
             <Tooltip title='Entradas' color={'#55D515'}>
               <Button
                 onClick={() => onClickAction('entries', record._id)}
                 style={{ backgroundColor: '#55D515' }}
                 icon={<DollarOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
+            </Tooltip>
+          }
+          {showSendMailTemplate && (record.codigo.includes('SOL') || record.codigo.includes('AGE')) &&
+            <Tooltip title='Enviar Mail' color={'#222DB7'}>
+              <Button
+                onClick={() => onClickAction('sendmail', record._id)}
+                style={{ backgroundColor: '#222DB7' }}
+                icon={<SendOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
         </>

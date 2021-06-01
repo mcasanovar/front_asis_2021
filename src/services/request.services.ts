@@ -132,6 +132,16 @@ const filterRequestsService = async (
   }
 };
 
+const sendMailsTemplateService = async (data: any) => {
+  const extension = `${PREFIX_REQUEST}/sendmail`;
+  try {
+    const response = await httpClient.post(extension, data);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 export {
   getAllRequestsService,
   getAllRequestToConfirmService,
@@ -144,5 +154,6 @@ export {
   confirmRequestService,
   confirmGroupRequestsService,
   filterRequestsService,
-  getAllRequestsNoPaginationService
+  getAllRequestsNoPaginationService,
+  sendMailsTemplateService
 }

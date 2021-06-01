@@ -5,7 +5,7 @@ import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
 import { CANCEL, CONFIRM, EDIT, FILTERS_REQUEST, N_PER_PAGE, OK, REQUESTS_COLUMNS_TABLE } from '../../constants/var';
 import { IResponseAllRequests, IResponseRequest, RequestModel } from '../../models/request.models';
 
-import { deleteOneRequestService, filterRequestsService, getAllRequestsService } from '../../services';
+import { deleteOneRequestService, filterRequestsService, getAllRequestsService, sendMailsTemplateService } from '../../services';
 
 import AlertComponent from "../../component/Alert/Alert";
 
@@ -19,6 +19,7 @@ import CreateEditRequestView from "./createEditrequest.view";
 import DetailsRequestView from "./detailsrequest.view";
 import GroupConfirmationView from "./groupconfirmation.view";
 import ConfirmRequestView from "./confirmrequest.view";
+import SendMailsTemplateView from './sendEmailsTemplate.view';
 
 interface IRequestViewProps {
   authorized: boolean
@@ -53,6 +54,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
   const [requests, setRequests] = useState<RequestModel[]>([]);
   const [idSelectedRequest, setIdSelectedRequest] = useState<string>('');
+  const [selectedRequest, setSelectedRequest] = useState<RequestModel>();
   const [loading, setLoading] = useState<boolean>(false);
   const [OpenModal, setOpenModal] = useState<boolean>(false);
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
@@ -123,6 +125,17 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
           showButtons: []
         });
         break;
+      case 'sendmail':
+        idregister && setSelectedRequest(requests.find((request) => request._id === idregister));
+        setActualModal({
+          _id: id,
+          title: 'Envío de correo de ingreso de solicitud',
+          size: 'small',
+          widthModal: 1200,
+          showButtons: []
+        });
+        setOpenModal(true);
+        break;
       default:
         return setActualModal(buttons[0])
     }
@@ -151,17 +164,17 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
     const headfilter = FILTERS_REQUEST.find((element) => element.key === optionFilter);
     if (!headfilter) return
     setFilterMode(true);
-    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
+    setFilterObjectSelected({ headerFilter: headfilter.name, filter: filterText });
     await filterRequests(filterText, headfilter.name)
   };
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    if(filterMode){
+    if (filterMode) {
       !filterObjectSelected && filterRequests(filterSelected, 'fecha_solicitud', newpage)
       !!filterObjectSelected && filterRequests(filterObjectSelected.filter, filterObjectSelected.headerFilter, newpage)
     }
-    if(!filterMode){
+    if (!filterMode) {
       getRequests(newpage);
       return
     }
@@ -291,6 +304,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
         showEdit
         showNullify
         showSchedule
+        showSendMailTemplate
         enablePagination={false}
       />
       <br />
@@ -338,6 +352,12 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
         {ActualModal._id === 'confirm' &&
           <GroupConfirmationView
             onCloseModal={(value, message) => handleCloseModal(value, message)}
+          />
+        }
+        {ActualModal._id === 'sendmail' &&
+          <SendMailsTemplateView
+            onCloseModal={(value, message) => handleCloseModal(value, message)}
+            request={selectedRequest}
           />
         }
       </ModalComponent>
