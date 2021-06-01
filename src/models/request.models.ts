@@ -27,6 +27,11 @@ export interface IRequestObservations {
   fecha: string
 };
 
+export interface IReceiverMails {
+  email: string,
+  name: string
+}
+
 export interface RequestModel {
   _id: string,
   codigo: string,

@@ -1,7 +1,16 @@
 import React from "react";
-import { IDataConfirmation, RequestModel } from "../../models/request.models";
+import { IDataConfirmation, IReceiverMails, RequestModel } from "../../models/request.models";
 
-const MapRequestToInsert = (request: RequestModel) => {
+const MapRequestToInsert = (request: RequestModel, sendMail: boolean, emailsArray: IReceiverMails[]) => {
+  const { _id, ...restOfData } = request;
+  return {
+    ...restOfData,
+    sendMail,
+    emailsArray
+  };
+};
+
+const MapRequestToEdit = (request: RequestModel) => {
   const { _id, ...restOfData } = request;
   return restOfData;
 };
@@ -40,4 +49,4 @@ const MapGroupRequestsToConfirm = (data: IDataConfirmation, selectedKeyRequests:
   return aux;
 };
 
-export { MapRequestToInsert, MapRequestToConfirm, MapGroupRequestsToConfirm }
+export { MapRequestToInsert, MapRequestToConfirm, MapGroupRequestsToConfirm, MapRequestToEdit }

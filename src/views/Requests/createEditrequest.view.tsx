@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Collapse, Input, Row, Col, Select, DatePicker, Spin, Typography, Button, Form, InputNumber, TimePicker } from "antd";
+import { Collapse, Input, Row, Col, Select, DatePicker, Spin, Typography, Button, Form, InputNumber, TimePicker, Checkbox } from "antd";
 import { IAlertMessageContent } from '../../models/index.models';
 
 import { editRequestService, getGIByRutService, getOneRequestService, getWorkersGIService, insertRequestService } from "../../services/index";
@@ -16,8 +16,8 @@ import { CalculateIVA } from "../../libs/calculateIVA";
 import moment, { Moment } from 'moment';
 import { GiModel, IContract, IFaena, IResponseGI } from '../../models/gi.models';
 import { SelectValue } from 'antd/lib/select';
-import { FormatingRut } from '../../functions/validators/index.validators';
-import { MapRequestToInsert } from '../../functions/mappers';
+import { FormatingRut, validateEmail } from '../../functions/validators/index.validators';
+import { MapRequestToInsert, MapRequestToEdit } from '../../functions/mappers';
 
 interface ICreateRequestViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -52,6 +52,9 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
   const [faenasSelected, setFaenasSelected] = useState<IFaena[]>([]);
   const [primaryClient, setPrimaryClient] = useState<GiModel>();
   const [secondaryClient, setSecondaryClient] = useState<GiModel>();
+  const [checkSendMail, setCheckSendMail] = useState<boolean>(false);
+  const [emails, setEmails] = useState<string>('');
+  const [isValidEmails, setIsValidEmails] = useState<boolean>(true);
 
   async function getGIByRut(rut: string, typeRequest: number) {
     setLoading(true);
@@ -158,7 +161,23 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
   const handleInsertRequest = async () => {
     setLoading(true);
     let formData = new FormData();
-    const requestToInsert = MapRequestToInsert(newRequestData);
+    let arrayEmails = [];
+    if (checkSendMail && !emails.includes(',')) {
+      arrayEmails.push({
+        email: emails.trim(),
+        name: emails.trim()
+      });
+    };
+    if (checkSendMail && emails.includes(',')) {
+      const aux = emails.split(',');
+      arrayEmails = aux.map((mail) => {
+        return {
+          email: mail.trim(),
+          name: mail.trim()
+        }
+      });
+    };
+    const requestToInsert = MapRequestToInsert(newRequestData, checkSendMail, arrayEmails);
     formData.append("data", JSON.stringify(requestToInsert));
     const result: IResponseRequest = await insertRequestService(formData);
     if (result.err === null) {
@@ -174,7 +193,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
   const handleSaveRequest = async () => {
     setLoading(true);
     let formData = new FormData();
-    const requestToInsert = MapRequestToInsert(newRequestData);
+    const requestToInsert = MapRequestToEdit(newRequestData);
     formData.append("data", JSON.stringify(requestToInsert));
     const result: IResponseRequest = await editRequestService(newRequestData._id, formData);
     if (result.err === null) {
@@ -193,6 +212,20 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
     }
     setNewRequestData({ ...newRequestData, jornada: 'Vespertina' });
     return
+  };
+
+  const handleValidEmails = (emailsString: string) => {
+    setEmails(emailsString);
+    if (checkSendMail && !emailsString) return
+    if (emailsString.includes(',')) {
+      const aux = emailsString.split(',');
+      const isValid = aux.some((element) => !validateEmail(element));
+      return isValid ? setIsValidEmails(false) : setIsValidEmails(true);
+    }
+    if (!emailsString.includes(',')) {
+      if (!validateEmail(emailsString)) return setIsValidEmails(false);
+      return setIsValidEmails(true);
+    }
   };
 
   async function getOneRequest() {
@@ -216,6 +249,11 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
   };
 
   //----------------------------------------USEEFECT
+  useEffect(() => {
+    !checkSendMail ? setIsValidEmails(true) : setIsValidEmails(false)
+    checkSendMail && setEmails('');
+  }, [checkSendMail]);
+
   useEffect(() => {
     setLoading(true)
     getWorkers();
@@ -280,22 +318,22 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
       && newRequestData.id_GI_PersonalAsignado !== ''
       && newRequestData.id_GI_Principal
       && newRequestData.id_GI_Secundario !== ''
-      // && newRequestData.nro_contrato_seleccionado_cp !== ''
-      // && newRequestData.faena_seleccionada_cp !== ''
+      && ((!checkSendMail && isValidEmails) || (checkSendMail && isValidEmails))
     ) {
 
       setDisabledConfirm(false)
+    }
+    else{
+      setDisabledConfirm(true)
     }
     // eslint-disable-next-line
   }, [newRequestData.nombre_servicio,
   newRequestData.id_GI_PersonalAsignado,
   newRequestData.id_GI_Principal,
   newRequestData.id_GI_Secundario,
-  // newRequestData.nro_contrato_seleccionado_cp,
-  // newRequestData.faena_seleccionada_cp
+  isValidEmails,
+  checkSendMail
   ]);
-
-
 
   //---RENDERS
   const renderServiceInformation = () => {
@@ -864,6 +902,33 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
     );
   };
 
+  const renderSendingMail = () => {
+    return (
+      <Form layout='vertical'>
+        <Row gutter={8}>
+          <Col span='4' style={{ marginTop: 34 }}>
+            <Checkbox onChange={() => setCheckSendMail(!checkSendMail)}>¿Desea enviar email?</Checkbox>
+          </Col>
+          <Col span='20'>
+            <Form.Item
+              label="Para enviar multiples correos, puede separarlos por coma (,)."
+              validateStatus={isValidEmails ? 'success' : 'error'}
+              help={isValidEmails ? '' : "El correo o los correos ingresados no contienen el formato correcto."}
+            >
+              <Input
+                placeholder='Ingrese los correos electrónicos'
+                disabled={!checkSendMail}
+                onChange={(e) => handleValidEmails(e.currentTarget.value)}
+                value={emails}
+                id="error"
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+    );
+  };
+
   return (
     <Spin spinning={loading} size='large' tip='Cargando...'>
       {messageAlert.show && <AlertComponent message={messageAlert.message} type={messageAlert.type} />}
@@ -879,6 +944,8 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
           {renderPreliminaryInformation()}
         </Panel>
       </Collapse>
+      <br />
+      {renderSendingMail()}
       <br />
       <Row gutter={8} style={{
         display: 'flex',
