@@ -1,10 +1,13 @@
+import moment from "moment";
 import React from "react";
+import { FORMAT_DATE } from "../../constants/var";
 import { IDataConfirmation, IReceiverMails, RequestModel } from "../../models/request.models";
 
 const MapRequestToInsert = (request: RequestModel, sendMail: boolean, emailsArray: IReceiverMails[]) => {
   const { _id, ...restOfData } = request;
   return {
     ...restOfData,
+    fecha_solicitud: moment(request.fecha_solicitud, FORMAT_DATE).format(FORMAT_DATE),
     sendMail,
     emailsArray
   };
