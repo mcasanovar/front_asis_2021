@@ -4669,7 +4669,7 @@ export const CIVIL_STATE = [
   "Noviazgo (período inferior a 1 año)",
 ];
 
-export const DRIVER_LICENSE = ["A1", "A2", "A3", "A4", "A5", "B", "C", "D", "E", "F"]
+export const DRIVER_LICENSE = ["A1", "A2", "A3", "A4", "A5", "B", "C", "D", "E", "F", "No tiene"]
 
 export const BLOOD_GROUP = ["O-", "O+", "A−", "A+", "B−", "B+", "AB−", "AB+"]
 
