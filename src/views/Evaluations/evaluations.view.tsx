@@ -140,6 +140,8 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
       setEvaluations(reservationsMapped);
+      setLoading(false)
+      return;
     }
     setLoading(false)
   };
@@ -195,12 +197,14 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
     );
 
     if (!aux.err) {
+      console.log(aux.evaluaciones)
       setEvaluations(aux.evaluaciones);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
-      return
+      setLoading(false)
     }
     if (aux.err) {
+      setLoading(false)
       return setMessageAlert({ message: aux.err, type: 'error', show: true });
     }
   };
