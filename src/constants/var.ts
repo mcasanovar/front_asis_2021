@@ -5090,6 +5090,18 @@ export const CATEGORIES_REQUESTS: ICategory1[] = [
                 id: 15,
                 nivel_4: "Potencial de Cargo",
               },
+              {
+                id: 16,
+                nivel_4: "Psicolaboral Liderazgo",
+              },
+              {
+                id: 17,
+                nivel_4: "Psicolaboral Escolta",
+              },
+              {
+                id: 18,
+                nivel_4: "Aversión al Riesgo para Cargos Críticos",
+              },
             ],
           },
           {
