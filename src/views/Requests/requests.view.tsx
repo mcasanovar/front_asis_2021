@@ -129,7 +129,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
         idregister && setSelectedRequest(requests.find((request) => request._id === idregister));
         setActualModal({
           _id: id,
-          title: 'Envío de correo de ingreso de solicitud',
+          title: 'Envío de emails',
           size: 'small',
           widthModal: 1200,
           showButtons: []
@@ -358,6 +358,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
           <SendMailsTemplateView
             onCloseModal={(value, message) => handleCloseModal(value, message)}
             request={selectedRequest}
+            type='Solicitud'
           />
         }
       </ModalComponent>

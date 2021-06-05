@@ -19,6 +19,8 @@ import GroupConfirmReservationView from "./groupconfirmreservation.view";
 import EditReservationView from "./editreservation.view";
 import ConfirmReservationView from "./confirmreservation.view";
 
+import SendMailsTemplateView from '../Requests/sendEmailsTemplate.view';
+
 interface IReservationViewProps {
   authorized: boolean
 }
@@ -44,6 +46,7 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
   const [OpenModal, setOpenModal] = useState<boolean>(false);
   const [idSelectedReservation, setidSelectedReservation] = useState<string>('');
+  const [selectedReservation, setSelectedReservation] = useState<ReservationModel>();
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [loading, setLoading] = useState<boolean>(false);
   const [reservations, setReservations] = useState<ReservationModel[]>([]);
@@ -105,6 +108,17 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
           showButtons: [{ _id: CANCEL }, { _id: EDIT }]
         })
         break;
+      case 'sendmail':
+        idregister && setSelectedReservation(reservations.find((reservation) => reservation._id === idregister));
+        setActualModal({
+          _id: id,
+          title: 'Envío de emails',
+          size: 'small',
+          widthModal: 1200,
+          showButtons: []
+        });
+        setOpenModal(true);
+        break;
       default:
         break;
     }
@@ -123,7 +137,7 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
     const headfilter = FILTERS_RESERVATION.find((element) => element.key === optionFilter);
     if (!headfilter) return
     setFilterMode(true);
-    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
+    setFilterObjectSelected({ headerFilter: headfilter.name, filter: filterText });
     await filterReservation(filterText, headfilter.name)
     setLoading(false)
   };
@@ -139,12 +153,12 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    if(filterMode){
+    if (filterMode) {
       !filterObjectSelected && filterReservation(filterSelected, 'fecha_reserva', newpage);
       !!filterObjectSelected && filterReservation(filterObjectSelected.filter, filterObjectSelected.headerFilter, newpage)
       return
     }
-    if(!filterMode){
+    if (!filterMode) {
       getReservations(newpage);
       return
     }
@@ -284,6 +298,7 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
         showEdit
         showNullify
         showReservation
+        showSendMailTemplate
         enablePagination={false}
       />
       <br />
@@ -323,6 +338,13 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
           <ConfirmReservationView
             onCloseModal={(value, message) => handleCloseModal(value, message)}
             _id={idSelectedReservation}
+          />
+        }
+        {ActualModal._id === 'sendmail' &&
+          <SendMailsTemplateView
+            onCloseModal={(value, message) => handleCloseModal(value, message)}
+            request={selectedReservation}
+            type='Reserva'
           />
         }
       </ModalComponent>

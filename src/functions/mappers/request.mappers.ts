@@ -18,7 +18,7 @@ const MapRequestToEdit = (request: RequestModel) => {
   return restOfData;
 };
 
-const MapRequestToConfirm = (request: RequestModel) => {
+const MapRequestToConfirm = (request: RequestModel, sendMail: boolean, emailsArray: IReceiverMails[]) => {
   const { 
     fecha_confirmacion: fecha_solicitud,
     hora_confirmacion: hora_solicitud,
@@ -35,7 +35,9 @@ const MapRequestToConfirm = (request: RequestModel) => {
     email_central,
     observacion_solicitud,
     id_GI_Principal,
-    url_file_adjunto_confirm: {}
+    url_file_adjunto_confirm: {},
+    sendMail,
+    emailsArray
   }
 };
 
