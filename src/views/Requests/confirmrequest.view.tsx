@@ -1,5 +1,5 @@
 import React, { FormEvent, useEffect, useState } from 'react';
-import { Input, Row, Col, Select, DatePicker, Form, TimePicker, Button, Spin } from "antd";
+import { Input, Row, Col, Select, DatePicker, Form, TimePicker, Button, Spin, Checkbox } from "antd";
 import { MailOutlined } from "@ant-design/icons";
 import { RequestInitialization } from '../../initializations/request.initialization';
 import { IResponseRequest, RequestModel } from '../../models/request.models';
@@ -30,16 +30,49 @@ const ConfirmRequestView: React.FunctionComponent<IConfirmRequestViewProps> = ({
   const [confirmRequest, setConfirmRequest] = useState<RequestModel>(RequestInitialization);
   const [disabledConfirm, setDisabledConfirm] = useState<boolean>(true);
   const [isPrimaryEmailOk, setIsPrimaryEmailOk] = useState<boolean>(true);
+  const [checkSendMail, setCheckSendMail] = useState<boolean>(false);
+  const [isValidEmails, setIsValidEmails] = useState<boolean>(true);
+  const [emails, setEmails] = useState<string>('');
 
   const handleValidateEmail = (e: FormEvent<HTMLInputElement>) => {
     setIsPrimaryEmailOk(validateEmail(e.currentTarget.value) && e.currentTarget.value !== '');
     setConfirmRequest({ ...confirmRequest, email_gi: e.currentTarget.value })
   };
 
+  const handleValidEmails = (emailsString: string) => {
+    setEmails(emailsString);
+    if (checkSendMail && !emailsString) return
+    if (emailsString.includes(',')) {
+      const aux = emailsString.split(',');
+      const isValid = aux.some((element) => !validateEmail(element));
+      return isValid ? setIsValidEmails(false) : setIsValidEmails(true);
+    }
+    if (!emailsString.includes(',')) {
+      if (!validateEmail(emailsString)) return setIsValidEmails(false);
+      return setIsValidEmails(true);
+    }
+  };
+
   const handleConfirmRequest = async () => {
     setLoading(true);
     let formData = new FormData();
-    const requestToConfirm = MapRequestToConfirm(confirmRequest)
+    let arrayEmails = [];
+    if (checkSendMail && !emails.includes(',')) {
+      arrayEmails.push({
+        email: emails.trim(),
+        name: emails.trim()
+      });
+    };
+    if (checkSendMail && emails.includes(',')) {
+      const aux = emails.split(',');
+      arrayEmails = aux.map((mail) => {
+        return {
+          email: mail.trim(),
+          name: mail.trim()
+        }
+      });
+    };
+    const requestToConfirm = MapRequestToConfirm(confirmRequest, checkSendMail, arrayEmails)
     formData.append("data", JSON.stringify(requestToConfirm));
     const result: IResponseRequest = await confirmRequestService(confirmRequest._id, formData);
     if (result.err === null) {
@@ -76,17 +109,51 @@ const ConfirmRequestView: React.FunctionComponent<IConfirmRequestViewProps> = ({
   }, []);
 
   useEffect(() => {
+    !checkSendMail ? setIsValidEmails(true) : setIsValidEmails(false)
+    checkSendMail && setEmails('');
+  }, [checkSendMail]);
+
+  useEffect(() => {
     if (confirmRequest._id !== '') return setLoading(false);
   }, [confirmRequest]);
 
   useEffect(() => {
-    if (confirmRequest.medio_confirmacion && confirmRequest.medio_confirmacion !== '' && isPrimaryEmailOk)
+    if (confirmRequest.medio_confirmacion && 
+      confirmRequest.medio_confirmacion !== '' && 
+      isPrimaryEmailOk &&
+      ((!checkSendMail && isValidEmails) || (checkSendMail && isValidEmails)))
       return setDisabledConfirm(false);
     return setDisabledConfirm(true)
     // eslint-disable-next-line
-  }, [confirmRequest.medio_confirmacion, isPrimaryEmailOk]);
+  }, [confirmRequest.medio_confirmacion, isPrimaryEmailOk, isValidEmails, checkSendMail]);
 
-  console.log(confirmRequest)
+  //-------------------------------------------------------RENDERS
+  const renderSendingMail = () => {
+    return (
+      <Form layout='vertical'>
+        <Row gutter={8}>
+          <Col span='6' style={{ marginTop: 34 }}>
+            <Checkbox onChange={() => setCheckSendMail(!checkSendMail)}>¿Desea enviar email de confirmación?</Checkbox>
+          </Col>
+          <Col span='18'>
+            <Form.Item
+              label="Para enviar multiples correos, puede separarlos por coma (,)."
+              validateStatus={isValidEmails ? 'success' : 'error'}
+              help={isValidEmails ? '' : "El correo o los correos ingresados no contienen el formato correcto."}
+            >
+              <Input
+                placeholder='Ingrese los correos electrónicos'
+                disabled={!checkSendMail}
+                onChange={(e) => handleValidEmails(e.currentTarget.value)}
+                value={emails}
+                id="error"
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+    );
+  };
 
   return (
     <Spin spinning={loading} size='large' tip='Cargando...'>
@@ -186,6 +253,7 @@ const ConfirmRequestView: React.FunctionComponent<IConfirmRequestViewProps> = ({
               </Form.Item>
             </Col>
           </Row>
+          {renderSendingMail()}
           <br />
           <Row gutter={8} style={{
             display: 'flex',

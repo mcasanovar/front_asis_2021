@@ -1,11 +1,20 @@
+import { IReceiverMails } from "../../models/request.models";
 import { IDataReservationConfirmation, ReservationModel } from "../../models/reservation.models";
 
-const MapReservation = (reservation: ReservationModel, obs: string, idProfessional: string) => {
+const MapReservation = (
+    reservation: ReservationModel, 
+    obs: string, 
+    idProfessional: string,
+    sendMail?: boolean,
+    emailsArray?: IReceiverMails[]
+  ) => {
   const { observacion, ...restOfData } = reservation;
   return {
     ...restOfData,
     id_GI_personalAsignado: idProfessional,
-    observacion: obs
+    observacion: obs,
+    sendMail,
+    emailsArray
   };
 };
 

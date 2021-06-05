@@ -103,6 +103,16 @@ const deleteReservationService = async (id: string) => {
   }
 };
 
+const sendMailsTemplateReservationsService = async (data: any) => {
+  const extension = `${PREFIX_RESERVATION}/sendmail`;
+  try {
+    const response = await httpClient.post(extension, data);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 export {
   getAllReservationsService,
   getGroupReservationsService,
@@ -112,5 +122,6 @@ export {
   confirmGroupReservationsService,
   getOneReservationService,
   editReservationService,
-  deleteReservationService
+  deleteReservationService,
+  sendMailsTemplateReservationsService
 }

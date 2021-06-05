@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Row, Col, Form, Button, Spin } from "antd";
+import { Input, Row, Col, Form, Button, Spin, Typography, Tag } from "antd";
 import { validateEmail } from '../../functions/validators/index.validators';
 import { IResponseRequest, RequestModel } from '../../models/request.models';
-import { sendMailsTemplateService } from '../../services';
 import { IAlertMessageContent } from '../../models/index.models';
 
+import AlertComponent from "../../component/Alert/Alert";
+import { IResponseReservation, ReservationModel } from '../../models/reservation.models';
+import { sendMailsTemplateReservationsService } from '../../services/reservation.services';
+import { sendMailsTemplateService } from '../../services';
 
 interface ISendEmailsTemplateViewProps {
   onCloseModal: (value: string, message: string) => string | void,
-  request: RequestModel | undefined
+  request: RequestModel | ReservationModel | undefined,
+  type: string
 }
 
 const SendEmailsTemplateView: React.FunctionComponent<ISendEmailsTemplateViewProps> = ({
   onCloseModal,
-  request
+  request,
+  type
 }) => {
+  const { Title, Paragraph } = Typography;
+
   const [loading, setLoading] = useState<boolean>(false);
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [emails, setEmails] = useState<string>('');
@@ -53,7 +60,7 @@ const SendEmailsTemplateView: React.FunctionComponent<ISendEmailsTemplateViewPro
         }
       });
     };
-    const aux: IResponseRequest = await sendMailsTemplateService({...request, emailsArray: arrayEmails});
+    const aux: IResponseRequest = await sendMailsTemplateService({ ...request, emailsArray: arrayEmails, estado: request?.estado });
     if (!aux.err) {
       onCloseModal('sended', aux.msg)
       return
@@ -62,6 +69,36 @@ const SendEmailsTemplateView: React.FunctionComponent<ISendEmailsTemplateViewPro
     setLoading(false);
     return
   };
+
+  const handleSendEmailsReservation = async () => {
+    setLoading(true);
+    let arrayEmails = [];
+    if (!emails.includes(',')) {
+      arrayEmails.push({
+        email: emails.trim(),
+        name: emails.trim()
+      });
+    };
+    if (emails.includes(',')) {
+      const aux = emails.split(',');
+      arrayEmails = aux.map((mail) => {
+        return {
+          email: mail.trim(),
+          name: mail.trim()
+        }
+      });
+    };
+    const result: IResponseReservation = await sendMailsTemplateReservationsService({...request, emailsArray: arrayEmails});
+    if (!result.err) {
+      onCloseModal('sended', result.msg)
+      return
+    }
+    setMessageAlert({ message: result.err, type: 'error', show: true });
+    setLoading(false);
+    return
+  };
+
+  console.log(request)
 
   //--------------------------USEEFFECT
   useEffect(() => {
@@ -73,13 +110,34 @@ const SendEmailsTemplateView: React.FunctionComponent<ISendEmailsTemplateViewPro
   }, [messageAlert]);
 
   useEffect(() => {
-    if(!emails) return setDisabledConfirm(true);
+    if (!emails) return setDisabledConfirm(true);
     if (isValidEmails) return setDisabledConfirm(false);
     return setDisabledConfirm(true)
   }, [isValidEmails, emails]);
 
   return (
     <Spin spinning={loading} size='large' tip='Enviando...'>
+      {messageAlert.show && <AlertComponent message={messageAlert.message} type={messageAlert.type} />}
+      <Row gutter={8}>
+        <Col span='22'>
+          {<Title level={4}>{`${type} ${request?.codigo}`}</Title>}
+        </Col>
+        <Col span='2'>
+          <Tag color={request?.estado === 'Ingresado' ? '#2db7f5' : '#4CAF50'}>
+            {request?.estado === 'Ingresado' ? 'Ingresado' : 'Confirmado'}
+          </Tag>
+        </Col>
+      </Row>
+      <Row gutter={8}>
+        <Col span='22'>
+          {<Title level={5}>
+            {request?.estado === 'Ingresado'
+              ? `Envio de correo para aviso de INGRESO de ${type.toLowerCase()} seleccionada`
+              : `Envio de correo para aviso de CONFIRMACION de ${type.toLowerCase()} seleccionada`}
+          </Title>}
+        </Col>
+      </Row>
+      <br />
       <Form layout='vertical'>
         <Row gutter={8}>
           <Col span='24'>
@@ -116,7 +174,7 @@ const SendEmailsTemplateView: React.FunctionComponent<ISendEmailsTemplateViewPro
               Cancelar
             </Button>
             <Button
-              onClick={() => handleSendEmails()}
+              onClick={() => { type === 'Solicitud' ? handleSendEmails() : handleSendEmailsReservation() }}
               disabled={disabledConfirm}
               style={!disabledConfirm ?
                 { backgroundColor: 'green', borderColor: 'green', color: 'white' } :

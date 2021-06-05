@@ -489,7 +489,8 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<DollarOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showSendMailTemplate && (record.codigo.includes('SOL') || record.codigo.includes('AGE')) &&
+          {showSendMailTemplate && 
+            (record.codigo.includes('SOL') || (record.codigo.includes('AGE') && record.estado === 'Reservado')) &&
             <Tooltip title='Enviar Mail' color={'#222DB7'}>
               <Button
                 onClick={() => onClickAction('sendmail', record._id)}
