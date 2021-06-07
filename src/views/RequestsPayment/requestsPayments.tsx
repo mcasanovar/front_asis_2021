@@ -9,6 +9,8 @@ import HeaderTableComponent from "../../component/HeaderTable/HeaderTable";
 import ModalComponent from "../../component/Modal/Modal";
 import TableComponent from "../../component/Table/Table";
 
+import SendMailsTemplateView from '../Requests/sendEmailsTemplate.view';
+
 import AlertComponent from "../../component/Alert/Alert";
 import PaginationComponent from '../../component/Pagination/Pagination';
 
@@ -71,11 +73,11 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    if(filterMode){
+    if (filterMode) {
       filterRequestPayment(filterObjectSelected?.filter || '', filterObjectSelected?.headerFilter || '', newpage);
       return
     }
-    if(!filterMode){
+    if (!filterMode) {
       getRequestPayment(newpage);
       return
     }
@@ -92,6 +94,17 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
           showButtons: [{ _id: OK }]
         });
         idregister && setRequestpaymentSelected(requestpayment.find((request) => request._id === idregister));
+        setOpenModal(true);
+        break;
+      case 'requestpaymentcard':
+        idregister && setRequestpaymentSelected(requestpayment.find((request) => request._id === idregister));
+        setActualModal({
+          _id: id,
+          title: 'Envío de emails',
+          size: 'small',
+          widthModal: 1200,
+          showButtons: []
+        });
         setOpenModal(true);
         break;
       default:
@@ -113,7 +126,7 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
     const headfilter = FILTERS_REQUEST_PAYMENT.find((element) => element.key === optionFilter);
     if (!headfilter) return
     setFilterMode(true);
-    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
+    setFilterObjectSelected({ headerFilter: headfilter.name, filter: filterText });
     filterRequestPayment(filterText, headfilter.name)
   };
 
@@ -176,8 +189,8 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
     getRequestPayment(1);
   }, []);
 
-  if(!authorized){
-    return <Redirect to='./login'/>
+  if (!authorized) {
+    return <Redirect to='./login' />
   }
 
   return (
@@ -217,7 +230,7 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
         showRequestPaymentCard
         enablePagination={false}
       />
-      <br/>
+      <br />
       <PaginationComponent
         actualPage={actualPage}
         onChange={(newpage: number) => handleChangePagination(newpage)}
@@ -240,7 +253,13 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
               requestpaymentSelected={requestpaymentSelected}
             />
           }
-          {/* {ActualModal._id === 'requestpaymentcard' && <RequestPaymentCardView />} */}
+          {ActualModal._id === 'requestpaymentcard' &&
+            <SendMailsTemplateView
+              onCloseModal={(value, message) => handleCloseModal(value, message)}
+              request={requestpaymentSelected}
+              type='Cobranza'
+            />
+          }
         </ModalComponent>
       }
     </div>

@@ -187,6 +187,9 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
           {record.estado === 'Vencido' &&
             <Tag style={{ textAlign: 'center' }} color="#E41B0E">Vencido</Tag>
           }
+          {record.estado === 'Al Dia' &&
+            <Tag style={{ textAlign: 'center' }} color="#4CAF50">Al Dia</Tag>
+          }
           {record.estado === 'Sin Stock' &&
             <Tag style={{ textAlign: 'center' }} color="#E41B0E">Sin Stock</Tag>
           }
@@ -392,7 +395,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
           {showSendMail && record.estado === 'Revisado' && record.estado_archivo === 'Aprobado' &&
             <Tooltip title='Enviar Email' color={'#0E27B0'}>
               <Button
-                onClick={() => { }}
+                onClick={() => onClickAction('resultsendmail', record._id)}
                 style={{ backgroundColor: '#0E27B0' }}
                 icon={<MailOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
@@ -465,7 +468,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<DollarOutlined style={{ fontSize: '1.1rem', color: '#35A20C' }} />} />
             </Tooltip>
           }
-          {showRequestPaymentCard &&
+          {showRequestPaymentCard && record.estado === 'Vencido' &&
             <Tooltip title='Carta Cobranza' color={'#50ACF5'}>
               <Button
                 onClick={() => onClickAction('requestpaymentcard', record._id)}

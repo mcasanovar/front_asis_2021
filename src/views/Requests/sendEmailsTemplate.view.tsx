@@ -7,11 +7,13 @@ import { IAlertMessageContent } from '../../models/index.models';
 import AlertComponent from "../../component/Alert/Alert";
 import { IResponseReservation, ReservationModel } from '../../models/reservation.models';
 import { sendMailsTemplateReservationsService } from '../../services/reservation.services';
-import { sendMailsTemplateService } from '../../services';
+import { sendMailsTemplateService, sendMailsTemplatResultService, sendMailsTemplatRequestPaymentService } from '../../services';
+import { IResponseResults, ResultModel } from '../../models/results.model';
+import { IResponseRequestPayment, RequestPaymentModel } from '../../models/requestpayment.models';
 
 interface ISendEmailsTemplateViewProps {
   onCloseModal: (value: string, message: string) => string | void,
-  request: RequestModel | ReservationModel | undefined,
+  request: RequestModel | ReservationModel | ResultModel | RequestPaymentModel | undefined,
   type: string
 }
 
@@ -39,6 +41,25 @@ const SendEmailsTemplateView: React.FunctionComponent<ISendEmailsTemplateViewPro
     if (!emailsString.includes(',')) {
       if (!validateEmail(emailsString)) return setIsValidEmails(false);
       return setIsValidEmails(true);
+    }
+  };
+
+  const handleSelecctionMail = (selection: string) => {
+    if (selection === 'Solicitud') {
+      handleSendEmails();
+      return
+    }
+    if (selection === 'Reserva') {
+      handleSendEmailsReservation();
+      return
+    }
+    if (selection === 'Resultado') {
+      handleSendEmailsResult();
+      return
+    }
+    if(selection === 'Cobranza'){
+      handleSendEmailsRequestPayment();
+      return
     }
   };
 
@@ -88,7 +109,7 @@ const SendEmailsTemplateView: React.FunctionComponent<ISendEmailsTemplateViewPro
         }
       });
     };
-    const result: IResponseReservation = await sendMailsTemplateReservationsService({...request, emailsArray: arrayEmails});
+    const result: IResponseReservation = await sendMailsTemplateReservationsService({ ...request, emailsArray: arrayEmails });
     if (!result.err) {
       onCloseModal('sended', result.msg)
       return
@@ -98,7 +119,75 @@ const SendEmailsTemplateView: React.FunctionComponent<ISendEmailsTemplateViewPro
     return
   };
 
-  console.log(request)
+  const handleSendEmailsResult = async () => {
+    setLoading(true);
+    let arrayEmails = [];
+    if (!emails.includes(',')) {
+      arrayEmails.push({
+        email: emails.trim(),
+        name: emails.trim()
+      });
+    };
+    if (emails.includes(',')) {
+      const aux = emails.split(',');
+      arrayEmails = aux.map((mail) => {
+        return {
+          email: mail.trim(),
+          name: mail.trim()
+        }
+      });
+    };
+
+    const result: IResponseResults = await sendMailsTemplatResultService(request?._id || '', { emailsArray: arrayEmails });
+    if (result.err === 98) {
+      setMessageAlert({ message: result.msg, type: 'error', show: true });
+      setLoading(false);
+      return
+    }
+    if (!!result.err) {
+      setMessageAlert({ message: result.err, type: 'error', show: true });
+      setLoading(false);
+      return
+    }
+
+    onCloseModal('sended', result.msg)
+    return
+  };
+
+  const handleSendEmailsRequestPayment = async () => {
+    setLoading(true);
+    let arrayEmails = [];
+    if (!emails.includes(',')) {
+      arrayEmails.push({
+        email: emails.trim(),
+        name: emails.trim()
+      });
+    };
+    if (emails.includes(',')) {
+      const aux = emails.split(',');
+      arrayEmails = aux.map((mail) => {
+        return {
+          email: mail.trim(),
+          name: mail.trim()
+        }
+      });
+    };
+
+    const result: IResponseRequestPayment = await sendMailsTemplatRequestPaymentService(request?._id || '', { emailsArray: arrayEmails });
+    if (result.err === 98) {
+      setMessageAlert({ message: result.msg, type: 'error', show: true });
+      setLoading(false);
+      return
+    }
+    if (!!result.err) {
+      setMessageAlert({ message: result.err, type: 'error', show: true });
+      setLoading(false);
+      return
+    }
+
+    onCloseModal('sended', result.msg)
+    return
+  };
 
   //--------------------------USEEFFECT
   useEffect(() => {
@@ -123,8 +212,10 @@ const SendEmailsTemplateView: React.FunctionComponent<ISendEmailsTemplateViewPro
           {<Title level={4}>{`${type} ${request?.codigo}`}</Title>}
         </Col>
         <Col span='2'>
-          <Tag color={request?.estado === 'Ingresado' ? '#2db7f5' : '#4CAF50'}>
-            {request?.estado === 'Ingresado' ? 'Ingresado' : 'Confirmado'}
+          <Tag color={request?.estado === 'Ingresado' 
+            ? '#2db7f5' : request?.estado === 'Vencido' ? '#E41B0E': '#4CAF50'}
+          >
+            {request?.estado}
           </Tag>
         </Col>
       </Row>
@@ -133,7 +224,9 @@ const SendEmailsTemplateView: React.FunctionComponent<ISendEmailsTemplateViewPro
           {<Title level={5}>
             {request?.estado === 'Ingresado'
               ? `Envio de correo para aviso de INGRESO de ${type.toLowerCase()} seleccionada`
-              : `Envio de correo para aviso de CONFIRMACION de ${type.toLowerCase()} seleccionada`}
+              : request?.estado === 'Confirmado'
+                ? `Envio de correo para aviso de CONFIRMACION de ${type.toLowerCase()} seleccionada`
+                : `Envío de ${type.toUpperCase()} seleccionado`}
           </Title>}
         </Col>
       </Row>
@@ -174,7 +267,7 @@ const SendEmailsTemplateView: React.FunctionComponent<ISendEmailsTemplateViewPro
               Cancelar
             </Button>
             <Button
-              onClick={() => { type === 'Solicitud' ? handleSendEmails() : handleSendEmailsReservation() }}
+              onClick={() => handleSelecctionMail(type)}
               disabled={disabledConfirm}
               style={!disabledConfirm ?
                 { backgroundColor: 'green', borderColor: 'green', color: 'white' } :
