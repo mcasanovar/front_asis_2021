@@ -83,6 +83,16 @@ const filterResultsService = async (
   }
 };
 
+const sendMailsTemplatResultService = async (id: string, data: any) => {
+  const extension = `${PREFIX_RESULTS}/sendmail/${id}`;
+  try {
+    const response = await httpClient.post(extension, data);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 export { 
   getAllResultsService, 
   downloadResultService, 
@@ -90,5 +100,6 @@ export {
   deleteResultService,
   filterResultsService,
   confirmResultService,
-  uploadResultService
+  uploadResultService,
+  sendMailsTemplatResultService
 }

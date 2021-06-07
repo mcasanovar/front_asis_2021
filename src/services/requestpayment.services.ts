@@ -33,4 +33,14 @@ const filterRequestPaymentService = async (
   }
 };
 
-export { getAllRequestPaymentService, filterRequestPaymentService }
+const sendMailsTemplatRequestPaymentService = async (id: string, data: any) => {
+  const extension = `${PREFIX_REQUEST_PAYMENT}/sendmail/${id}`;
+  try {
+    const response = await httpClient.post(extension, data);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export { getAllRequestPaymentService, filterRequestPaymentService, sendMailsTemplatRequestPaymentService }

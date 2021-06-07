@@ -16,6 +16,8 @@ import DetailsResultsView from "./detailsresults.view";
 import ConfirmResultView from "./confirmresult.view";
 import UploadResultView from './uploadresults.view';
 
+import SendMailsTemplateView from '../Requests/sendEmailsTemplate.view';
+
 import AlertComponent from "../../component/Alert/Alert";
 
 interface IResultsViewProps {
@@ -150,6 +152,17 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
           showButtons: [{ _id: CANCEL }]
         })
         break;
+      case 'resultsendmail':
+        idregister && setResultSelected(results.find((result) => result._id === idregister));
+        setActualModal({
+          _id: id,
+          title: 'Envío de emails',
+          size: 'small',
+          widthModal: 1200,
+          showButtons: []
+        });
+        setOpenModal(true);
+        break;
       default:
         return setActualModal(buttons[0])
     }
@@ -220,7 +233,7 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
     const headfilter = FILTERS_RESULT.find((element) => element.key === optionFilter);
     if (!headfilter) return
     setFilterMode(true);
-    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
+    setFilterObjectSelected({ headerFilter: headfilter.name, filter: filterText });
     filterResults(filterText, headfilter.name)
     setLoading(false)
   };
@@ -235,11 +248,11 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    if(filterMode){
+    if (filterMode) {
       !filterObjectSelected && filterResults(filterSelected, 'fecha_resultado', newpage);
       !!filterObjectSelected && filterResults(filterObjectSelected.filter, filterObjectSelected.headerFilter, newpage)
     }
-    if(!filterMode){
+    if (!filterMode) {
       getResults(newpage);
       return
     }
@@ -289,8 +302,8 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
     // eslint-disable-next-line
   }, [ActualModal]);
 
-  if(!authorized){
-    return <Redirect to='./login'/>
+  if (!authorized) {
+    return <Redirect to='./login' />
   }
 
   return (
@@ -338,7 +351,7 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
         showSendMail
         enablePagination={false}
       />
-      <br/>
+      <br />
       <PaginationComponent
         actualPage={actualPage}
         onChange={(newpage: number) => handleChangePagination(newpage)}
@@ -371,6 +384,13 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
             <ConfirmResultView
               onCloseModal={(value, message) => handleCloseModal(value, message)}
               resultSelected={resultSelected}
+            />
+          }
+          {ActualModal._id === 'resultsendmail' &&
+            <SendMailsTemplateView
+              onCloseModal={(value, message) => handleCloseModal(value, message)}
+              request={resultSelected}
+              type='Resultado'
             />
           }
         </ModalComponent>}
