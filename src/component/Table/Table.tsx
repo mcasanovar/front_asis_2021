@@ -267,23 +267,6 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<EditOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showDelete &&
-            <Popover
-              content={<Button style={{ backgroundColor: '#E6100D', color: 'white' }}
-                onClick={() => onClickDelete('delete', record._id)}>
-                Confirmar eliminación</Button>}
-              title="¿Seguro que desea eliminar este registro?"
-              trigger="click"
-              visible={(deleteConfirmation._id === record._id && deleteConfirmation.show === true) ? true : false}
-              onVisibleChange={() => setDeleteConfirmation({ _id: record._id, show: !deleteConfirmation.show })}
-            >
-              <Button
-                onClick={() => setDeleteConfirmation({ _id: record._id, show: true })}
-                style={{ backgroundColor: '#E6100D' }}
-                icon={<DeleteOutlined style={{ fontSize: '1.1rem', color: 'white' }} />}
-              />
-            </Popover>
-          }
           {showAbsence &&
             <Tooltip title='Ausencias' color={'#4DE13E'}>
               <Button
@@ -492,7 +475,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<DollarOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showSendMailTemplate && 
+          {showSendMailTemplate &&
             (record.codigo.includes('SOL') || (record.codigo.includes('AGE') && record.estado === 'Reservado')) &&
             <Tooltip title='Enviar Mail' color={'#222DB7'}>
               <Button
@@ -500,6 +483,23 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 style={{ backgroundColor: '#222DB7' }}
                 icon={<SendOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
+          }
+          {showDelete &&
+            <Popover
+              content={<Button style={{ backgroundColor: '#E6100D', color: 'white' }}
+                onClick={() => onClickDelete('delete', record._id)}>
+                Confirmar eliminación</Button>}
+              title="¿Seguro que desea eliminar este registro?"
+              trigger="click"
+              visible={(deleteConfirmation._id === record._id && deleteConfirmation.show === true) ? true : false}
+              onVisibleChange={() => setDeleteConfirmation({ _id: record._id, show: !deleteConfirmation.show })}
+            >
+              <Button
+                onClick={() => setDeleteConfirmation({ _id: record._id, show: true })}
+                style={{ backgroundColor: '#E6100D' }}
+                icon={<DeleteOutlined style={{ fontSize: '1.1rem', color: 'white' }} />}
+              />
+            </Popover>
           }
         </>
       )

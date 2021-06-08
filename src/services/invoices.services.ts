@@ -154,7 +154,17 @@ const filterInvoicesService = async (
   } catch (error) {
     return error.response.data;
   }
-}; 
+};
+
+const deleteInvoiceService = async (id: string) => {
+  const extension = `${PREFIX_INVOICES}/${id}`;
+  try {
+    const response = await httpClient.delete(extension);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
 
 export {
   getAllInvoicesService,
@@ -170,5 +180,6 @@ export {
   confirmOCService,
   generateInvoiceService,
   filterInvoicesService,
-  confirmInvoiceService
+  confirmInvoiceService,
+  deleteInvoiceService
 }

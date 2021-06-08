@@ -3,8 +3,8 @@ import { Redirect } from 'react-router-dom';
 
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
 import { CANCEL, CONFIRM, FILTERS_PAYMENTS, N_PER_PAGE, OK, PAYMENTS_COLUMNS_TABLE } from '../../constants/var';
-import { IResponseAllPayments, PaymentModel } from '../../models/payments.models';
-import { filterPaymentsService, getAllPaymentsService } from '../../services';
+import { IResponseAllPayments, IResponsePayment, PaymentModel } from '../../models/payments.models';
+import { filterPaymentsService, getAllPaymentsService, deleteGeneralPaymentService } from '../../services';
 
 import SubBarComponent from "../../component/Subbar/SubBar";
 import HeaderTableComponent from "../../component/HeaderTable/HeaderTable";
@@ -47,6 +47,7 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
   const [loading, setLoading] = useState<boolean>(false);
   const [OpenModal, setOpenModal] = useState<boolean>(false);
   const [payments, setPayments] = useState<PaymentModel[]>([]);
+  const [idSelectedPayment, setIdSelectedPayment] = useState<string>('');
   const [paymentSelected, setPaymentSelected] = useState<PaymentModel>();
   const [filterText, setFilterText] = useState<string>('');
   const [optionFilter, setOptionFilter] = useState<number>(0);
@@ -94,7 +95,17 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
         });
         idregister && setPaymentSelected(payments.find((payment) => payment._id === idregister));
         setOpenModal(true);
-        break
+        break;
+      case 'delete':
+        idregister && setIdSelectedPayment(idregister)
+        setActualModal({
+          _id: id,
+          title: '',
+          size: 'small',
+          widthModal: 0,
+          showButtons: []
+        })
+        break;
       default:
         break;
     }
@@ -102,11 +113,11 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    if(filterMode){
+    if (filterMode) {
       filterPayments(filterObjectSelected?.filter || '', filterObjectSelected?.headerFilter || '', newpage)
       return
     }
-    if(!filterMode){
+    if (!filterMode) {
       getPayments(newpage);
       return
     }
@@ -137,8 +148,18 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
     const headfilter = FILTERS_PAYMENTS.find((element) => element.key === optionFilter);
     if (!headfilter) return
     setFilterMode(true);
-    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
+    setFilterObjectSelected({ headerFilter: headfilter.name, filter: filterText });
     filterPayments(filterText, headfilter.name)
+  };
+
+  async function hanbleDeleteGeneralPayment(id: string) {
+    const aux: IResponsePayment = await deleteGeneralPaymentService(id);
+    if (aux.err === null) {
+      setMessageAlert({ message: aux.msg, type: 'success', show: true });
+      getPayments(1);
+      return setLoading(false);
+    }
+    return setMessageAlert({ message: aux.res, type: 'error', show: true });
   };
 
   async function filterPayments(date: string, headFilter: string, pageNumber: number = 1) {
@@ -196,6 +217,14 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
   }, [messageAlert]);
 
   useEffect(() => {
+    if (ActualModal && ActualModal._id === 'delete') {
+      setLoading(true);
+      hanbleDeleteGeneralPayment(idSelectedPayment);
+      return
+    }
+  }, [ActualModal]);
+
+  useEffect(() => {
     setLoading(true)
     getPayments(1);
   }, []);
@@ -231,7 +260,7 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
       />
       <TableComponent
         onClickAction={(id: string, _id?: string) => handleCLickActionTable(id, _id)}
-        onClickDelete={() => { }}
+        onClickDelete={(id, _id) => handleCLickActionTable(id, _id)}
         columns={PAYMENTS_COLUMNS_TABLE}
         data={handleTransformValues(payments)}
         loading={loading}
@@ -239,6 +268,7 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
         showDetails
         showManagmentPayments
         showGeneratePayment
+        showDelete
         enablePagination={false}
       />
       <br />

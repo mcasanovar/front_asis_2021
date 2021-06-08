@@ -22,7 +22,7 @@ import ValidateGroupInvoicesView from "./grupal/validategrupalinvoices.view";
 
 import AlertComponent from "../../component/Alert/Alert";
 
-import { downloadFilesService, filterInvoicesService, getAllInvoicesService } from '../../services/invoices.services';
+import { deleteInvoiceService, downloadFilesService, filterInvoicesService, getAllInvoicesService } from '../../services/invoices.services';
 import PaginationComponent from '../../component/Pagination/Pagination';
 import { MilesFormat } from '../../libs/formattedPesos';
 
@@ -183,6 +183,16 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
         idregister && setInvoiceSelected(invoices.find((invoice) => invoice._id === idregister));
         setOpenModal(true);
         break;
+      case 'delete':
+        idregister && setIdInvoiceSelected(idregister)
+        setActualModal({
+          _id: id,
+          title: '',
+          size: 'small',
+          widthModal: 0,
+          showButtons: []
+        })
+        break;
       default:
         return setActualModal(buttons[0])
     }
@@ -190,11 +200,11 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    if(filterMode){
+    if (filterMode) {
       filterInvoices(filterObjectSelected?.filter || '', filterObjectSelected?.headerFilter || '', newpage)
       return
     }
-    if(!filterMode){
+    if (!filterMode) {
       getInvoices(newpage);
       return
     }
@@ -276,7 +286,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
     const headfilter = FILTERS_INVOICES.find((element) => element.key === optionFilter);
     if (!headfilter) return
     setFilterMode(true);
-    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
+    setFilterObjectSelected({ headerFilter: headfilter.name, filter: filterText });
     filterInvoices(filterText, headfilter.name)
   };
 
@@ -288,6 +298,16 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
       }
     });
     return aux;
+  };
+
+  async function hanbleDeleteInvoice(id: string) {
+    const aux: IResponseInvoices = await deleteInvoiceService(id);
+    if (aux.err === null) {
+      setMessageAlert({ message: aux.msg, type: 'success', show: true });
+      getInvoices(1);
+      return setLoading(false);
+    }
+    return setMessageAlert({ message: aux.res, type: 'error', show: true });
   };
 
   const handleClickClean = () => {
@@ -330,6 +350,11 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
       downloadFile(idInvoiceSelected, 'invoice');
       return
     }
+    if (ActualModal && ActualModal._id === 'delete') {
+      setLoading(true);
+      hanbleDeleteInvoice(idInvoiceSelected);
+      return
+    }
   }, [ActualModal]);
 
   if (!authorized) {
@@ -365,7 +390,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
       />
       <TableComponent
         onClickAction={(id: string, _id?: string) => handleCLickActionTable(id, _id)}
-        onClickDelete={() => { }}
+        onClickDelete={(id, _id) => handleCLickActionTable(id, _id)}
         columns={INVOICES_COLUMNS_TABLE}
         data={handleTransformPrice(invoices)}
         loading={loading}
@@ -378,6 +403,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
         showDownloadOc
         showDownloadInvoice
         showValidateInvoice
+        showDelete
         enablePagination={false}
       />
       <br />

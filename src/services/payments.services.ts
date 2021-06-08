@@ -1,5 +1,6 @@
 import { httpClient, httpClientFormData } from "../libs/axios";
 import { PREFIX_PAYMENTS } from "../constants/var";
+import { IPayment } from "../models/payments.models";
 
 const getAllPaymentsService = async (pageNumber: number, nPerPage: number) => {
   const extension = `${PREFIX_PAYMENTS}/pagination`;
@@ -61,13 +62,34 @@ const filterPaymentsService = async (
   } catch (error) {
     return error.response.data;
   }
-}; 
+};
 
+const deleteGeneralPaymentService = async (id: string) => {
+  const extension = `${PREFIX_PAYMENTS}/${id}`;
+  try {
+    const response = await httpClient.delete(extension);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
 
-export { 
+const deletePaymentService = async (id: string, payment: IPayment) => {
+  const extension = `${PREFIX_PAYMENTS}/pagos/onepayment/${id}`;
+  try {
+    const response = await httpClient.post(extension, payment);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export {
   getAllPaymentsService,
   getAllPendingPaymentsService,
   generateParcialPaymentService,
   generateGroupPaymentsService,
   filterPaymentsService,
+  deleteGeneralPaymentService,
+  deletePaymentService
 }
