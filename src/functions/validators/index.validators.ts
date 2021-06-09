@@ -62,10 +62,10 @@ export const ValidateRut = (rut: string) => {
   var dvEsperado: number = 11 - (suma % 11);
 
   // Casos Especiales (0 y K)
-  dv = (dv === 'K') ? 10 : dv;
-  dv = (dv === 0) ? 11 : dv;
+  dv = (dv === 'K' || dv === 'k') ? 10 : dv;
+  dv = (dv === '0') ? 11 : dv;
 
-  console.log('sdsds', [dvEsperado, dv])
+  console.log('resultado rut', [dvEsperado, dv])
 
   // Validar que el Cuerpo coincide con su Dígito Verificador
   if (dvEsperado !== parseInt(dv)) return false;
