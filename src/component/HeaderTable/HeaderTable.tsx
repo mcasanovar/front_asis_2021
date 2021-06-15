@@ -27,7 +27,8 @@ interface IHeaderTableProps {
   notFIlter?: boolean,
   notSearch?: boolean,
   notClean?: boolean,
-  onClickClean: () => void
+  onClickClean: () => void,
+  userPermissions?: string[]
 }
 
 const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
@@ -47,11 +48,30 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
   notFIlter = false,
   notSearch = false,
   notClean = false,
-  onClickClean
+  onClickClean,
+  userPermissions = []
 }) => {
 
   const { Option } = Select;
   const { Search } = Input;
+
+  const handleShowButtons = (button: IButtonsProps, index: number) => {
+    if (!!button &&
+      !!userPermissions.length &&
+      button?.permission &&
+      userPermissions.indexOf(button.permission) > -1) {
+      return (
+        <ButtonComponent
+          key={index}
+          title={button.title}
+          size={button.size}
+          ghost={true}
+          onClick={() => onClick(button)}
+        />
+      );
+    }
+    return null
+  };
 
   return (
     <div className="container-header-table">
@@ -107,15 +127,9 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
         <div></div>
         {/* section buttons right */}
         <div className="container-header-table-section3">
-          {buttons.length > 0 && buttons.map((button: IButtonsProps, index: number) => (
-            <ButtonComponent
-              key={index}
-              title={button.title}
-              size={button.size}
-              ghost={true}
-              onClick={() => onClick(button)}
-            />
-          ))}
+          {!!buttons.length && buttons.map((button: IButtonsProps, index: number) => {
+            return handleShowButtons(button, index);
+          })}
           {showInvoicesOptions &&
             <Select placeholder='Pago Grupal...' style={{ width: 160 }} onSelect={onClickGrupal}>
               <Option value="uploadgroupoc">Carga OC grupal</Option>

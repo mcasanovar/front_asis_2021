@@ -1,9 +1,11 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { Menu } from 'antd';
 import {
   Link
 } from "react-router-dom";
 import { PieChartOutlined, AppstoreOutlined, MailOutlined } from "@ant-design/icons";
+import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
+import { MODULES_PERMISSION } from '../../constants/var';
 
 interface IDrawerComponentProps {
 }
@@ -16,6 +18,8 @@ const DrawerComponent: React.FunctionComponent<IDrawerComponentProps> = (props) 
     fontSize: 16
   };
 
+  const roles = getUserFromLocalStorage();
+
   return (
     <Menu
       defaultSelectedKeys={['1']}
@@ -26,56 +30,84 @@ const DrawerComponent: React.FunctionComponent<IDrawerComponentProps> = (props) 
       style={{ height: '95.9vh', width: 130 }}
       onClick={(e) => { }}
     >
-      <Menu.Item key="1" icon={<PieChartOutlined />}>
-        <Link to='/dashboard'>Dashboard</Link>
-      </Menu.Item>
+      {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_DASHBOARD) > -1 &&
+        <Menu.Item key="1" icon={<PieChartOutlined />}>
+          <Link to='/dashboard'>Dashboard</Link>
+        </Menu.Item>
+      }
       <SubMenu key="2" icon={<MailOutlined />} title="Administración">
-        <Menu.Item key="gi">
-          <Link to='/gi' style={{...styleText}}>Grupo de Interes</Link>
-        </Menu.Item>
-        <Menu.Item key="empleados">
-          <Link to='/employees' style={{...styleText}}>Empleados</Link>
-        </Menu.Item>
-        <Menu.Item key="calendario" style={{...styleText}}>
-          <Link to='/calendario' style={{...styleText}}>Calendario</Link>
-        </Menu.Item>
+        {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_GI) > -1 &&
+          <Menu.Item key="gi">
+            <Link to='/gi' style={{ ...styleText }}>Grupo de Interes</Link>
+          </Menu.Item>
+        }
+        {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_EMPLOYEES) > -1 &&
+          <Menu.Item key="empleados">
+            <Link to='/employees' style={{ ...styleText }}>Empleados</Link>
+          </Menu.Item>
+        }
+        {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_CALENDAR) > -1 &&
+          <Menu.Item key="calendario" style={{ ...styleText }}>
+            <Link to='/calendario' style={{ ...styleText }}>Calendario</Link>
+          </Menu.Item>
+        }
       </SubMenu>
       <SubMenu key="3" icon={<AppstoreOutlined />} title="Operaciones">
-        <Menu.Item key="solicitudes">
-          <Link to='/solicitudes'  style={{...styleText}}>Solicitudes</Link>
-        </Menu.Item>
-        <Menu.Item key="reservas">
-          <Link to='/reservas'  style={{...styleText}}>Reservas</Link>
-        </Menu.Item>
-        <Menu.Item key="evaluaciones">
-          <Link to='/evaluaciones'  style={{...styleText}}>Evaluaciones</Link>
-        </Menu.Item>
-        <Menu.Item key="resultados">
-          <Link to='/resultados'  style={{...styleText}}>Resultados</Link>
-        </Menu.Item>
+        {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_REQUESTS) > -1 &&
+          <Menu.Item key="solicitudes">
+            <Link to='/solicitudes' style={{ ...styleText }}>Solicitudes</Link>
+          </Menu.Item>
+        }
+        {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_RESERVATIIONS) > -1 &&
+          <Menu.Item key="reservas">
+            <Link to='/reservas' style={{ ...styleText }}>Reservas</Link>
+          </Menu.Item>
+        }
+        {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_EVALUATIONS) > -1 &&
+          <Menu.Item key="evaluaciones">
+            <Link to='/evaluaciones' style={{ ...styleText }}>Evaluaciones</Link>
+          </Menu.Item>
+        }
+        {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_RESULTS) > -1 &&
+          <Menu.Item key="resultados">
+            <Link to='/resultados' style={{ ...styleText }}>Resultados</Link>
+          </Menu.Item>
+        }
       </SubMenu>
       <SubMenu key="4" icon={<AppstoreOutlined />} title="Finanzas">
-        <SubMenu key="sub8" title="Ingresos"  style={{...styleText}}>
-          <Menu.Item key="facturaciones">
-            <Link to='/facturaciones' style={{...styleText}}>Facturaciones</Link>
-          </Menu.Item>
-          <Menu.Item key="pagos">
-            <Link to='/pagos' style={{...styleText}}>Pagos</Link>
-          </Menu.Item>
-          <Menu.Item key="cobranza">
-            <Link to='/cobranzas' style={{...styleText}}>Cobranza</Link>
-          </Menu.Item>
+        <SubMenu key="sub8" title="Ingresos" style={{ ...styleText }}>
+          {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_INVOICES) > -1 &&
+            <Menu.Item key="facturaciones">
+              <Link to='/facturaciones' style={{ ...styleText }}>Facturaciones</Link>
+            </Menu.Item>
+          }
+          {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_PAYMENTS) > -1 &&
+            <Menu.Item key="pagos">
+              <Link to='/pagos' style={{ ...styleText }}>Pagos</Link>
+            </Menu.Item>
+          }
+          {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_REQUESTPAYMENT) > -1 &&
+            <Menu.Item key="cobranza">
+              <Link to='/cobranzas' style={{ ...styleText }}>Cobranza</Link>
+            </Menu.Item>
+          }
         </SubMenu>
-        <SubMenu key="sub9" title="Egresos"  style={{...styleText}}>
-          <Menu.Item key="gas_ent">
-            <Link to='/gastos_entradas' style={{...styleText}}>Gastos / Entradas</Link>
-          </Menu.Item>
-          <Menu.Item key="salidas">
-            <Link to='/salidas' style={{...styleText}}>Salidas</Link>
-          </Menu.Item>
-          <Menu.Item key="existencia">
-            <Link to='/existencia' style={{...styleText}}>Existencia</Link>
-          </Menu.Item>
+        <SubMenu key="sub9" title="Egresos" style={{ ...styleText }}>
+          {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_EXPENSES) > -1 &&
+            <Menu.Item key="gas_ent">
+              <Link to='/gastos_entradas' style={{ ...styleText }}>Gastos / Entradas</Link>
+            </Menu.Item>
+          }
+          {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_OUTPUTS) > -1 &&
+            <Menu.Item key="salidas">
+              <Link to='/salidas' style={{ ...styleText }}>Salidas</Link>
+            </Menu.Item>
+          }
+          {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_EXISTENSES) > -1 &&
+            <Menu.Item key="existencia">
+              <Link to='/existencia' style={{ ...styleText }}>Existencia</Link>
+            </Menu.Item>
+          }
         </SubMenu>
       </SubMenu>
     </Menu>

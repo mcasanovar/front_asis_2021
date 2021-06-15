@@ -7034,5 +7034,64 @@ export const PREFIX_LOGIN = './login';
 
 
 
+//--------------------------------------------------------------------ROLES--------------------------
 
+export const MODULES_PERMISSION = {
+  M_DASHBOARD: 'modulo_dashboard',
+  M_GI: 'modulo_gi',
+  M_EMPLOYEES: 'modulo_empleados',
+  M_CALENDAR: 'modulo_calendario',
+  M_REQUESTS: 'modulo_solicitudes',
+  M_RESERVATIIONS: 'modulo_reservas',
+  M_EVALUATIONS: 'modulo_evaluaciones',
+  M_RESULTS: 'modulo_resultados',
+  M_INVOICES: 'modulo_facturaciones',
+  M_PAYMENTS: 'modulo_pagos',
+  M_REQUESTPAYMENT: 'modulo_cobranzas',
+  M_EXPENSES: 'modulo_gastos',
+  M_OUTPUTS: 'modulos_salidas',
+  M_EXISTENSES: 'modulo_existencias'
+}
 
+export const PERMISSIONS = {
+  //gi
+  CONFIGURATION_GI: 'configurar_gi',
+  CREATE_GI: 'crear_gi',
+  EDIT_GI: 'editar_gi',
+  DETAILS_GI: 'detalle_gi',
+  DELETE_GI: 'eliminar_gi',
+  //employees
+  EDIT_EMPLOYEE: 'editar_empleado',
+  DETAILS_EMPLOYEE: 'detalle_empleado',
+  ABSENSES_EMPLOYEE: 'ausencias_empleado',
+  DELETE_EMPLOYEE: 'eliminar_empleado',
+  //requests
+  CREATE_REQUEST: 'crear_solicitud',
+  CONFIRM_GROUP_REQUEST: 'confirmar_grupal_solicitud',
+  DETAILS_REQUETS: 'detalle_solicitud',
+  EDIT_REQUEST: 'modificar_solicitud',
+  CONFIRM_REQUEST: 'agendar_solicitud',
+  NULLIFY_REQUEST: 'anular_solicitud',
+  SEND_MAIL_TEMPLATE_REQUEST: 'enviar_correo_solicitud',
+  //reservations
+  CONFIRM_RESERVATION: 'confirmar_reserva',
+  CONFIRM_GROUP_RESERVATION: 'confirmar_grupal_reserva',
+  DETAILS_RESERVATION: 'detalle_reserva',
+  EDIT_RESERVATION: 'editar_reserva',
+  NULLIFY_RESERVATION: 'anular_reserva',
+  SEND_MAIL_TEMPLATE_RESERVATION: 'enviar_correo_reserva',
+  //evaluations
+  DETAILS_EVALUATION: 'detalle_evaluacion',
+  NULLIFY_EVALUATION: 'anular_evaluacion',
+  UPLOAD_EXAM_EVALUATION: 'subir_examen_evaluacion',
+  GENERATE_EXAM_EVALUATION: 'generar_examen_evaluacion',
+  DOWNLOAD_EXAM_EVALUACION: 'descargar_examen_evaluacion',
+  CONFIRM_EXAM_EVALUATION: 'confirmar_examen_evaluacion',
+  //results
+  DETAILS_RESULT: 'detalle_resultado',
+  NULLIFY_RESULT: 'anular_resultado',
+  DOWNLOAD_EXAM_RESULT: 'descargar_resultado',
+  CONFIRM_RESULT: 'confirmar_resultado',
+  UPLOAD_RESULT: 'subir_resultado',
+  SEND_MAIL: 'enviar_correo_resultado'
+}

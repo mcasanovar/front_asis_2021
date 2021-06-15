@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
-import { CANCEL, CONFIRM, EDIT, FILTERS_RESERVATION, N_PER_PAGE, OK, RESERVATIONS_COLUMNS_TABLE } from '../../constants/var';
+import { CANCEL, CONFIRM, EDIT, FILTERS_RESERVATION, N_PER_PAGE, OK, PERMISSIONS, RESERVATIONS_COLUMNS_TABLE } from '../../constants/var';
 
 import SubBarComponent from "../../component/Subbar/SubBar";
 import HeaderTableComponent from "../../component/HeaderTable/HeaderTable";
@@ -20,6 +20,7 @@ import EditReservationView from "./editreservation.view";
 import ConfirmReservationView from "./confirmreservation.view";
 
 import SendMailsTemplateView from '../Requests/sendEmailsTemplate.view';
+import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
 
 interface IReservationViewProps {
   authorized: boolean
@@ -39,10 +40,12 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
       customTitle: 'Confirmación grupal de reservas,',
       size: 'small',
       widthModal: 1600,
-      showButtons: []
+      showButtons: [],
+      permission: PERMISSIONS.CONFIRM_GROUP_RESERVATION
     },
   ];
 
+  const [permissions, setPermissions] = useState<string[]>([]);
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
   const [OpenModal, setOpenModal] = useState<boolean>(false);
   const [idSelectedReservation, setidSelectedReservation] = useState<string>('');
@@ -238,6 +241,10 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
 
   useEffect(() => {
     setLoading(true)
+    const auxPermissions = getUserFromLocalStorage();
+    if(!!auxPermissions && auxPermissions?.permisos.length){
+      setPermissions(auxPermissions.permisos);
+    }
     getReservations(1);
   }, []);
 
@@ -285,6 +292,7 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
         onClickSearch={() => handleClickSearch()}
         setOptionFilter={setOptionFilter}
         onClickClean={() => handleClickClean()}
+        userPermissions={permissions}
 
       />
       <TableComponent
@@ -300,6 +308,8 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
         showReservation
         showSendMailTemplate
         enablePagination={false}
+        userPermissions={permissions}
+        typeModule='reservations'
       />
       <br />
       <PaginationComponent

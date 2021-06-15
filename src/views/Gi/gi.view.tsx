@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
-import { CANCEL, CONFIRM, EDIT, FILTERS_GI, GIS_COLUMNS_TABLE, N_PER_PAGE, OK } from '../../constants/var';
+import { CANCEL, CONFIRM, EDIT, FILTERS_GI, GIS_COLUMNS_TABLE, N_PER_PAGE, OK, PERMISSIONS } from '../../constants/var';
 
 import SubBarComponent from "../../component/Subbar/SubBar";
 import HeaderTableComponent from "../../component/HeaderTable/HeaderTable";
@@ -17,6 +17,7 @@ import { deleteOneGiService, filterGisService, getAllGIService } from '../../ser
 import CreateEditGiView from "./createEditgi.view";
 import DetailsGIView from "./detailsgi.view";
 import ConfigurationView from "./configurationGi.view";
+import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
 
 interface IGiViewProps {
   authorized: boolean
@@ -42,17 +43,12 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
         {
           _id: CONFIRM
         }
-      ]
+      ],
+      permission: PERMISSIONS.CREATE_GI
     },
-    // {
-    //   _id: 'newgrupalgi',
-    //   title: 'GI GRUPAL',
-    //   size: 'small',
-    //   widthModal: 1200,
-    //   showButtons: []
-    // }
   ];
 
+  const [permissions, setPermissions] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [GIs, setGIs] = useState<GiModel[]>([]);
   const [idSelectedGI, setIdSelectedGI] = useState<string>('');
@@ -213,7 +209,11 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
   }, [messageAlert]);
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
+    const auxPermissions = getUserFromLocalStorage();
+    if(!!auxPermissions && auxPermissions?.permisos.length){
+      setPermissions(auxPermissions.permisos);
+    }
     GIs.length === 0 && getGis(1);
   }, []);
 
@@ -259,6 +259,7 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
         onClickSearch={() => handleClickSearch()}
         setOptionFilter={setOptionFilter}
         onClickClean={() => handleClickClean()}
+        userPermissions={permissions}
       />
       <TableComponent
         data={GIs}
@@ -271,6 +272,8 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
         showDelete
         loading={loading}
         enablePagination={false}
+        userPermissions={permissions}
+        typeModule='gi'
       />
       <br />
       <PaginationComponent

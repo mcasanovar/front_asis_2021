@@ -19,6 +19,7 @@ import UploadResultView from './uploadresults.view';
 import SendMailsTemplateView from '../Requests/sendEmailsTemplate.view';
 
 import AlertComponent from "../../component/Alert/Alert";
+import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
 
 interface IResultsViewProps {
   authorized: boolean
@@ -33,6 +34,7 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
 
   const buttons: IButtonsProps[] = [];
 
+  const [permissions, setPermissions] = useState<string[]>([]);
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
   const [results, setResults] = useState<ResultModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -278,6 +280,10 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
 
   useEffect(() => {
     setLoading(true)
+    const auxPermissions = getUserFromLocalStorage();
+    if (!!auxPermissions && auxPermissions?.permisos.length) {
+      setPermissions(auxPermissions.permisos);
+    }
     getResults(1);
   }, []);
 
@@ -350,6 +356,8 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
         showUploadResult
         showSendMail
         enablePagination={false}
+        userPermissions={permissions}
+        typeModule='results'
       />
       <br />
       <PaginationComponent

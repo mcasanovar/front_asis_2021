@@ -204,3 +204,16 @@ th.column-money{
   background-color: #1073B5 !important;
   color: white !important; 
 }
+
+.container-notfound  {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: gainsboro;
+}
+
+.container-notfound .h1 {
+  text-align: center;
+}

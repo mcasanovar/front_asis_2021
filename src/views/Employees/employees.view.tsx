@@ -21,6 +21,7 @@ import PaginationComponent from '../../component/Pagination/Pagination';
 import { IReponseAllEmployees } from '../../models/gi.models';
 import { deleteEmployeeService, filterEmployeesService, getAllEmployeesService } from '../../services';
 import { GiInitializationData } from '../../initializations/gi.initialization';
+import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
 
 const buttons: IButtonsProps[] = [];
 
@@ -35,6 +36,7 @@ interface IFilterSelected {
 
 const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => {
 
+  const [permissions, setPermissions] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
@@ -48,7 +50,7 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
   const [totalItems, setTotalItems] = useState<number>(1);
   const [filterMode, setFilterMode] = useState<boolean>(false);
   const [filterSelected, setFilterSelected] = useState<IFilterSelected>();
-  
+
 
   const handleClickButton = (button: IButtonsProps) => {
     setActualModal(button);
@@ -131,16 +133,16 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
     if (!headfilter) return
     await filterEmployees(filterText, headfilter.name)
     setFilterMode(true);
-    setFilterSelected({headerFilter: headfilter.name, filter: filterText});
+    setFilterSelected({ headerFilter: headfilter.name, filter: filterText });
   };
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    if(filterMode){
+    if (filterMode) {
       filterEmployees(filterSelected?.filter || '', filterSelected?.headerFilter || '');
       return
     }
-    if(!filterMode){
+    if (!filterMode) {
       getEmployees(newpage);
       return
     }
@@ -197,7 +199,7 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
     getEmployees(1);
     setFilterMode(false);
     setFilterText('');
-    setFilterSelected({headerFilter: '', filter: ''});
+    setFilterSelected({ headerFilter: '', filter: '' });
   };
 
   //--------------USEEFECT
@@ -211,6 +213,10 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
 
   useEffect(() => {
     setLoading(true)
+    const auxPermissions = getUserFromLocalStorage();
+    if (!!auxPermissions && auxPermissions?.permisos.length) {
+      setPermissions(auxPermissions.permisos);
+    }
     getEmployees(1);
   }, []);
 
@@ -221,7 +227,7 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
     }
   }, [ActualModal]);
 
-  if(!authorized){
+  if (!authorized) {
     return <Redirect to='/login' />
   }
 
@@ -249,6 +255,7 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
         onClickSearch={() => handleClickSearch()}
         setOptionFilter={setOptionFilter}
         onClickClean={() => handleClickClean()}
+        userPermissions={permissions}
       />
       <TableComponent
         onClickAction={(id: string, _id?: string) => handleCLickActionTable(id, _id)}
@@ -261,8 +268,10 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
         showDetails
         showDelete
         enablePagination={false}
+        userPermissions={permissions}
+        typeModule='employees'
       />
-      <br/>
+      <br />
       <PaginationComponent
         actualPage={actualPage}
         onChange={(newpage: number) => handleChangePagination(newpage)}
@@ -282,7 +291,7 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
           {ActualModal._id === 'edit' &&
             <EditEmployeeView
               onCloseModal={(value, message) => handleCloseModal(value, message)}
-              employeesSelected={employeeSelected || {...GiInitializationData}}
+              employeesSelected={employeeSelected || { ...GiInitializationData }}
             />
           }
           {ActualModal._id === 'details' &&

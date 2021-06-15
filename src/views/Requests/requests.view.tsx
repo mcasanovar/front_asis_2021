@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
 
-import { CANCEL, CONFIRM, EDIT, FILTERS_REQUEST, N_PER_PAGE, OK, REQUESTS_COLUMNS_TABLE } from '../../constants/var';
+import { CANCEL, CONFIRM, EDIT, FILTERS_REQUEST, N_PER_PAGE, OK, PERMISSIONS, REQUESTS_COLUMNS_TABLE } from '../../constants/var';
 import { IResponseAllRequests, IResponseRequest, RequestModel } from '../../models/request.models';
 
 import { deleteOneRequestService, filterRequestsService, getAllRequestsService, sendMailsTemplateService } from '../../services';
@@ -20,6 +20,7 @@ import DetailsRequestView from "./detailsrequest.view";
 import GroupConfirmationView from "./groupconfirmation.view";
 import ConfirmRequestView from "./confirmrequest.view";
 import SendMailsTemplateView from './sendEmailsTemplate.view';
+import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
 
 interface IRequestViewProps {
   authorized: boolean
@@ -39,7 +40,8 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
       title: 'NUEVA SOLICITUD',
       size: 'small',
       widthModal: 1200,
-      showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
+      showButtons: [{ _id: CANCEL }, { _id: CONFIRM }],
+      permission: PERMISSIONS.CREATE_REQUEST
     },
     {
       _id: 'confirm',
@@ -47,10 +49,12 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
       customTitle: 'CONFIRMACIÓN GRUPAL DE SOLICITUDES',
       size: 'small',
       widthModal: 1600,
-      showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
+      showButtons: [{ _id: CANCEL }, { _id: CONFIRM }],
+      permission: PERMISSIONS.CONFIRM_GROUP_REQUEST
     }
   ];
 
+  const [permissions, setPermissions] = useState<string[]>([]);
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
   const [requests, setRequests] = useState<RequestModel[]>([]);
   const [idSelectedRequest, setIdSelectedRequest] = useState<string>('');
@@ -246,6 +250,10 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
 
   useEffect(() => {
     setLoading(true)
+    const auxPermissions = getUserFromLocalStorage();
+    if (!!auxPermissions && auxPermissions?.permisos.length) {
+      setPermissions(auxPermissions.permisos);
+    }
     getRequests(1);
   }, []);
 
@@ -292,6 +300,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
         onClickDateFilter={(date) => handleFilterByDate(date)}
         setOptionFilter={setOptionFilter}
         onClickClean={() => handleClickClean()}
+        userPermissions={permissions}
       />
       <TableComponent
         data={requests}
@@ -306,6 +315,8 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
         showSchedule
         showSendMailTemplate
         enablePagination={false}
+        userPermissions={permissions}
+        typeModule='requests'
       />
       <br />
       <PaginationComponent
