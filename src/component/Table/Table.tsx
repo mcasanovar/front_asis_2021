@@ -358,7 +358,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
       className: headerWithColor ? 'column-money' : '',
       render: (text: string, record: any, index: any) => (
         <>
-          {handleShowPermission(PERMISSIONS.CONFIGURATION_GI) && showConfiguration &&
+          {userPermissions.indexOf(PERMISSIONS.CONFIGURATION_GI) > -1 && showConfiguration &&
             <Tooltip title="Configuración" color={'#546E7A'}>
               <Button
                 onClick={() => onClickAction('configurationGi', record._id)}
