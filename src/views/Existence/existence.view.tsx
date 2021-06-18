@@ -14,6 +14,7 @@ import { ExistenceModel, IResponseAllExistence } from '../../models/existence.mo
 import { filterExistencesService, getAllExistencesService } from '../../services';
 import { MilesFormat } from '../../libs/formattedPesos';
 import PaginationComponent from '../../component/Pagination/Pagination';
+import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
 
 interface IExistenceViewProps {
   authorized: boolean
@@ -24,10 +25,11 @@ interface IFilterSelected {
   filter: string
 }
 
-const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({authorized}) => {
+const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({ authorized }) => {
 
   const buttons: IButtonsProps[] = [];
 
+  const [permissions, setPermissions] = useState<string[]>([]);
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
   const [OpenModal, setOpenModal] = useState<boolean>(false);
   const [existences, setExistences] = useState<ExistenceModel[]>([]);
@@ -86,11 +88,11 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({authorized
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    if(filterMode){
+    if (filterMode) {
       filterExistences(filterObjectSelected?.filter || '', filterObjectSelected?.headerFilter || '', newpage);
       return
     }
-    if(!filterMode){
+    if (!filterMode) {
       getExistences(newpage);
       return
     }
@@ -101,7 +103,7 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({authorized
     const headfilter = FILTERS_EXISTENCE.find((element) => element.key === optionFilter);
     if (!headfilter) return
     setFilterMode(true);
-    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
+    setFilterObjectSelected({ headerFilter: headfilter.name, filter: filterText });
     filterExistences(filterText, headfilter.name)
   };
 
@@ -160,11 +162,15 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({authorized
 
   useEffect(() => {
     setLoading(true)
+    const auxPermissions = getUserFromLocalStorage();
+    if (!!auxPermissions && auxPermissions?.permisos.length) {
+      setPermissions(auxPermissions.permisos);
+    }
     getExistences(1);
   }, []);
 
-  if(!authorized){
-    return <Redirect to='./login'/>
+  if (!authorized) {
+    return <Redirect to='./login' />
   }
 
   return (
@@ -193,8 +199,10 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({authorized
         showProcessState
         showDetails
         enablePagination={false}
+        userPermissions={permissions}
+        typeModule='existences'
       />
-      <br/>
+      <br />
       <PaginationComponent
         actualPage={actualPage}
         onChange={(newpage: number) => handleChangePagination(newpage)}

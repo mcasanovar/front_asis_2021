@@ -6,7 +6,7 @@ import { IButtonsProps } from '../../models/index.models';
 
 import ButtonComponent from "../Button/Button";
 import { IFiltersGI } from '../../models/gi.models';
-import { FORMAT_DATE } from '../../constants/var';
+import { FORMAT_DATE, PERMISSIONS } from '../../constants/var';
 import { IFiltersEvaluation } from '../../models/evaluations.models';
 import { IFiltersResults } from '../../models/results.model';
 
@@ -27,7 +27,8 @@ interface IHeaderTableProps {
   notFIlter?: boolean,
   notSearch?: boolean,
   notClean?: boolean,
-  onClickClean: () => void
+  onClickClean: () => void,
+  userPermissions?: string[]
 }
 
 const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
@@ -47,11 +48,30 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
   notFIlter = false,
   notSearch = false,
   notClean = false,
-  onClickClean
+  onClickClean,
+  userPermissions = []
 }) => {
 
   const { Option } = Select;
   const { Search } = Input;
+
+  const handleShowButtons = (button: IButtonsProps, index: number) => {
+    if (!!button &&
+      !!userPermissions.length &&
+      button?.permission &&
+      userPermissions.indexOf(button.permission) > -1) {
+      return (
+        <ButtonComponent
+          key={index}
+          title={button.title}
+          size={button.size}
+          ghost={true}
+          onClick={() => onClick(button)}
+        />
+      );
+    }
+    return null
+  };
 
   return (
     <div className="container-header-table">
@@ -107,21 +127,23 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
         <div></div>
         {/* section buttons right */}
         <div className="container-header-table-section3">
-          {buttons.length > 0 && buttons.map((button: IButtonsProps, index: number) => (
-            <ButtonComponent
-              key={index}
-              title={button.title}
-              size={button.size}
-              ghost={true}
-              onClick={() => onClick(button)}
-            />
-          ))}
+          {!!buttons.length && buttons.map((button: IButtonsProps, index: number) => {
+            return handleShowButtons(button, index);
+          })}
           {showInvoicesOptions &&
             <Select placeholder='Pago Grupal...' style={{ width: 160 }} onSelect={onClickGrupal}>
-              <Option value="uploadgroupoc">Carga OC grupal</Option>
-              <Option value="validategroupoc">Validar OC grupal</Option>
-              <Option value="uploadgroupinvoice">Carga factura grupal</Option>
-              <Option value="validategroupinvoice">Validar factura grupal</Option>
+              {userPermissions.indexOf(PERMISSIONS.UPLOAD_OC) > -1 &&
+                <Option value="uploadgroupoc">Carga OC grupal</Option>
+              }
+              {userPermissions.indexOf(PERMISSIONS.CONFIRM_OC) > -1 &&
+                <Option value="validategroupoc">Validar OC grupal</Option>
+              }
+              {userPermissions.indexOf(PERMISSIONS.UPLOAD_INVOICE) > -1 &&
+                <Option value="uploadgroupinvoice">Carga factura grupal</Option>
+              }
+              {userPermissions.indexOf(PERMISSIONS.CONFIRM_INVOICE) > -1 &&
+                <Option value="validategroupinvoice">Validar factura grupal</Option>
+              }
             </Select>}
         </div>
       </div>

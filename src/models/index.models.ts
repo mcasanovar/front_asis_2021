@@ -15,7 +15,8 @@ export interface IButtonsProps {
   customTitle?: string
   size: SizeType,
   widthModal: number,
-  showButtons: IShowButtonModals[] | []
+  showButtons: IShowButtonModals[] | [],
+  permission?: string
 };
 
 export interface IExamPsicoExtras {

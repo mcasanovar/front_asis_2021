@@ -25,6 +25,7 @@ import AlertComponent from "../../component/Alert/Alert";
 import { deleteInvoiceService, downloadFilesService, filterInvoicesService, getAllInvoicesService } from '../../services/invoices.services';
 import PaginationComponent from '../../component/Pagination/Pagination';
 import { MilesFormat } from '../../libs/formattedPesos';
+import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
 
 interface IInvoicesViewProps {
   authorized: boolean
@@ -39,6 +40,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
 
   const buttons: IButtonsProps[] = [];
 
+  const [permissions, setPermissions] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [invoices, setInvoices] = useState<InvoicesModel[]>([]);
   const [invoiceSelected, setInvoiceSelected] = useState<InvoicesModel>();
@@ -329,6 +331,10 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
 
   useEffect(() => {
     setLoading(true)
+    const auxPermissions = getUserFromLocalStorage();
+    if (!!auxPermissions && auxPermissions?.permisos.length) {
+      setPermissions(auxPermissions.permisos);
+    }
     getInvoices(1);
   }, []);
 
@@ -386,6 +392,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
         onClickDateFilter={() => { }}
         setOptionFilter={setOptionFilter}
         onClickClean={() => handleClickClean()}
+        userPermissions={permissions}
 
       />
       <TableComponent
@@ -405,6 +412,8 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
         showValidateInvoice
         showDelete
         enablePagination={false}
+        userPermissions={permissions}
+        typeModule='invoices'
       />
       <br />
       <PaginationComponent

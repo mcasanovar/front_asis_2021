@@ -1,10 +1,7 @@
 import axios from "axios";
-// import { setupCache } from 'axios-cache-adapter';
+import { getUserFromLocalStorage } from "../functions/getLocalStorage";
 
-// Create `axios-cache-adapter` instance
-// const cache = setupCache({
-//   maxAge: 15 * 60 * 1000
-// })
+const userLogged = getUserFromLocalStorage();
 
 const config = {
   // baseURL: process.env.REACT_APP_API_DEV,
@@ -14,6 +11,7 @@ const config = {
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
+    'x-access-token': `${!!userLogged?.token ? userLogged.token : ''}`
   },
   // adapter: cache.adapter
 };
@@ -26,6 +24,7 @@ const configFormData = {
   headers: {
     Accept: 'application/json',
     "Content-Type": "multipart/form-data",
+    'x-access-token': `${!!userLogged?.token ? userLogged.token : ''}`
   },
 };
 

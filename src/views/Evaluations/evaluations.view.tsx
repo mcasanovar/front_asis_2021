@@ -19,6 +19,7 @@ import { deleteEvaluationService, downloadExamService, filterEvaluationsService,
 
 import AlertComponent from "../../component/Alert/Alert";
 import PaginationComponent from '../../component/Pagination/Pagination';
+import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
 
 interface IEvaluationsViewProps {
   authorized: boolean
@@ -33,6 +34,7 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
 
   const buttons: IButtonsProps[] = [];
 
+  const [permissions, setPermissions] = useState<string[]>([]);
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
   const [OpenModal, setOpenModal] = useState<boolean>(false);
   const [idSelectedEvaluation, setIdSelectedEvaluation] = useState<string>('');
@@ -231,18 +233,18 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
     const headfilter = FILTERS_EVALUATION.find((element) => element.key === optionFilter);
     if (!headfilter) return
     setFilterMode(true);
-    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
+    setFilterObjectSelected({ headerFilter: headfilter.name, filter: filterText });
     filterEvaluations(filterText, headfilter.name)
   };
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    if(filterMode){
+    if (filterMode) {
       !filterObjectSelected && filterEvaluations(filterSelected, 'fecha_evaluacion', newpage);
       !!filterObjectSelected && filterEvaluations(filterObjectSelected.filter, filterObjectSelected.headerFilter, newpage)
       return
     }
-    if(!filterMode){
+    if (!filterMode) {
       getEvaluations(newpage);
       return
     }
@@ -268,6 +270,10 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
 
   useEffect(() => {
     setLoading(true)
+    const auxPermissions = getUserFromLocalStorage();
+    if (!!auxPermissions && auxPermissions?.permisos.length) {
+      setPermissions(auxPermissions.permisos);
+    }
     getEvaluations(1);
   }, []);
 
@@ -291,8 +297,8 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
     }
   }, [ActualModal]);
 
-  if(!authorized){
-    return <Redirect to='./login'/>
+  if (!authorized) {
+    return <Redirect to='./login' />
   }
 
   return (
@@ -336,6 +342,8 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
         showDownloadExam
         showConfirmExam
         enablePagination={false}
+        userPermissions={permissions}
+        typeModule='evaluations'
       />
       <br />
       <PaginationComponent

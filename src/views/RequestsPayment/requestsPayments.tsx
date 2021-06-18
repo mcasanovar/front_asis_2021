@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
 import { Redirect } from 'react-router-dom';
 
-import { CANCEL, CONFIRM, FILTERS_REQUEST_PAYMENT, N_PER_PAGE, OK, REQUESTPAYMENT_COLUMNS_TABLE } from '../../constants/var';
+import { CANCEL, CONFIRM, FILTERS_REQUEST_PAYMENT, N_PER_PAGE, OK, PERMISSIONS, REQUESTPAYMENT_COLUMNS_TABLE } from '../../constants/var';
 
 import SubBarComponent from "../../component/Subbar/SubBar";
 import HeaderTableComponent from "../../component/HeaderTable/HeaderTable";
@@ -19,6 +19,7 @@ import DetailsRequestPaymentView from "./detailsrequestpayment.view";
 import { IResponseAllRequestPayment, RequestPaymentModel } from '../../models/requestpayment.models';
 import { MilesFormat } from '../../libs/formattedPesos';
 import { filterRequestPaymentService, getAllRequestPaymentService } from '../../services';
+import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
 
 interface IRequestsPaymentViewProps {
   authorized: boolean
@@ -37,10 +38,12 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
       title: 'INFORME CONSOLIDADO',
       size: 'small',
       widthModal: 900,
-      showButtons: []
+      showButtons: [],
+      permission: PERMISSIONS.CONSOLIDATE_REPORT
     },
   ];
 
+  const [permissions, setPermissions] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [requestpayment, setRequestpayment] = useState<RequestPaymentModel[]>([]);
   const [requestpaymentSelected, setRequestpaymentSelected] = useState<RequestPaymentModel>();
@@ -186,6 +189,10 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
 
   useEffect(() => {
     setLoading(true)
+    const auxPermissions = getUserFromLocalStorage();
+    if(!!auxPermissions && auxPermissions?.permisos.length){
+      setPermissions(auxPermissions.permisos);
+    }
     getRequestPayment(1);
   }, []);
 
@@ -217,6 +224,7 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
         onClickSearch={() => handleClickSearch()}
         setOptionFilter={setOptionFilter}
         onClickClean={() => handleClickClean()}
+        userPermissions={permissions}
 
       />
       <TableComponent
@@ -229,6 +237,8 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
         showDetails
         showRequestPaymentCard
         enablePagination={false}
+        userPermissions={permissions}
+        typeModule='requestPayments'
       />
       <br />
       <PaginationComponent

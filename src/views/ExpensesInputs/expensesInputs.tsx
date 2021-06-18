@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { ExpensesModel, IResponseAllExpenses, IResponseExpenses } from '../../models/expenses.models';
-import { CANCEL, EXPENSES_COLUMNS_TABLE, FILTERS_EXPENSES, N_PER_PAGE, OK } from '../../constants/var';
+import { CANCEL, EXPENSES_COLUMNS_TABLE, FILTERS_EXPENSES, N_PER_PAGE, OK, PERMISSIONS } from '../../constants/var';
 
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
 
@@ -18,6 +18,7 @@ import EntriesView from './entries';
 import { deleteExpenseService, downloadFileExpenseService, filterExpensesService, getAllExpensesService } from '../../services';
 import { MilesFormat } from '../../libs/formattedPesos';
 import PaginationComponent from '../../component/Pagination/Pagination';
+import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
 
 interface IExpensesInputsViewProps {
   authorized: boolean
@@ -36,10 +37,12 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
       title: 'NUEVO GASTO',
       size: 'small',
       widthModal: 1200,
-      showButtons: []
+      showButtons: [],
+      permission: PERMISSIONS.CREATE_EXPENSE
     },
   ];
 
+  const [permissions, setPermissions] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [expenses, setExpenses] = useState<ExpensesModel[]>([]);
   const [idExpenseSelected, setIdExpenseSelected] = useState<string>('');
@@ -130,11 +133,11 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
 
   const handleChangePagination = (newpage: number) => {
     setLoading(true);
-    if(filterMode){
+    if (filterMode) {
       filterExpenses(filterObjectSelected?.filter || '', filterObjectSelected?.headerFilter || '', newpage);
       return
     }
-    if(!filterMode){
+    if (!filterMode) {
       getExpenses(newpage);
       return
     }
@@ -155,7 +158,7 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
     const headfilter = FILTERS_EXPENSES.find((element) => element.key === optionFilter);
     if (!headfilter) return
     setFilterMode(true);
-    setFilterObjectSelected({headerFilter: headfilter.name, filter: filterText});
+    setFilterObjectSelected({ headerFilter: headfilter.name, filter: filterText });
     filterExpenses(filterText, headfilter.name)
   };
 
@@ -221,7 +224,7 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
     }
   };
 
-  async function deleteExpense(id: string){
+  async function deleteExpense(id: string) {
     const aux: IResponseExpenses = await deleteExpenseService(idExpenseSelected);
     getExpenses(1)
     return setMessageAlert({
@@ -250,6 +253,10 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
 
   useEffect(() => {
     setLoading(true)
+    const auxPermissions = getUserFromLocalStorage();
+    if (!!auxPermissions && auxPermissions?.permisos.length) {
+      setPermissions(auxPermissions.permisos);
+    }
     getExpenses(1);
   }, []);
 
@@ -259,7 +266,7 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
       downloadFile(idExpenseSelected);
       return
     }
-    if(ActualModal && ActualModal._id === 'delete'){
+    if (ActualModal && ActualModal._id === 'delete') {
       setLoading(true)
       deleteExpense(idExpenseSelected);
     }
@@ -293,6 +300,7 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
         onClickSearch={() => handleClickSearch()}
         setOptionFilter={setOptionFilter}
         onClickClean={() => handleClickClean()}
+        userPermissions={permissions}
 
       />
       <TableComponent
@@ -306,6 +314,8 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
         ShowDownloadExpense
         ShowEntries
         enablePagination={false}
+        userPermissions={permissions}
+        typeModule='expenses'
       />
       <br />
       <PaginationComponent
