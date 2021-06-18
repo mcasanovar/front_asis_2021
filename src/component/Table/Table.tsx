@@ -149,6 +149,12 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
         return userPermissions.indexOf(PERMISSIONS.DELETE_GI) > -1 ? true : false
       case 'employees':
         return userPermissions.indexOf(PERMISSIONS.DELETE_EMPLOYEE) > -1 ? true : false
+      case 'invoices':
+        return userPermissions.indexOf(PERMISSIONS.DELETE_INVOICE) > -1 ? true : false
+      case 'payments':
+        return userPermissions.indexOf(PERMISSIONS.DELETE_PAYMENT) > -1 ? true : false
+      case 'expenses':
+        return userPermissions.indexOf(PERMISSIONS.DELETE_EXPENSE) > -1 ? true : false
       default:
         return false
     }
@@ -168,6 +174,16 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
         return userPermissions.indexOf(PERMISSIONS.DETAILS_EVALUATION) > -1 ? true : false
       case 'results':
         return userPermissions.indexOf(PERMISSIONS.DETAILS_RESULT) > -1 ? true : false
+      case 'invoices':
+        return userPermissions.indexOf(PERMISSIONS.DETAILS_INVOICE) > -1 ? true : false
+      case 'payments':
+        return userPermissions.indexOf(PERMISSIONS.DETAILS_PAYMENT) > -1 ? true : false
+      case 'requestPayments':
+        return userPermissions.indexOf(PERMISSIONS.DETAILS_REQUESTPAYMENT) > -1 ? true : false
+      case 'expenses':
+        return userPermissions.indexOf(PERMISSIONS.DETAILS_EXPENSE) > -1 ? true : false
+      case 'existences':
+        return userPermissions.indexOf(PERMISSIONS.DETAILS_EXISTENCE) > -1 ? true : false
       default:
         return false
     }
@@ -489,7 +505,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<MailOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showUploadOC && record.estado === 'Ingresado'
+          {userPermissions.indexOf(PERMISSIONS.UPLOAD_OC) > -1 && showUploadOC && record.estado === 'Ingresado'
             && (record.estado_archivo === 'Sin Documento' || record.estado_archivo === 'Rechazado')
             && record.oc === 'Si' &&
             <Tooltip title='Subir OC' color={'#50ACF5'}>
@@ -499,7 +515,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<FilePdfOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showConfirmOC && record.estado === 'En Revisión' && record.estado_archivo === 'Cargado' &&
+          {userPermissions.indexOf(PERMISSIONS.CONFIRM_OC) > -1 && showConfirmOC && record.estado === 'En Revisión' && record.estado_archivo === 'Cargado' &&
             <Tooltip title='Confirmar OC' color={'#39AE16'}>
               <Button
                 onClick={() => onClickAction('confirmoc', record._id)}
@@ -507,7 +523,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<FilePdfOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showDownloadOc && record.estado === 'En Revisión' && record.estado_archivo === 'Cargado' &&
+          {userPermissions.indexOf(PERMISSIONS.DOWNLOAD_OC) > -1 && showDownloadOc && record.estado === 'En Revisión' && record.estado_archivo === 'Cargado' &&
             <Tooltip title='Descargar OC' color={'#1A9D02'}>
               <Button
                 onClick={() => onClickAction('downloadoc', record._id)}
@@ -515,7 +531,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<CloudDownloadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showDownloadInvoice && record.estado === 'En Facturacion' && record.estado_archivo === 'Cargado' &&
+          {userPermissions.indexOf(PERMISSIONS.DOWNLOAD_INVOICE) > -1 && showDownloadInvoice && record.estado === 'En Facturacion' && record.estado_archivo === 'Cargado' &&
             <Tooltip title='Descargar factura' color={'#1A9D02'}>
               <Button
                 onClick={() => onClickAction('downloadinvoice', record._id)}
@@ -523,7 +539,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<DownloadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {showInvoice && record.estado === 'En Facturacion'
+          {userPermissions.indexOf(PERMISSIONS.SHOW_INVOICE) > -1 && showInvoice && record.estado === 'En Facturacion'
             && (record.estado_archivo === 'Sin Documento' || record.estado_archivo === 'Aprobado' || record.estado_archivo === 'Rechazado')
             &&
             <Tooltip title='Factura' color={'#50ACF5'}>
@@ -533,7 +549,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<CreditCardOutlined style={{ fontSize: '1.1rem', color: '#50ACF5' }} />} />
             </Tooltip>
           }
-          {showValidateInvoice && record.estado === 'En Facturacion' && record.estado_archivo === 'Cargado' &&
+          {userPermissions.indexOf(PERMISSIONS.CONFIRM_INVOICE) > -1 && showValidateInvoice && record.estado === 'En Facturacion' && record.estado_archivo === 'Cargado' &&
             <Tooltip title='Validar factura' color={'#39AE16'}>
               <Button
                 onClick={() => onClickAction('validateinvoice', record._id)}
@@ -541,7 +557,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<FileSearchOutlined style={{ fontSize: '1.1rem', color: '#39AE16' }} />} />
             </Tooltip>
           }
-          {showManagmentPayments &&
+          {userPermissions.indexOf(PERMISSIONS.MANAGMENT_PAYMENT) > -1 && showManagmentPayments &&
             <Tooltip title='Gestión de Pagos' color={'#870989'}>
               <Button
                 onClick={() => onClickAction('managepayment', record._id)}
@@ -549,7 +565,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<DollarOutlined style={{ fontSize: '1.1rem', color: '#870989' }} />} />
             </Tooltip>
           }
-          {showGeneratePayment && record.estado !== 'Pagado' &&
+          {userPermissions.indexOf(PERMISSIONS.GENERATE_PAYMENT) > -1 && showGeneratePayment && record.estado !== 'Pagado' &&
             <Tooltip title='Realizar Pago' color={'#35A20C'}>
               <Button
                 onClick={() => onClickAction('generatepayment', record._id)}
@@ -557,7 +573,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<DollarOutlined style={{ fontSize: '1.1rem', color: '#35A20C' }} />} />
             </Tooltip>
           }
-          {showRequestPaymentCard && record.estado === 'Vencido' &&
+          {userPermissions.indexOf(PERMISSIONS.CARD_REQUESTPAYMENT) > -1 && showRequestPaymentCard && record.estado === 'Vencido' &&
             <Tooltip title='Carta Cobranza' color={'#50ACF5'}>
               <Button
                 onClick={() => onClickAction('requestpaymentcard', record._id)}
@@ -565,7 +581,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<MailOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {ShowDownloadExpense &&
+          {userPermissions.indexOf(PERMISSIONS.DOWNLOAD_EXPENSE) > -1 && ShowDownloadExpense &&
             <Tooltip title='Descargar gasto' color={'#1A9D02'}>
               <Button
                 onClick={() => onClickAction('downloadexpense', record._id)}
@@ -573,7 +589,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<DownloadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
             </Tooltip>
           }
-          {ShowEntries && record.inventario === 'Si' &&
+          {userPermissions.indexOf(PERMISSIONS.SHOW_ENTRIES) > -1 && ShowEntries && record.inventario === 'Si' &&
             <Tooltip title='Entradas' color={'#55D515'}>
               <Button
                 onClick={() => onClickAction('entries', record._id)}

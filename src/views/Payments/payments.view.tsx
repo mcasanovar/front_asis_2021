@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
-import { CANCEL, CONFIRM, FILTERS_PAYMENTS, N_PER_PAGE, OK, PAYMENTS_COLUMNS_TABLE } from '../../constants/var';
+import { CANCEL, CONFIRM, FILTERS_PAYMENTS, N_PER_PAGE, OK, PAYMENTS_COLUMNS_TABLE, PERMISSIONS } from '../../constants/var';
 import { IResponseAllPayments, IResponsePayment, PaymentModel } from '../../models/payments.models';
 import { filterPaymentsService, getAllPaymentsService, deleteGeneralPaymentService } from '../../services';
 
@@ -20,6 +20,7 @@ import GenerateGroupPaymentView from "./grupal/generategrupalpayment.view";
 import AlertComponent from "../../component/Alert/Alert";
 
 import { MilesFormat } from '../../libs/formattedPesos';
+import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
 
 interface IPaymentsViewProps {
   authorized: boolean
@@ -38,10 +39,12 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
       title: 'PAGO GRUPAL',
       size: 'small',
       widthModal: 1200,
-      showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
+      showButtons: [{ _id: CANCEL }, { _id: CONFIRM }],
+      permission: PERMISSIONS.PAYMENT_GROUP
     },
   ];
 
+  const [permissions, setPermissions] = useState<string[]>([]);
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [loading, setLoading] = useState<boolean>(false);
@@ -226,6 +229,10 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
 
   useEffect(() => {
     setLoading(true)
+    const auxPermissions = getUserFromLocalStorage();
+    if (!!auxPermissions && auxPermissions?.permisos.length) {
+      setPermissions(auxPermissions.permisos);
+    }
     getPayments(1);
   }, []);
 
@@ -257,6 +264,7 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
         onClickSearch={() => handleClickSearch()}
         setOptionFilter={setOptionFilter}
         onClickClean={() => handleClickClean()}
+        userPermissions={permissions}
       />
       <TableComponent
         onClickAction={(id: string, _id?: string) => handleCLickActionTable(id, _id)}
@@ -270,6 +278,8 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
         showGeneratePayment
         showDelete
         enablePagination={false}
+        userPermissions={permissions}
+        typeModule='payments'
       />
       <br />
       <PaginationComponent

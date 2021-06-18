@@ -6,7 +6,7 @@ import { IButtonsProps } from '../../models/index.models';
 
 import ButtonComponent from "../Button/Button";
 import { IFiltersGI } from '../../models/gi.models';
-import { FORMAT_DATE } from '../../constants/var';
+import { FORMAT_DATE, PERMISSIONS } from '../../constants/var';
 import { IFiltersEvaluation } from '../../models/evaluations.models';
 import { IFiltersResults } from '../../models/results.model';
 
@@ -132,10 +132,18 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
           })}
           {showInvoicesOptions &&
             <Select placeholder='Pago Grupal...' style={{ width: 160 }} onSelect={onClickGrupal}>
-              <Option value="uploadgroupoc">Carga OC grupal</Option>
-              <Option value="validategroupoc">Validar OC grupal</Option>
-              <Option value="uploadgroupinvoice">Carga factura grupal</Option>
-              <Option value="validategroupinvoice">Validar factura grupal</Option>
+              {userPermissions.indexOf(PERMISSIONS.UPLOAD_OC) > -1 &&
+                <Option value="uploadgroupoc">Carga OC grupal</Option>
+              }
+              {userPermissions.indexOf(PERMISSIONS.CONFIRM_OC) > -1 &&
+                <Option value="validategroupoc">Validar OC grupal</Option>
+              }
+              {userPermissions.indexOf(PERMISSIONS.UPLOAD_INVOICE) > -1 &&
+                <Option value="uploadgroupinvoice">Carga factura grupal</Option>
+              }
+              {userPermissions.indexOf(PERMISSIONS.CONFIRM_INVOICE) > -1 &&
+                <Option value="validategroupinvoice">Validar factura grupal</Option>
+              }
             </Select>}
         </div>
       </div>

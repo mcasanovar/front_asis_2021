@@ -7093,5 +7093,33 @@ export const PERMISSIONS = {
   DOWNLOAD_EXAM_RESULT: 'descargar_resultado',
   CONFIRM_RESULT: 'confirmar_resultado',
   UPLOAD_RESULT: 'subir_resultado',
-  SEND_MAIL: 'enviar_correo_resultado'
+  SEND_MAIL: 'enviar_correo_resultado',
+  //invoices
+  UPLOAD_OC: 'cargar_oc',
+  CONFIRM_OC: 'validar_oc',
+  UPLOAD_INVOICE: 'factura',
+  CONFIRM_INVOICE: 'validar_factura',
+  DETAILS_INVOICE: 'detalle_facturacion',
+  SHOW_INVOICE: 'factura',
+  DOWNLOAD_OC: 'descargar_oc',
+  DOWNLOAD_INVOICE: 'descargar_factura',
+  DELETE_INVOICE: 'eliminar_factura',
+  //payments
+  PAYMENT_GROUP: 'realizar_pago_grupal',
+  DETAILS_PAYMENT: 'detalle_pago',
+  MANAGMENT_PAYMENT: 'gestion_pago',
+  GENERATE_PAYMENT: 'realizar_pago',
+  DELETE_PAYMENT: 'eliminar_pago',
+  //requestPayments
+  CONSOLIDATE_REPORT: 'informe_consolidado',
+  DETAILS_REQUESTPAYMENT: 'detalle_cobranza',
+  CARD_REQUESTPAYMENT: 'carta_cobranza',
+  //expenses
+  CREATE_EXPENSE: 'crear_gasto',
+  DETAILS_EXPENSE: 'detalle_gasto',
+  DELETE_EXPENSE: 'eliminar_gasto',
+  DOWNLOAD_EXPENSE: 'descargar_gasto',
+  SHOW_ENTRIES: 'entradas',
+  //existences
+  DETAILS_EXISTENCE: 'detalle_existencia'
 }
