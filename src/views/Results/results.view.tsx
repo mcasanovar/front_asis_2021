@@ -237,7 +237,6 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
     setFilterMode(true);
     setFilterObjectSelected({ headerFilter: headfilter.name, filter: filterText });
     filterResults(filterText, headfilter.name)
-    setLoading(false)
   };
 
   const handleFilterByDate = (date: string) => {

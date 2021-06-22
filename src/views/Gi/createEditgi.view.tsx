@@ -2,7 +2,7 @@ import { FunctionComponent, FormEvent, useState, useEffect } from 'react';
 import moment, { Moment } from 'moment';
 
 import { Collapse, Input, Row, Col, Select, DatePicker, Form, Spin, Button, Table, Tag, Typography } from "antd";
-import { PhoneOutlined, MailOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PhoneOutlined, MailOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { SelectValue } from 'antd/lib/select';
 import { GiModel, IContract, IFaena, IResponseGI } from '../../models/gi.models';
 import { GiInitializationData } from '../../initializations/gi.initialization';
@@ -60,6 +60,8 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
   const [contractoNumberToAdd, setContractoNumberToAdd] = useState<string>('');
   const [faenasToAdd, setFaenasToAdd] = useState<IFaena[]>([]);
   const [faenasSelected, setFaenasSelected] = useState<IFaena[]>([]);
+  const [isEditContract, setIsEditContract] = useState<boolean>(false);
+  const [indexContractToEdit, setIndexContractToEdit] = useState<number>(0);
 
   const handleSetDataNewGI = (e: FormEvent<HTMLInputElement>) => {
     setNewGiData({
@@ -135,8 +137,16 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
   const handleSelectOrgBeloging = (id: string) => {
     const aux = organizationsBelonging.find((org) => org._id === id);
     if (!aux) return
-    setNewGiData({ ...newGiData, id_GI_org_perteneciente: aux._id || '', razon_social_org_perteneciente: aux.razon_social });
+    setNewGiData({
+      ...newGiData,
+      id_GI_org_perteneciente: aux._id || '',
+      razon_social_org_perteneciente: aux.razon_social,
+      contrato_faenas: [],
+      nro_contrato: '',
+      faena: ''
+    });
     setOrganizationBelongingSelected(aux);
+    setFaenasSelected([]);
   };
 
   const handleFaenasToAdd = (e: any) => {
@@ -150,6 +160,37 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
     setNewGiData({ ...newGiData, contrato_faenas: [...newGiData.contrato_faenas, ...[aux]] });
     setContractoNumberToAdd('');
     setFaenasToAdd([]);
+  };
+
+  const handleEditContractFaena = (record: IContract, index: number) => {
+    setContractoNumberToAdd(record.nro_contrato);
+    setFaenasToAdd(record.faenas);
+    setIndexContractToEdit(index);
+    setIsEditContract(true)
+  };
+
+  const editContractFaenas = () => {
+    const indexPosition = indexContractToEdit;
+    const aux: IContract[] = newGiData.contrato_faenas.map((contract, index) => {
+      if(index === indexPosition){
+        return {
+          nro_contrato: contractoNumberToAdd,
+          faenas: faenasToAdd
+        }
+      }
+      else{
+        return contract
+      }
+    });
+
+    setNewGiData({...newGiData, contrato_faenas: aux});
+    cancelEditContractFaenas();
+  };
+
+  const cancelEditContractFaenas = () => {
+    setContractoNumberToAdd('');
+    setFaenasToAdd([]);
+    setIsEditContract(false);
   };
 
   const handleDeleteContractFaena = (index: number) => {
@@ -281,7 +322,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
     // eslint-disable-next-line
   }, []);
 
-  console.log(newGiData);
+  console.log(organizationBelongingSelected);
 
   //---------RENDERS
   const renderTributaryInformation = () => {
@@ -776,7 +817,6 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                       }
                       style={{ width: '100%' }}
                       onSelect={(e: SelectValue) => handleSelectOrgBeloging(e.toString())}
-                      // value={newGiData.id_GI_org_perteneciente}
                       defaultValue={newGiData.razon_social_org_perteneciente || ''}
                     >
                       {organizationsBelonging.length > 0 && organizationsBelonging.map((org, index) => (
@@ -1028,35 +1068,45 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                   <Form.Item
                     label='Nro. contrato'
                   >
-                    <Select
-                      style={{ width: '100%' }}
-                      onChange={(e) => handleSetContractNumber(e)}
-                      value={newGiData.nro_contrato}
-                    >
-                      {organizationBelongingSelected
-                        && organizationBelongingSelected.contrato_faenas
-                        && organizationBelongingSelected.contrato_faenas.length > 0
-                        && organizationBelongingSelected.contrato_faenas.map((contract, index) => (
-                          <Option key={index} value={contract.nro_contrato}>{contract.nro_contrato}</Option>
-                        ))
-                      }
-                    </Select>
+                    {(!!organizationBelongingSelected && organizationBelongingSelected?.contrato_faenas.length)
+                      ? <Select
+                        style={{ width: '100%' }}
+                        onChange={(e) => handleSetContractNumber(e)}
+                        value={newGiData.nro_contrato}
+                      >
+                        {
+                          organizationBelongingSelected.contrato_faenas.map((contract, index) => (
+                            <Option key={index} value={contract.nro_contrato}>{contract.nro_contrato}</Option>
+                          ))
+                        }
+                      </Select> :
+                      <Input
+                        readOnly
+                        disabled
+                      />
+                    }
                   </Form.Item>
                 </Col>
                 <Col span={6}>
                   <Form.Item
                     label='Seleccione faena'
                   >
-                    <Select
-                      style={{ width: '100%' }}
-                      onChange={(e) => setNewGiData({ ...newGiData, faena: e.toString() })}
-                      value={newGiData.faena}
-                    >
-                      {faenasSelected && faenasSelected.length > 0 && faenasSelected.map((faena, index) => (
-                        <Option key={index} value={faena.name}>{faena.name}</Option>
-                      ))
-                      }
-                    </Select>
+                    {(!!faenasSelected && !!faenasSelected.length) ?
+                      <Select
+                        style={{ width: '100%' }}
+                        onChange={(e) => setNewGiData({ ...newGiData, faena: e.toString() })}
+                        value={newGiData.faena}
+                      >
+                        {faenasSelected && faenasSelected.length > 0 && faenasSelected.map((faena, index) => (
+                          <Option key={index} value={faena.name}>{faena.name}</Option>
+                        ))
+                        }
+                      </Select> :
+                      <Input
+                        readOnly
+                        disabled
+                      />
+                    }
                   </Form.Item>
                 </Col>
                 <Col span={12}>
@@ -1100,13 +1150,32 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                   />
                 </Col>
                 <Col span={6}>
-                  <Button
-                    onClick={() => handleAddContractFaenas()}
-                    type='primary'
-                    style={{ backgroundColor: 'green', borderColor: 'green', color: 'white' }}
-                  >
-                    Agregar
-                </Button>
+                  {isEditContract ?
+                    <>
+                      <Button
+                        onClick={() => editContractFaenas()}
+                        type='primary'
+                        style={{ backgroundColor: '#F68923', borderColor: '#F68923', color: 'white' }}
+                      >
+                        Editar
+                    </Button>
+                      <Button
+                        onClick={() => cancelEditContractFaenas()}
+                        type='primary'
+                        style={{ backgroundColor: 'dimgrey', borderColor: 'dimgrey', color: 'white' }}
+                      >
+                        Cancelar
+                    </Button>
+                    </>
+                    :
+                    <Button
+                      onClick={() => handleAddContractFaenas()}
+                      type='primary'
+                      style={{ backgroundColor: 'green', borderColor: 'green', color: 'white' }}
+                    >
+                      Agregar
+                    </Button>
+                  }
                 </Col>
               </Row>
               <br />
@@ -1134,12 +1203,19 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                         width='10%'
                         className='column-money'
                         title="Actions"
-                        render={(_, __, index: number) => (
-                          <Button
-                            onClick={() => handleDeleteContractFaena(index)}
-                            style={{ backgroundColor: '#E6100D' }}
-                            icon={<DeleteOutlined style={{ fontSize: '1.1rem', color: 'white' }} />}
-                          />
+                        render={(_, record: IContract, index: number) => (
+                          <>
+                            <Button
+                              onClick={() => handleDeleteContractFaena(index)}
+                              style={{ backgroundColor: '#E6100D' }}
+                              icon={<DeleteOutlined style={{ fontSize: '1.1rem', color: 'white' }} />}
+                            />
+                            <Button
+                              onClick={() => handleEditContractFaena(record, index)}
+                              style={{ backgroundColor: '#FC9410' }}
+                              icon={<EditOutlined style={{ fontSize: '1.1rem', color: 'white' }} />}
+                            />
+                          </>
                         )}
                       />
                     </Table>

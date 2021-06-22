@@ -46,6 +46,7 @@ export const ROLES_GI = [
   'Empleados',
   'Colaboradores',
   'Clientes',
+  'Supervisor',
   'admin'
 ]
 
@@ -5613,7 +5614,7 @@ export const FILTERS_EVALUATION: IFiltersRequest[] = [
   {
     key: 1,
     value: 'Rut CP',
-    name: 'rut_CP'
+    name: 'rut_cp'
   },
   {
     key: 2,
@@ -5692,10 +5693,10 @@ export const FILTERS_RESULT: IFiltersResults[] = [
   {
     key: 1,
     value: 'Rut CP',
-    name: 'rut_CP'
+    name: 'rut_cp'
   },
   {
-    key: 2,
+    key: 2, 
     value: 'Rut CS',
     name: 'rut_cs'
   },
@@ -5776,7 +5777,7 @@ export const FILTERS_INVOICES: IFiltersInvoices[] = [
   {
     key: 1,
     value: 'Rut CP',
-    name: 'rut_CP'
+    name: 'rut_cp'
   },
   {
     key: 2,
@@ -5860,7 +5861,7 @@ export const FILTERS_PAYMENTS: IFiltersInvoices[] = [
   {
     key: 1,
     value: 'Rut CP',
-    name: 'rut_CP'
+    name: 'rut_cp'
   },
   {
     key: 2,
@@ -5949,7 +5950,7 @@ export const FILTERS_REQUEST_PAYMENT: IFiltersRequestPayment[] = [
   {
     key: 1,
     value: 'Rut CP',
-    name: 'rut_CP'
+    name: 'rut_cp'
   },
   {
     key: 2,
