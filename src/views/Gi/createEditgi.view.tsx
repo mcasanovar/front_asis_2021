@@ -262,12 +262,26 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
     }
     const gi: GiModel = aux.res;
     const selected = organizationsBelonging.find((org) => org._id === gi.id_GI_org_perteneciente);
-    setOrganizationBelongingSelected(selected || GiInitializationData)
+    setOrganizationBelongingSelected(selected || GiInitializationData);
     setNewGiData(gi);
     setLoading(false);
   }
 
   //------------------------ USEEFECT
+  useEffect(() => {
+    if(!!organizationBelongingSelected && !!newGiData.nro_contrato && type === 'edit'){
+      const aux = organizationBelongingSelected.contrato_faenas.find((contract: IContract) => contract.nro_contrato === newGiData.nro_contrato);
+      if (!aux) return
+      setFaenasSelected(aux.faenas);
+    }
+  }, [organizationBelongingSelected, newGiData.nro_contrato])
+
+  useEffect(() => {
+    if(!!organizationsBelonging && !!organizationsBelonging.length && type === 'edit'){
+      getOneGI();
+    }
+  }, [organizationsBelonging])
+
   useEffect(() => {
     if (messageAlert.show) {
       setTimeout(() => {
@@ -318,7 +332,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
     setLoading(true);
     getCountries();
     getOrganizationBelonging();
-    type === 'edit' && getOneGI();
+    // type === 'edit' && getOneGI();
     // eslint-disable-next-line
   }, []);
 
