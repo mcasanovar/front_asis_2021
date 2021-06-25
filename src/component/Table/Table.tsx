@@ -573,7 +573,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                 icon={<DollarOutlined style={{ fontSize: '1.1rem', color: '#35A20C' }} />} />
             </Tooltip>
           }
-          {userPermissions.indexOf(PERMISSIONS.CARD_REQUESTPAYMENT) > -1 && showRequestPaymentCard && record.estado === 'Vencido' &&
+          {userPermissions.indexOf(PERMISSIONS.CARD_REQUESTPAYMENT) > -1 && showRequestPaymentCard &&
             <Tooltip title='Carta Cobranza' color={'#50ACF5'}>
               <Button
                 onClick={() => onClickAction('requestpaymentcard', record._id)}
