@@ -1,3 +1,5 @@
+import { Moment } from "moment";
+
 //--- REQUEST PAYMENT
 export interface RequestPaymentModel {
   _id: string,
@@ -8,6 +10,7 @@ export interface RequestPaymentModel {
   valor_servicio_string?: string,
   categoria_cliente: string,
   fecha_facturacion: string,
+  fecha_cobranza?: Date,
   dias_credito: number,
   rut_cp: string,
   razon_social_cp: string,

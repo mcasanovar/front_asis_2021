@@ -43,4 +43,30 @@ const sendMailsTemplatRequestPaymentService = async (id: string, data: any) => {
   }
 };
 
-export { getAllRequestPaymentService, filterRequestPaymentService, sendMailsTemplatRequestPaymentService }
+const getRequestsPaymentByRutGIService = async (rut: string) => {
+  const extension = `${PREFIX_REQUEST_PAYMENT}/gifilter/${rut}`;
+  try {
+    const response = await httpClient.get(extension);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+const generateConsolidatedReportService = async (data: any) => {
+  const extension = `${PREFIX_REQUEST_PAYMENT}/pdfconsolidado`;
+  try {
+    const response = await httpClient.post(extension, data);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export { 
+  getAllRequestPaymentService, 
+  filterRequestPaymentService, 
+  sendMailsTemplatRequestPaymentService,
+  getRequestsPaymentByRutGIService,
+  generateConsolidatedReportService
+}

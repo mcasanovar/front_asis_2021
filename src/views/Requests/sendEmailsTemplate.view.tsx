@@ -22,7 +22,7 @@ const SendEmailsTemplateView: React.FunctionComponent<ISendEmailsTemplateViewPro
   request,
   type
 }) => {
-  const { Title, Paragraph } = Typography;
+  const { Title } = Typography;
 
   const [loading, setLoading] = useState<boolean>(false);
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
@@ -32,7 +32,7 @@ const SendEmailsTemplateView: React.FunctionComponent<ISendEmailsTemplateViewPro
 
   const handleValidEmails = (emailsString: string) => {
     setEmails(emailsString);
-    if (!emailsString) return
+    if (!emailsString) return setIsValidEmails(false);
     if (emailsString.includes(',')) {
       const aux = emailsString.split(',');
       const isValid = aux.some((element) => !validateEmail(element));
