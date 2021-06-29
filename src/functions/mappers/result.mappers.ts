@@ -1,3 +1,4 @@
+import { GiModel } from "../../models/gi.models";
 import { ResultModel } from "../../models/results.model";
 
 const MapResult = (result: ResultModel, obs: string, ) => {
@@ -8,4 +9,12 @@ const MapResult = (result: ResultModel, obs: string, ) => {
   };
 };
 
-export { MapResult }
+const MapDataResultToConsolidatedReport = (gi: GiModel | undefined, results: ResultModel[] | undefined, emails: {email: string, name: string}[]) => {
+  return {
+    gi,
+    results,
+    emails
+  }
+};
+
+export { MapResult, MapDataResultToConsolidatedReport }

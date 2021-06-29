@@ -93,6 +93,26 @@ const sendMailsTemplatResultService = async (id: string, data: any) => {
   }
 };
 
+const getResultsByRutGIService = async (rut: string) => {
+  const extension = `${PREFIX_RESULTS}/gifilter/${rut}`;
+  try {
+    const response = await httpClient.get(extension);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+const generateConsolidatedReportResultsService = async (data: any) => {
+  const extension = `${PREFIX_RESULTS}/pdfconsolidado`;
+  try {
+    const response = await httpClient.post(extension, data);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 export { 
   getAllResultsService, 
   downloadResultService, 
@@ -101,5 +121,7 @@ export {
   filterResultsService,
   confirmResultService,
   uploadResultService,
-  sendMailsTemplatResultService
+  sendMailsTemplatResultService,
+  getResultsByRutGIService,
+  generateConsolidatedReportResultsService
 }

@@ -28,6 +28,7 @@ export interface ResultModel {
   estado_archivo: string,
   estado_resultado: string,
   fecha_resultado?: string,
+  fecha_resultado_date?: Date,
   hora_resultado?: string,
   isActive: boolean
 }

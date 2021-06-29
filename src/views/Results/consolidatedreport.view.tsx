@@ -5,14 +5,15 @@ import { IAlertMessageContent } from '../../models/index.models';
 import AlertComponent from "../../component/Alert/Alert";
 import { SelectValue } from 'antd/lib/select';
 import { GiModel, IResponseGI, IContract, IFaena } from '../../models/gi.models';
-import { generateConsolidatedReportService, getCompanyGIService, getRequestsPaymentByRutGIService } from '../../services';
+import { generateConsolidatedReportResultsService, generateConsolidatedReportService, getCompanyGIService, getRequestsPaymentByRutGIService, getResultsByRutGIService } from '../../services';
 import { MilesFormat } from '../../libs/formattedPesos';
 import { IResponseRequestPayment, RequestPaymentModel } from '../../models/requestpayment.models';
 import moment, { Moment } from 'moment';
 import { FORMAT_DATE } from '../../constants/var';
 import { parse } from 'node:url';
-import { MapDataToConsolidatedReport } from '../../functions/mappers/requestsPayment.mapper';
+import { MapDataResultToConsolidatedReport } from '../../functions/mappers/result.mappers';
 import { validateEmail } from '../../functions/validators/index.validators';
+import { IResponseResults, ResultModel } from '../../models/results.model';
 
 interface IConsolidatedReportViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -32,8 +33,8 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [companies, setCompanies] = useState<GiModel[]>();
   const [companySelected, setCompanySelected] = useState<GiModel>();
-  const [requestsPayment, setRequestsPayment] = useState<RequestPaymentModel[]>();
-  const [requestsPaymentFiltered, setRequestsPaymentFiltered] = useState<RequestPaymentModel[]>();
+  const [results, setResults] = useState<ResultModel[]>();
+  const [resultsFiltered, setResultsFiltered] = useState<ResultModel[]>();
   const [contractSelected, setContractSelected] = useState<IContract>();
   const [servicesSelected, setServicesSelected] = useState<string[]>([]);
   const [showDateFilter, setShowDateFilter] = useState<boolean>(false);
@@ -57,9 +58,9 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
     setLoading(false);
   };
 
-  async function getRequetsPaymentByGI() {
+  async function getResultsByGI() {
     setLoading(true);
-    const aux: IResponseRequestPayment = await getRequestsPaymentByRutGIService(companySelected?.rut || '');
+    const aux: IResponseResults = await getResultsByRutGIService(companySelected?.rut || '');
     if (!!aux.err && aux.err === 98) {
       setMessageAlert({ message: aux.msg, type: 'error', show: true });
       setLoading(false);
@@ -72,16 +73,16 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
     }
 
     //agregarle en formato fecha la fecha de cobranza
-    const res: RequestPaymentModel[] = aux.res;
-    const requestPaymentMapped: RequestPaymentModel[] = res.map((element) => {
+    const res: ResultModel[] = aux.res;
+    const requestPaymentMapped: ResultModel[] = res.map((element) => {
       return {
         ...element,
-        fecha_cobranza: moment(element.fecha_facturacion, FORMAT_DATE).add(element.dias_credito, 'd').toDate()
+        fecha_resultado_date: moment(element.fecha_resultado, FORMAT_DATE).toDate()
       }
     });
 
     //sacar los nombres de servicvios para cargarlos en el filtro
-    const auxServices = res.reduce((acc: string[], current: RequestPaymentModel) => {
+    const auxServices = res.reduce((acc: string[], current: ResultModel) => {
       const aux = acc.find((old) => current.nombre_servicio === old);
       if (!aux) {
         acc.push(current.nombre_servicio)
@@ -91,8 +92,8 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
 
     setServicesSelected(auxServices);
 
-    setRequestsPayment(requestPaymentMapped);
-    setRequestsPaymentFiltered(requestPaymentMapped);
+    setResults(requestPaymentMapped);
+    setResultsFiltered(requestPaymentMapped);
     setLoading(false);
   };
 
@@ -103,16 +104,16 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
   };
 
   const handleFilterRequestPayment = () => {
-    let result: RequestPaymentModel[] | undefined = requestsPayment;
-    if (!showDateFilter && !showContractFilter && !showServiceNameFilter) return setRequestsPaymentFiltered(requestsPayment);
+    let result: ResultModel[] | undefined = results;
+    if (!showDateFilter && !showContractFilter && !showServiceNameFilter) return setResultsFiltered(results);
 
     //si filtra por fecha
     if (showDateFilter) {
       setDateValueRange(dateValueRange)
-      if (!dateValueRange) return setRequestsPaymentFiltered(requestsPayment);
-      result = requestsPayment?.filter((element) => {
+      if (!dateValueRange) return setResultsFiltered(results);
+      result = results?.filter((element) => {
         // return element?.fecha_cobranza && element.fecha_cobranza >= daterange[0].toDate() && element.fecha_cobranza <= daterange[1].toDate()
-        return element?.fecha_cobranza && moment(element.fecha_cobranza).isBetween(dateValueRange[0], dateValueRange[1])
+        return element?.fecha_resultado_date && moment(element.fecha_resultado_date).isBetween(dateValueRange[0], dateValueRange[1])
       })
     };
 
@@ -126,7 +127,7 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
       result = result?.filter((element) => element.nombre_servicio === serviceSelected);
     }
 
-    setRequestsPaymentFiltered(result)
+    setResultsFiltered(result)
   };
 
   const handleGetFaenas = (contractNumber: string) => {
@@ -168,8 +169,8 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
         }
       });
     };
-    const dataMapped = MapDataToConsolidatedReport(companySelected, requestsPaymentFiltered, arrayEmails);
-    const aux: IResponseRequestPayment = await generateConsolidatedReportService(dataMapped);
+    const dataMapped = MapDataResultToConsolidatedReport(companySelected, resultsFiltered, arrayEmails);
+    const aux: IResponseRequestPayment = await generateConsolidatedReportResultsService(dataMapped);
     if(!aux.err){
       onCloseModal('sended', aux.msg)
       return
@@ -261,17 +262,17 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
         style={{ width: '100%' }}
         showHeader={true}
         pagination={false}
-        dataSource={requestsPaymentFiltered}
+        dataSource={resultsFiltered}
       >
         <Column className='column-money' title="Código" dataIndex="codigo" key="codigo" />
         <Column
           className='column-money'
-          title="Fecha Cobranza"
-          dataIndex="fecha_cobranza"
-          key="fecha_cobranza"
+          title="Fecha Resultado"
+          dataIndex="fecha_resultado_date"
+          key="fecha_resultado_date"
           render={(_, record: any) => {
             return <>
-              <Text>{moment(record.fecha_cobranza, FORMAT_DATE).format(FORMAT_DATE)}</Text>
+              <Text>{moment(record.fecha_resultado_date, FORMAT_DATE).format(FORMAT_DATE)}</Text>
             </>
           }}
         />
@@ -289,28 +290,6 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
             </>
           }}
         />
-        <Column
-          className='column-money'
-          title="Valor Cancelado"
-          dataIndex="valor_cancelado"
-          key="valor_cancelado"
-          render={(_, record: any) => {
-            return <>
-              <Text>{`$ ${MilesFormat(record.valor_cancelado)}`}</Text>
-            </>
-          }}
-        />
-        <Column
-          className='column-money'
-          title="Valor Deuda"
-          dataIndex="valor_deuda"
-          key="valor_deuda"
-          render={(_, record: any) => {
-            return <>
-              <Text>{`$ ${MilesFormat(record.valor_deuda)}`}</Text>
-            </>
-          }}
-        />
       </Table>
     );
   };
@@ -322,7 +301,7 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
 
   useEffect(() => {
     if (!!companySelected && !!companySelected._id) {
-      getRequetsPaymentByGI();
+      getResultsByGI();
     }
   }, [companySelected]);
 
@@ -354,11 +333,11 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
   useEffect(() => {
     if (!emails) return setDisabledConfirm(true);
     if (!isValidEmails) return setDisabledConfirm(true);
-    if(!!requestsPaymentFiltered && !requestsPaymentFiltered.length){
+    if(!!resultsFiltered && !resultsFiltered.length){
       setDisabledConfirm(true);
     }
-    if(!!requestsPaymentFiltered && !!requestsPaymentFiltered.length) return setDisabledConfirm(false);
-  }, [isValidEmails, emails, requestsPaymentFiltered]);
+    if(!!resultsFiltered && !!resultsFiltered.length) return setDisabledConfirm(false);
+  }, [isValidEmails, emails, resultsFiltered]);
 
   return (
     <Spin spinning={loading} size='large' tip='Cargando...'>
