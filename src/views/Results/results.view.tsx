@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
-import { CANCEL, CONFIRM, FILTERS_RESULT, N_PER_PAGE, OK, RESULTS_COLUMNS_TABLE } from '../../constants/var';
+import { CANCEL, CONFIRM, FILTERS_RESULT, N_PER_PAGE, OK, PERMISSIONS, RESULTS_COLUMNS_TABLE } from '../../constants/var';
 import { IResponseAllResults, IResponseResults, ResultModel } from '../../models/results.model';
 import { deleteResultService, downloadResultService, getAllResultsService, filterResultsService } from '../../services';
 
@@ -15,6 +15,7 @@ import PaginationComponent from '../../component/Pagination/Pagination';
 import DetailsResultsView from "./detailsresults.view";
 import ConfirmResultView from "./confirmresult.view";
 import UploadResultView from './uploadresults.view';
+import ConsolidatedReportResultsView from './consolidatedreport.view';
 
 import SendMailsTemplateView from '../Requests/sendEmailsTemplate.view';
 
@@ -32,7 +33,16 @@ interface IFilterSelected {
 
 const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized }) => {
 
-  const buttons: IButtonsProps[] = [];
+  const buttons: IButtonsProps[] = [
+    {
+      _id: 'consolidatereport',
+      title: 'INFORME CONSOLIDADO DE RESULTADOS',
+      size: 'small',
+      widthModal: 1600,
+      showButtons: [],
+      permission: PERMISSIONS.CONSOLIDATE_REPORT
+    },
+  ];
 
   const [permissions, setPermissions] = useState<string[]>([]);
   const [ActualModal, setActualModal] = useState<IButtonsProps>(buttons[0]);
@@ -336,6 +346,7 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
         onClickSearch={() => handleClickSearch()}
         setOptionFilter={setOptionFilter}
         onClickClean={() => handleClickClean()}
+        userPermissions={permissions}
 
       />
       <TableComponent
@@ -398,6 +409,11 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
               onCloseModal={(value, message) => handleCloseModal(value, message)}
               request={resultSelected}
               type='Resultado'
+            />
+          }
+          {ActualModal._id === 'consolidatereport' &&
+            <ConsolidatedReportResultsView
+              onCloseModal={(value, message) => handleCloseModal(value, message)}
             />
           }
         </ModalComponent>}
