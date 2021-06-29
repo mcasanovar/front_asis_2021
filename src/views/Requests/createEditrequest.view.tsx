@@ -94,10 +94,6 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
     setLoading(false);
   };
 
-  const handleWorkingDay = (date: string) => {
-
-  };
-
   const handleSelectRequestDate = (e: Moment) => {
     setNewRequestData({
       ...newRequestData,

@@ -9,17 +9,18 @@ import HeaderTableComponent from "../../component/HeaderTable/HeaderTable";
 import ModalComponent from "../../component/Modal/Modal";
 import TableComponent from "../../component/Table/Table";
 
-import SendMailsTemplateView from '../Requests/sendEmailsTemplate.view';
 
 import AlertComponent from "../../component/Alert/Alert";
 import PaginationComponent from '../../component/Pagination/Pagination';
 
-import DetailsRequestPaymentView from "./detailsrequestpayment.view";
-// import RequestPaymentCardView from "./requestpaymentcard.view";
 import { IResponseAllRequestPayment, RequestPaymentModel } from '../../models/requestpayment.models';
 import { MilesFormat } from '../../libs/formattedPesos';
 import { filterRequestPaymentService, getAllRequestPaymentService } from '../../services';
 import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
+
+import DetailsRequestPaymentView from "./detailsrequestpayment.view";
+import SendMailsTemplateView from '../Requests/sendEmailsTemplate.view';
+import ConsolidatedReportView from './consolidatedreport.view';
 
 interface IRequestsPaymentViewProps {
   authorized: boolean
@@ -37,7 +38,7 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
       _id: 'consolidatereport',
       title: 'INFORME CONSOLIDADO',
       size: 'small',
-      widthModal: 900,
+      widthModal: 1600,
       showButtons: [],
       permission: PERMISSIONS.CONSOLIDATE_REPORT
     },
@@ -190,7 +191,7 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
   useEffect(() => {
     setLoading(true)
     const auxPermissions = getUserFromLocalStorage();
-    if(!!auxPermissions && auxPermissions?.permisos.length){
+    if (!!auxPermissions && auxPermissions?.permisos.length) {
       setPermissions(auxPermissions.permisos);
     }
     getRequestPayment(1);
@@ -268,6 +269,11 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
               onCloseModal={(value, message) => handleCloseModal(value, message)}
               request={requestpaymentSelected}
               type='Cobranza'
+            />
+          }
+          {ActualModal._id === 'consolidatereport' &&
+            <ConsolidatedReportView
+              onCloseModal={(value, message) => handleCloseModal(value, message)}
             />
           }
         </ModalComponent>
