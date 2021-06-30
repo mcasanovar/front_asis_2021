@@ -294,6 +294,8 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
     );
   };
 
+  console.log(resultsFiltered?.length)
+
   //---------------------------------------USEEFFECT
   useEffect(() => {
     getGIsCompanies()
