@@ -72,7 +72,9 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
       const reservationsMapped = aux.resultados.map((reservation) => {
         return {
           ...reservation,
-          fecha_resultado: reservation.fecha_resultado ? `${reservation.fecha_resultado} ${reservation.hora_resultado}` : 'En Revisión',
+          fecha_resultado: reservation.fecha_resultado 
+            ? `${reservation.fecha_resultado} ${reservation?.hora_resultado ? reservation.hora_resultado : ''}` 
+            : 'En Revisión',
         }
       });
       setActualPage(aux.pagina_actual);
