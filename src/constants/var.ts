@@ -7036,6 +7036,8 @@ export const PREFIX_LOGIN = './login';
 
 
 //--------------------------------------------------------------------ROLES--------------------------
+export const CURRENT_ROL = 'clientes';
+export const COLABORATION_ROL = 'colaboradores'
 
 export const MODULES_PERMISSION = {
   M_DASHBOARD: 'modulo_dashboard',

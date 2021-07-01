@@ -13,6 +13,8 @@ import { CalculateIVA } from "../../libs/calculateIVA";
 
 
 import { GiModel, IFaena, IResponseGI } from '../../models/gi.models';
+import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
+import { COLABORATION_ROL } from '../../constants/var';
 
 interface ICreateRequestViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -46,7 +48,8 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
   const [workers, setWorkers] = useState<GiModel[]>([]);
   const [primaryClient, setPrimaryClient] = useState<GiModel>();
   const [secondaryClient, setSecondaryClient] = useState<GiModel>();
-  const [workerSelected, _] = useState<GiModel>();
+  const [workerSelected, setWorkerSelected] = useState<GiModel>();
+  const [loadingWorkers, setloadingWorkers] = useState<boolean>(true);
 
   async function getGIByRut(rut: string, typeRequest: number) {
     setLoading(true);
@@ -66,34 +69,38 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
     typeRequest === 2 && setSecondaryClient(aux.res);
 
     setLoading(false);
+  };
+
+  async function getWorkers() {
+    const aux: IResponseGI = await getWorkersGIService();
+    aux.err === null && setWorkers(aux.res || [])
+  }
+
+  async function getOneRequest() {
+    const aux: IResponseGI = await getOneRequestService(_id);
+    if (aux.err !== null) {
+      setMessageAlert({ message: aux.err, type: 'error', show: true });
+      return
+    }
+    const request: RequestModel = aux.res;
+    setNewRequestData(request);
   }
 
   //----------------------------------------USEEFECT
   useEffect(() => {
     setLoading(true)
-
-    async function getWorkers() {
-      const aux: IResponseGI = await getWorkersGIService();
-      aux.err === null && setWorkers(aux.res || [])
-    }
-
-    async function getOneRequest() {
-      const aux: IResponseGI = await getOneRequestService(_id);
-      if (aux.err !== null) {
-        setMessageAlert({ message: aux.err, type: 'error', show: true });
-        return
-      }
-      const request: RequestModel = aux.res;
-      setNewRequestData(request);
-    }
-
     getWorkers();
     getOneRequest();
   }, []);
 
   useEffect(() => {
-    if (workers && workers.length > 0) return setLoading(false);
-  }, [workers]);
+    if (!!workers && !!workers.length && !!newRequestData._id) {
+      const auxWorker = workers.find((element) => element._id === newRequestData.id_GI_PersonalAsignado)
+      setWorkerSelected(auxWorker);
+      setloadingWorkers(false);
+      setLoading(false);
+    }
+  }, [workers, newRequestData._id]);
 
   useEffect(() => {
     if (newRequestData._id !== '') {
@@ -116,6 +123,8 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
       }, 3000);
     }
   }, [messageAlert]);
+
+  console.log(workerSelected)
 
   //---RENDERS
   const renderServiceInformation = () => {
@@ -314,14 +323,16 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item
-                label='Profesional asignado'
-              >
-                <Input
-                  readOnly
-                  value={workerSelected?.razon_social}
-                />
-              </Form.Item>
+              <Spin spinning={loadingWorkers}>
+                <Form.Item
+                  label='Profesional asignado'
+                >
+                  <Input
+                    readOnly
+                    value={workerSelected?.razon_social}
+                  />
+                </Form.Item>
+              </Spin>
             </Col>
           </Row>
           <br />
