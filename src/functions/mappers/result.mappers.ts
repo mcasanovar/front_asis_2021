@@ -9,11 +9,21 @@ const MapResult = (result: ResultModel, obs: string, ) => {
   };
 };
 
-const MapDataResultToConsolidatedReport = (gi: GiModel | undefined, results: ResultModel[] | undefined, emails: {email: string, name: string}[]) => {
+const MapDataResultToConsolidatedReport = (
+  gi: GiModel | undefined, 
+  results: ResultModel[] | undefined, 
+  emails: {email: string, name: string}[],
+  datefilter: string | null,
+  contractfilter: string | null,
+  faenafilter: string | null
+) => {
   return {
     gi,
     results,
-    emails
+    emails,
+    filtrofecha: datefilter,
+    filtrocontrato: contractfilter,
+    filtrofaena: faenafilter
   }
 };
 

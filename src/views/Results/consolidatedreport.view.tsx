@@ -169,7 +169,14 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
         }
       });
     };
-    const dataMapped = MapDataResultToConsolidatedReport(companySelected, resultsFiltered, arrayEmails);
+    const dataMapped = MapDataResultToConsolidatedReport(
+      companySelected, 
+      resultsFiltered, 
+      arrayEmails,
+      showDateFilter && !!dateValueRange ? `${moment(dateValueRange[0]).format(FORMAT_DATE)} - ${moment(dateValueRange[1]).format(FORMAT_DATE)}` : null,
+      showContractFilter && !!contractSelected ? contractSelected.nro_contrato : null,
+      showContractFilter && !!faenaSelected ? faenaSelected : null
+    );
     const aux: IResponseRequestPayment = await generateConsolidatedReportResultsService(dataMapped);
     if(!aux.err){
       onCloseModal('sended', aux.msg)
