@@ -267,7 +267,7 @@ const EditReservationView: React.FunctionComponent<IEditReservationViewProps> = 
               <Form.Item
                 validateStatus={newReservationData?.reqEvaluacion ? 'success' : 'error'}
                 help={newReservationData?.reqEvaluacion ? '' : 'Debe seleccionar'}
-                label='¿Requiere evaluación?'
+                label='¿Requiere Evaluación o Informe?'
               >
                 <Select
                   style={{ width: '100%' }}
