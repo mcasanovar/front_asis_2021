@@ -1,8 +1,8 @@
 import { FunctionComponent, FormEvent, useState, useEffect } from 'react';
 import moment, { Moment } from 'moment';
 
-import { Collapse, Input, Row, Col, Select, DatePicker, Form, Spin, Button, Table, Tag, Typography } from "antd";
-import { PhoneOutlined, MailOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Collapse, Input, Row, Col, Select, DatePicker, Form, Spin, Button, Table, Tag, Typography, Upload } from "antd";
+import { PhoneOutlined, MailOutlined, DeleteOutlined, EditOutlined, InboxOutlined } from '@ant-design/icons';
 import { SelectValue } from 'antd/lib/select';
 import { GiModel, IContract, IFaena, IResponseGI } from '../../models/gi.models';
 import { GiInitializationData } from '../../initializations/gi.initialization';
@@ -62,6 +62,12 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
   const [faenasSelected, setFaenasSelected] = useState<IFaena[]>([]);
   const [isEditContract, setIsEditContract] = useState<boolean>(false);
   const [indexContractToEdit, setIndexContractToEdit] = useState<number>(0);
+  const [file, setFile] = useState<string | Blob | null>(null);
+
+  const getFileUploaded = (e: any) => {
+    e && setFile(e.file)
+    e.onSuccess('ok');
+  };
 
   const handleSetDataNewGI = (e: FormEvent<HTMLInputElement>) => {
     setNewGiData({
@@ -172,18 +178,18 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
   const editContractFaenas = () => {
     const indexPosition = indexContractToEdit;
     const aux: IContract[] = newGiData.contrato_faenas.map((contract, index) => {
-      if(index === indexPosition){
+      if (index === indexPosition) {
         return {
           nro_contrato: contractoNumberToAdd,
           faenas: faenasToAdd
         }
       }
-      else{
+      else {
         return contract
       }
     });
 
-    setNewGiData({...newGiData, contrato_faenas: aux});
+    setNewGiData({ ...newGiData, contrato_faenas: aux });
     cancelEditContractFaenas();
   };
 
@@ -219,6 +225,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
     let formData = new FormData();
     const giToInsert = MapGIToInsert(newGiData)
     formData.append("data", JSON.stringify(giToInsert));
+    file !== null && formData.append("archivo", file);
     const result: IResponseGI = await insertGIService(formData);
     if (result.err === null) {
       onCloseModal('reload', result.res)
@@ -234,6 +241,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
     let formData = new FormData();
     const giToEdit = MapGIToInsert(newGiData);
     formData.append("data", JSON.stringify(giToEdit));
+    file !== null && formData.append("archivo", file);
     const result: IResponseGI = await editOneGIService(newGiData._id, formData);
     if (result.err === null) {
       onCloseModal('reload', result.res)
@@ -269,7 +277,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
 
   //------------------------ USEEFECT
   useEffect(() => {
-    if(!!organizationBelongingSelected && !!newGiData.nro_contrato && type === 'edit'){
+    if (!!organizationBelongingSelected && !!newGiData.nro_contrato && type === 'edit') {
       const aux = organizationBelongingSelected.contrato_faenas.find((contract: IContract) => contract.nro_contrato === newGiData.nro_contrato);
       if (!aux) return
       setFaenasSelected(aux.faenas);
@@ -277,7 +285,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
   }, [organizationBelongingSelected, newGiData.nro_contrato])
 
   useEffect(() => {
-    if(!!organizationsBelonging && !!organizationsBelonging.length && type === 'edit'){
+    if (!!organizationsBelonging && !!organizationsBelonging.length && type === 'edit') {
       getOneGI();
     }
   }, [organizationsBelonging])
@@ -1259,6 +1267,32 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
         </Panel>
       </Collapse>
       <br />
+      <Row gutter={8}>
+        <Col span={12}>
+          <Form layout='vertical'>
+            <Form.Item
+              label={type === 'edit' ? 'Cambiar archivo adjunto': 'Archivo Adjunto'}
+              getValueFromEvent={getFileUploaded}
+              valuePropName="fileData"
+            >
+              <Upload.Dragger
+                name="file"
+                customRequest={getFileUploaded}
+                accept='.pdf'
+                maxCount={1}
+                onRemove={() => setFile(null)}
+              >
+                <p className="ant-upload-drag-icon">
+                  <InboxOutlined />
+                </p>
+                <p className="ant-upload-text">Click o arrastra el archivo para subirlo</p>
+                <p className="ant-upload-hint">10mb max.</p>
+              </Upload.Dragger>
+            </Form.Item>
+          </Form>
+        </Col>
+      </Row>
+      <br />
       <Row gutter={8} style={{
         display: 'flex',
         flexDirection: 'row',
@@ -1294,7 +1328,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                 { backgroundColor: 'grey', borderColor: 'grey', color: 'white' }}
             >
               Guardar
-              </Button>
+            </Button>
           }
         </Col>
       </Row>

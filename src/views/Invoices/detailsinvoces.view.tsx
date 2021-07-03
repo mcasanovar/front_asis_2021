@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Collapse, Input, Row, Col, Button, Typography, Form, Spin, Table, Tag } from "antd";
 import { DownloadOutlined } from '@ant-design/icons';
 
@@ -564,6 +564,15 @@ const DetailsInvoicesView: React.FunctionComponent<IDetailsInvoicesViewProps> = 
       </Form>
     );
   };
+
+  //---------------------------------------USEEFFECT
+  useEffect(() => {
+    if (messageAlert.show) {
+      setTimeout(() => {
+        setMessageAlert({ ...messageAlert, show: false });
+      }, 3000);
+    }
+  }, [messageAlert]);
 
   return (
     <Spin spinning={loading} size='large' tip='Cargando...'>

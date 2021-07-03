@@ -122,6 +122,16 @@ const editPasswordService = async (id: string, data: ConfigurationGIModel) => {
   }
 };
 
+const downloadGIFilesService = async (id: string) => {
+  const extension = `${PREFIX_GIS}/downloadfile/${id}`;
+  try {
+    const response = await httpClientFormData.get(extension);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 export {
   getAllGIWithoutPaginationService,
   getCompanyGIService,
@@ -133,5 +143,6 @@ export {
   editOneGIService,
   deleteOneGiService,
   getGIByRutService,
-  editPasswordService
+  editPasswordService,
+  downloadGIFilesService
 }
