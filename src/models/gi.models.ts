@@ -122,7 +122,9 @@ export interface ConfigurationGIModel {
 
 export interface IResponseGI {
   err: any,
-  res: any
+  msg?: string,
+  res: any,
+  filename?: string
 };
 
 export interface IResponseEmployees {

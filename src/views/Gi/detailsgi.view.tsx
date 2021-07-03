@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Collapse, Input, Row, Col, Form, Spin, Button, Table, Tag, Typography } from "antd";
-import { PhoneOutlined, MailOutlined } from '@ant-design/icons';
+import { PhoneOutlined, MailOutlined, DownloadOutlined } from '@ant-design/icons';
 
 import { GiModel, IFaena, IResponseGI } from '../../models/gi.models';
 import { GiInitializationData } from '../../initializations/gi.initialization';
-import { getOneGIService, httpExternalApi } from '../../services';
+import { downloadGIFilesService, getOneGIService, httpExternalApi } from '../../services';
 import { API_COUNTRIES } from '../../constants/var';
 import { ICountries } from '../../models/index.models';
+import { IAlertMessageContent } from '../../models/index.models';
+
+import AlertComponent from "../../component/Alert/Alert";
 
 interface IDetailsGIViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -24,6 +27,37 @@ const DetailsGIView: React.FunctionComponent<IDetailsGIViewProps> = ({
   const [newGiData, setNewGiData] = useState<GiModel>(GiInitializationData);
   const [loading, setLoading] = useState<boolean>(false);
   const [countries, setCountries] = useState<ICountries[]>([]);
+  const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
+
+
+  const handleDownloadFile = () => {
+    setLoading(true);
+    downloadFile(newGiData?._id || '');
+  };
+
+  async function downloadFile(id: string) {
+    const aux: IResponseGI = await downloadGIFilesService(id);
+    if (!aux.err) {
+      const arr = new Uint8Array(aux.res.data);
+      const blob = new Blob([arr], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const fileName = aux?.filename || 'examen';
+
+      link.setAttribute('href', url);
+      link.setAttribute('download', fileName);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setLoading(false)
+      return
+    }
+
+    setMessageAlert({ message: aux?.msg || '', type: 'error', show: true });
+    setLoading(false)
+    return
+  }
 
   //--------USEEFECT
   useEffect(() => {
@@ -43,6 +77,14 @@ const DetailsGIView: React.FunctionComponent<IDetailsGIViewProps> = ({
     getOneGI();
     getCountries();
   }, []);
+
+  useEffect(() => {
+    if (messageAlert.show) {
+      setTimeout(() => {
+        setMessageAlert({ ...messageAlert, show: false });
+      }, 3000);
+    }
+  }, [messageAlert]);
 
   useEffect(() => {
     if (newGiData._id !== '' && countries.length > 0) {
@@ -676,6 +718,7 @@ const DetailsGIView: React.FunctionComponent<IDetailsGIViewProps> = ({
 
   return (
     <Spin spinning={loading} size='large' tip='Cargando...'>
+      {messageAlert.show && <AlertComponent message={messageAlert.message} type={messageAlert.type} />}
       <Title level={4}>{newGiData.razon_social}</Title>
       <Collapse accordion defaultActiveKey={['1']}>
         <Panel header="Datos Tributarios" key="1">
@@ -688,6 +731,24 @@ const DetailsGIView: React.FunctionComponent<IDetailsGIViewProps> = ({
           {renderPersonalWorkingInformation()}
         </Panel>
       </Collapse>
+      <br />
+      <Row gutter={8}>
+        <Col span={4}>
+          <Button
+            onClick={() => handleDownloadFile()}
+            type="primary"
+            icon={<DownloadOutlined />}
+            disabled={!newGiData?.url_file_adjunto ? true : false}
+          >
+            Descargar Archivo
+          </Button>
+        </Col>
+        {!newGiData?.url_file_adjunto &&
+          <Col>
+            <Title level={5} style={{ color: 'gray' }}>No se ha subido ningún archivo</Title>
+          </Col>
+        }
+      </Row>
       <br />
       <Row gutter={8} style={{
         display: 'flex',
