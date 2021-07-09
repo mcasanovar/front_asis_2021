@@ -971,7 +971,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                 { backgroundColor: 'green', borderColor: 'green', color: 'white' } :
                 { backgroundColor: 'grey', borderColor: 'grey', color: 'white' }}
             >
-              Confirmar
+              Ingresar
             </Button> :
             <Button
               onClick={() => handleSaveRequest()}

@@ -83,6 +83,8 @@ const GenerateInvoice: React.FunctionComponent<IGenerateInvoiceProps> = ({
 		});
 	};
 
+	console.log(company)
+
 	//--------------------------------USEEFECT
 	useEffect(() => {
     if (messageAlert.show) {
@@ -122,14 +124,11 @@ const GenerateInvoice: React.FunctionComponent<IGenerateInvoiceProps> = ({
 
 	useEffect(() => {
 		if (!!companyBusinessName &&
-			!!newDataInvoice.fecha_facturacion &&
-			!!file) {
+			!!newDataInvoice.fecha_facturacion) {
 			return setDisabledConfirm(false)
 		}
 		return setDisabledConfirm(true);
-	}, [newDataInvoice.fecha_facturacion, file, companyBusinessName]);
-
-	console.log(invoiceSelected)
+	}, [newDataInvoice.fecha_facturacion, companyBusinessName]);
 
 	//----------------------------RENDERS
 	const renderGeneralInvoiceInfo = () => {

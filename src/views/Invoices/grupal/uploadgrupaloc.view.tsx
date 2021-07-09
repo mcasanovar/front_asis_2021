@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import { Input, Row, Col, Upload, DatePicker, TimePicker, Spin, Form, Table, Button } from "antd";
 import { InboxOutlined } from '@ant-design/icons';
 import { IGroupUploadOC, InvoicesModel, IResponseInvoices } from '../../../models/invoices.models';
@@ -11,6 +11,7 @@ import { MilesFormat } from '../../../libs/formattedPesos';
 import { MapGroupInvoiceToUploadOC } from '../../../functions/mappers';
 
 import AlertComponent from "../../../component/Alert/Alert";
+import { FormatingRut } from '../../../functions/validators/index.validators';
 
 interface IUploadGrupalOCViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -27,8 +28,10 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [file, setFile] = useState<string | Blob | null>(null);
   const [invoices, setInvoices] = useState<InvoicesModel[]>();
+  const [invoicesFiltered, setInvoicesFiltered] = useState<InvoicesModel[]>();
   const [selectedInvoices, setSelectedInvoices] = useState<React.Key[]>([]);
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
+  const [rutSearchInput, setRutSearchInput] = useState<string>('');
 
   const getFileUploaded = (e: any) => {
     e && setFile(e.file)
@@ -56,10 +59,26 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
     setLoading(false)
   };
 
+  const handleFormatingRut = (e: FormEvent<HTMLInputElement>) => {
+    setRutSearchInput(FormatingRut(e.currentTarget.value));
+  };
+
+  const handleSearchInput = () => {
+    const aux: InvoicesModel[] | undefined = invoices?.filter((invoice) => invoice.rut_cp === rutSearchInput);
+    if(aux){
+      setLoading(true);
+      setTimeout(() => {
+        setInvoicesFiltered(aux);
+        setLoading(false);
+      }, 2000);
+    }
+  };
+
   async function getInvoicesWithOC() {
     const aux: IResponseInvoices = await getGroupOCService();
     if (!aux.err) {
       setInvoices(aux.res);
+      setInvoicesFiltered(aux.res);
       setDataConfirmation({
         ...dataConfirmation,
         fecha_oc: moment().format(FORMAT_DATE),
@@ -69,7 +88,6 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
       return
     }
     setMessageAlert({ message: aux.msg, type: 'error', show: true });
-    console.log(aux.err)
     setLoading(false)
   };
 
@@ -94,6 +112,12 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
     }
     setDisabledConfirm(true);
   }, [dataConfirmation, file, selectedInvoices]);
+
+  useEffect(() => {
+     if(!rutSearchInput){
+      setInvoicesFiltered(invoices)
+     }
+  }, [rutSearchInput]);
 
   //--------------------------------------------RENDERS
   const renderInformation = () => {
@@ -183,7 +207,7 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
       <Table
         style={{ width: '100%' }}
         showHeader={true}
-        dataSource={invoices || []}
+        dataSource={invoicesFiltered || []}
         // columns={columns}
         loading={loading}
         rowSelection={{
@@ -216,6 +240,20 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
         <Row>
           <Col span='24'>
             {renderInformation()}
+          </Col>
+        </Row>
+        <br />
+        <Row gutter={8}>
+          <Col span={12}>
+            <Search
+              placeholder="Rut CP"
+              allowClear
+              enterButton="Buscar"
+              size="large"
+              onChange={(e) => handleFormatingRut(e)}
+              onSearch={handleSearchInput}
+              value={rutSearchInput}
+            />
           </Col>
         </Row>
         <br />

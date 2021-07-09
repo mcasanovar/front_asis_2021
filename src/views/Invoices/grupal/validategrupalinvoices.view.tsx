@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import { Input, Row, Col, Select, Spin, Form, DatePicker, InputNumber, Table, Button } from "antd";
 import { IGroupConfirmInvoices, InvoicesModel, IResponseInvoices } from '../../../models/invoices.models';
 import { IGroupConfirmInvoicesInitialization } from '../../../initializations/invoices.initialization';
@@ -9,6 +9,7 @@ import AlertComponent from '../../../component/Alert/Alert';
 import { MilesFormat } from '../../../libs/formattedPesos';
 import { MapGroupConfirmInvoices } from '../../../functions/mappers';
 import moment from 'moment';
+import { FormatingRut } from '../../../functions/validators/index.validators';
 
 interface IValidateGroupInvoicesViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -24,9 +25,11 @@ const ValidateGroupInvoicesView: React.FunctionComponent<IValidateGroupInvoicesV
   const [loading, setLoading] = useState<boolean>(false);
   const [dataConfirmation, setDataConfirmation] = useState<IGroupConfirmInvoices>(IGroupConfirmInvoicesInitialization);
   const [invoices, setInvoices] = useState<InvoicesModel[]>();
+  const [invoicesFiltered, setInvoicesFiltered] = useState<InvoicesModel[]>();
   const [disabledConfirm, setDisabledConfirm] = useState<boolean>(true);
   const [selectedInvoices, setSelectedInvoices] = useState<React.Key[]>([]);
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
+  const [rutSearchInput, setRutSearchInput] = useState<string>('');
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[]) => {
@@ -38,7 +41,7 @@ const ValidateGroupInvoicesView: React.FunctionComponent<IValidateGroupInvoicesV
     setLoading(true);
     const dataMapped = MapGroupConfirmInvoices(dataConfirmation, selectedInvoices);
     const aux: IResponseInvoices = await confirmGroupInvoicesService(dataMapped);
-    if(!aux.err){
+    if (!aux.err) {
       return onCloseModal('reload', aux.msg)
     }
     setMessageAlert({ message: aux.msg, type: 'error', show: true });
@@ -46,11 +49,27 @@ const ValidateGroupInvoicesView: React.FunctionComponent<IValidateGroupInvoicesV
     setLoading(false)
   };
 
+  const handleFormatingRut = (e: FormEvent<HTMLInputElement>) => {
+    setRutSearchInput(FormatingRut(e.currentTarget.value));
+  };
+
+  const handleSearchInput = () => {
+    const aux: InvoicesModel[] | undefined = invoices?.filter((invoice) => invoice.rut_cp === rutSearchInput);
+    if (aux) {
+      setLoading(true);
+      setTimeout(() => {
+        setInvoicesFiltered(aux);
+        setLoading(false);
+      }, 2000);
+    }
+  };
+
   async function getInvoicesToUpload() {
     const aux: IResponseInvoices = await getGroupInvoiceToUploadService();
     if (!aux.err) {
       const filteredInvoices = aux.res.filter((invoice: InvoicesModel) => invoice.estado_archivo === 'Cargado');
       setInvoices(filteredInvoices);
+      setInvoicesFiltered(filteredInvoices);
       setLoading(false);
       return
     }
@@ -75,21 +94,27 @@ const ValidateGroupInvoicesView: React.FunctionComponent<IValidateGroupInvoicesV
 
   useEffect(() => {
     if (dataConfirmation.estado_archivo === 'Aprobado') {
-      if(!!selectedInvoices.length) return setDisabledConfirm(false)
+      if (!!selectedInvoices.length) return setDisabledConfirm(false)
       return setDisabledConfirm(true)
     }
-    if(dataConfirmation.estado_archivo === 'Rechazado'){
-      if(!!dataConfirmation.fecha_nota_credito
+    if (dataConfirmation.estado_archivo === 'Rechazado') {
+      if (!!dataConfirmation.fecha_nota_credito
         && !!dataConfirmation.nro_nota_credito
         && !!dataConfirmation.monto_nota_credito
         && !!dataConfirmation.factura_anular
-        && !!selectedInvoices.length){
-          return setDisabledConfirm(false)
+        && !!selectedInvoices.length) {
+        return setDisabledConfirm(false)
       }
       return setDisabledConfirm(true)
     }
     setDisabledConfirm(true)
   }, [dataConfirmation, selectedInvoices]);
+
+  useEffect(() => {
+    if (!rutSearchInput) {
+      setInvoicesFiltered(invoices)
+    }
+  }, [rutSearchInput]);
 
   //---------------------------------------------------------RENDERS
   const renderInformation = () => {
@@ -192,7 +217,7 @@ const ValidateGroupInvoicesView: React.FunctionComponent<IValidateGroupInvoicesV
       <Table
         style={{ width: '100%' }}
         showHeader={true}
-        dataSource={invoices || []}
+        dataSource={invoicesFiltered || []}
         // columns={columns}
         loading={loading}
         rowSelection={{
@@ -224,6 +249,20 @@ const ValidateGroupInvoicesView: React.FunctionComponent<IValidateGroupInvoicesV
       {messageAlert.show && <AlertComponent message={messageAlert.message} type={messageAlert.type} />}
       <Form layout='vertical'>
         {renderInformation()}
+        <Row gutter={8}>
+          <Col span={12}>
+            <Search
+              placeholder="Rut CP"
+              allowClear
+              enterButton="Buscar"
+              size="large"
+              onChange={(e) => handleFormatingRut(e)}
+              onSearch={handleSearchInput}
+              value={rutSearchInput}
+            />
+          </Col>
+        </Row>
+        <br/>
         <Row>
           <Col span='24'>
             {renderListInvoices()}
