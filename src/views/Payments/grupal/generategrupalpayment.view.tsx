@@ -101,12 +101,11 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
       && !!dataConfirmation.sucursal
       && !!dataConfirmation.tipo_pago
       && !!dataConfirmation.institucion_bancaria
-      && !!amount
-      && !!file){
+      && !!amount){
         return setDisabledConfirm(false)
     }
     return setDisabledConfirm(true)
-  }, [dataConfirmation, amount, file]);
+  }, [dataConfirmation, amount]);
 
   //----------------------------------------------RENDERS
   const renderInformation = () => {
