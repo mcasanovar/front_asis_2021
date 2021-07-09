@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import { Col, Input, Row, DatePicker, Upload, Table, Form, InputNumber, Button, Select, Spin } from 'antd';
 import { DollarOutlined, PercentageOutlined, InboxOutlined } from "@ant-design/icons";
 
@@ -13,6 +13,7 @@ import { getGroupInvoiceToUploadService, uploadGroupInvoicesService } from '../.
 import { IAlertMessageContent } from '../../../models/index.models';
 import { MapGroupInvoiceToUpload } from '../../../functions/mappers';
 import AlertComponent from '../../../component/Alert/Alert';
+import { FormatingRut } from '../../../functions/validators/index.validators';
 
 interface IUploadGroupInvoicesViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -23,7 +24,7 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
   onCloseModal,
   company
 }) => {
-  const { TextArea } = Input;
+  const { TextArea, Search } = Input;
   const { Column } = Table;
   const { Option } = Select;
 
@@ -32,9 +33,11 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
   const [companyBusinessName, setCompanyBusinessName] = useState<string>('');
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [invoices, setInvoices] = useState<InvoicesModel[]>();
+  const [invoicesFiltered, setInvoicesFiltered] = useState<InvoicesModel[]>();
   const [selectedInvoices, setSelectedInvoices] = useState<React.Key[]>([]);
   const [file, setFile] = useState<string | Blob | null>(null);
   const [disabledConfirm, setDisabledConfirm] = useState<boolean>(true);
+  const [rutSearchInput, setRutSearchInput] = useState<string>('');
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[]) => {
@@ -87,11 +90,29 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
     setLoading(false)
   };
 
+  const handleFormatingRut = (e: FormEvent<HTMLInputElement>) => {
+    setRutSearchInput(FormatingRut(e.currentTarget.value));
+  };
+
+  const handleSearchInput = () => {
+    const aux: InvoicesModel[] | undefined = invoices?.filter((invoice) => invoice.rut_cp === rutSearchInput);
+    if (aux) {
+      setLoading(true);
+      setTimeout(() => {
+        setInvoicesFiltered(aux);
+        setLoading(false);
+      }, 2000);
+    }
+  };
+
   async function getInvoicesToUpload() {
     const aux: IResponseInvoices = await getGroupInvoiceToUploadService();
+    console.log('invoices to grupal upload', aux)
     if (!aux.err) {
-      const filteredInvoices = aux.res.filter((invoice: InvoicesModel) => invoice.estado_archivo === 'Aprobado' || invoice.estado_archivo === 'Rechazado');
+      const filteredInvoices = aux.res.filter((invoice: InvoicesModel) =>
+        invoice.estado_archivo === 'Aprobado' || invoice.estado_archivo === 'Rechazado' || invoice.estado_archivo === 'Sin Documento');
       setInvoices(filteredInvoices);
+      setInvoicesFiltered(filteredInvoices);
       setLoading(false);
       return
     }
@@ -112,7 +133,7 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
         setMessageAlert({ ...messageAlert, show: false });
       }, 2500);
     }
-	}, [messageAlert]);
+  }, [messageAlert]);
 
   useEffect(() => {
     setDataConfirmation({
@@ -141,6 +162,12 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
     }
     return setDisabledConfirm(true)
   }, [dataConfirmation, companyBusinessName, file, selectedInvoices]);
+
+  useEffect(() => {
+    if (!rutSearchInput) {
+      setInvoicesFiltered(invoices)
+    }
+  }, [rutSearchInput]);
 
   //------------------------------------------RENDERS
   const renderInformation = () => {
@@ -350,7 +377,7 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
       <Table
         style={{ width: '100%' }}
         showHeader={true}
-        dataSource={invoices || []}
+        dataSource={invoicesFiltered || []}
         // columns={columns}
         loading={loading}
         rowSelection={{
@@ -385,6 +412,20 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
           <Row gutter={8}>
             {renderInformation()}
             {renderValuesInformation()}
+          </Row>
+          <br />
+          <Row gutter={8}>
+            <Col span={12}>
+              <Search
+                placeholder="Rut CP"
+                allowClear
+                enterButton="Buscar"
+                size="large"
+                onChange={(e) => handleFormatingRut(e)}
+                onSearch={handleSearchInput}
+                value={rutSearchInput}
+              />
+            </Col>
           </Row>
           <br />
           <Row>

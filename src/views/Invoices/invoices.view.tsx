@@ -88,7 +88,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
           _id: value,
           title: 'Subida grupal de facturas',
           size: 'small',
-          widthModal: 1100,
+          widthModal: 1400,
           showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
         })
         setOpenModal(true);
@@ -249,6 +249,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
   async function getInvoices(pagenumber: number) {
     setLoading(true)
     const aux: IResponseAllInvoices = await getAllInvoicesService(pagenumber, N_PER_PAGE);
+    console.log(aux.empresa)
     if (!aux.err) {
       setInvoices(aux.facturaciones);
       setCompany(aux.empresa);
@@ -275,10 +276,12 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
       setCompany(aux.empresa);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
+      setLoading(false)
       return
     }
     if (aux.err) {
-      return setMessageAlert({ message: aux.err, type: 'error', show: true });
+      setMessageAlert({ message: aux.err, type: 'error', show: true });
+      return
     }
     setLoading(false)
   };

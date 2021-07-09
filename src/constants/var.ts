@@ -4981,6 +4981,11 @@ export const FILTERS_REQUEST: IFiltersRequest[] = [
     key: 7,
     value: 'Nombre Servicio',
     name: 'nombre_servicio'
+  },
+  {
+    key: 8,
+    value: 'Código',
+    name: 'codigo'
   }
 ]
 
@@ -5561,6 +5566,11 @@ export const FILTERS_RESERVATION: IFiltersReservation[] = [
     key: 7,
     value: 'Nombre Servicio',
     name: 'nombre_servicio'
+  },
+  {
+    key: 8,
+    value: 'Código',
+    name: 'codigo'
   }
 ]
 
@@ -5650,6 +5660,11 @@ export const FILTERS_EVALUATION: IFiltersRequest[] = [
     key: 8,
     value: 'Nombre Servicio',
     name: 'nombre_servicio'
+  },
+  {
+    key: 9,
+    value: 'Código',
+    name: 'codigo'
   }
 ]
 
@@ -5729,6 +5744,11 @@ export const FILTERS_RESULT: IFiltersResults[] = [
     key: 8,
     value: 'Nombre Servicio',
     name: 'nombre_servicio'
+  },
+  {
+    key: 9,
+    value: 'Código',
+    name: 'codigo'
   }
 ]
 

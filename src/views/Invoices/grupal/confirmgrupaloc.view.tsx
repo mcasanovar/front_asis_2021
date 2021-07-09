@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import { Input, Row, Col, Select, Spin, Form, Table, Button } from "antd";
 
 import { IGroupConfirmOC, InvoicesModel, IResponseInvoices } from '../../../models/invoices.models';
@@ -9,6 +9,7 @@ import { MilesFormat } from '../../../libs/formattedPesos';
 import { MapGroupInvoiceToConfirmOC } from '../../../functions/mappers';
 
 import AlertComponent from '../../../component/Alert/Alert';
+import { FormatingRut } from '../../../functions/validators/index.validators';
 
 interface IConfirmGroupOCViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -25,8 +26,10 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [disabledConfirm, setDisabledConfirm] = useState<boolean>(true);
   const [invoices, setInvoices] = useState<InvoicesModel[]>();
+  const [invoicesFiltered, setInvoicesFiltered] = useState<InvoicesModel[]>();
   const [selectedInvoices, setSelectedInvoices] = useState<React.Key[]>([]);
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
+  const [rutSearchInput, setRutSearchInput] = useState<string>('');
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[]) => {
@@ -46,15 +49,30 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
     setLoading(false)
   };
 
+  const handleFormatingRut = (e: FormEvent<HTMLInputElement>) => {
+    setRutSearchInput(FormatingRut(e.currentTarget.value));
+  };
+
+  const handleSearchInput = () => {
+    const aux: InvoicesModel[] | undefined = invoices?.filter((invoice) => invoice.rut_cp === rutSearchInput);
+    if(aux){
+      setLoading(true);
+      setTimeout(() => {
+        setInvoicesFiltered(aux);
+        setLoading(false);
+      }, 2000);
+    }
+  };
+
   async function getInvoicesWithOC() {
     const aux: IResponseInvoices = await getGroupOCConfirmService();
     if (!aux.err) {
       setInvoices(aux.res);
+      setInvoicesFiltered(aux.res);
       setLoading(false);
       return
     }
     setMessageAlert({ message: aux.msg, type: 'error', show: true });
-    console.log(aux.err)
     setLoading(false)
   };
 
@@ -79,6 +97,12 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
     }
     setDisabledConfirm(true)
   }, [dataConfirmation, selectedInvoices]);
+
+  useEffect(() => {
+    if(!rutSearchInput){
+     setInvoicesFiltered(invoices)
+    }
+ }, [rutSearchInput]);
 
   //----------------------------------------------RENDERS
   const renderInformation = () => {
@@ -122,7 +146,7 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
       <Table
         style={{ width: '100%' }}
         showHeader={true}
-        dataSource={invoices || []}
+        dataSource={invoicesFiltered || []}
         // columns={columns}
         loading={loading}
         rowSelection={{
@@ -157,6 +181,20 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
             {renderInformation()}
           </Col>
         </Row>
+        <Row gutter={8}>
+          <Col span={12}>
+            <Search
+              placeholder="Rut CP"
+              allowClear
+              enterButton="Buscar"
+              size="large"
+              onChange={(e) => handleFormatingRut(e)}
+              onSearch={handleSearchInput}
+              value={rutSearchInput}
+            />
+          </Col>
+        </Row>
+        <br/>
         <Row>
           <Col span='24'>
             {renderListInvoices()}
