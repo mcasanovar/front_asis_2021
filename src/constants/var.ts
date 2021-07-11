@@ -5818,6 +5818,11 @@ export const FILTERS_INVOICES: IFiltersInvoices[] = [
     key: 5,
     value: 'Nombre Servicio',
     name: 'nombre_servicio'
+  },
+  {
+    key: 6,
+    value: 'Código',
+    name: 'codigo'
   }
 ];
 
@@ -5907,6 +5912,11 @@ export const FILTERS_PAYMENTS: IFiltersInvoices[] = [
     key: 6,
     value: 'Estado proceso',
     name: 'estado'
+  },
+  {
+    key: 7,
+    value: 'Código',
+    name: 'codigo'
   }
 ];
 
@@ -5991,6 +6001,11 @@ export const FILTERS_REQUEST_PAYMENT: IFiltersRequestPayment[] = [
     key: 5,
     value: 'Faena',
     name: 'faena_seleccionada_cp'
+  },
+  {
+    key: 6,
+    value: 'Código',
+    name: 'codigo'
   }
 ];
 

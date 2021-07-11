@@ -52,10 +52,7 @@ const ValidateInvoiceView: React.FunctionComponent<IValidateInvoiceViewProps> = 
 
   useEffect(() => {
     if(newDataInvoice.estado_archivo === 'Rechazado'){
-      if(newDataInvoice.nro_nota_credito
-        && newDataInvoice.fecha_nota_credito
-        && newDataInvoice.monto_nota_credito
-        && newDataInvoice.factura_anular){
+      if(newDataInvoice.fecha_nota_credito){
           return setDisabledConfirm(false)
       }
     }
@@ -111,8 +108,8 @@ const ValidateInvoiceView: React.FunctionComponent<IValidateInvoiceViewProps> = 
                     <Col span={8}>
                       <Form.Item
                         label='Nro. Nota crédito'
-                        validateStatus={!!newDataInvoice.nro_nota_credito ? 'success' : 'error'}
-                        help={!!newDataInvoice.nro_nota_credito ? '' : 'Seleccionar'}
+                        // validateStatus={!!newDataInvoice.nro_nota_credito ? 'success' : 'error'}
+                        // help={!!newDataInvoice.nro_nota_credito ? '' : 'Seleccionar'}
                       >
                         <Input
                           onChange={(e) => setNewDataInvoice({ ...newDataInvoice, nro_nota_credito: e.currentTarget.value })}
@@ -124,8 +121,8 @@ const ValidateInvoiceView: React.FunctionComponent<IValidateInvoiceViewProps> = 
                     <Col span={8}>
                       <Form.Item
                         label='Monto nota crédito'
-                        validateStatus={!!newDataInvoice.nro_nota_credito ? 'success' : 'error'}
-                        help={!!newDataInvoice.nro_nota_credito ? '' : 'Seleccionar'}
+                        // validateStatus={!!newDataInvoice.nro_nota_credito ? 'success' : 'error'}
+                        // help={!!newDataInvoice.nro_nota_credito ? '' : 'Seleccionar'}
                       >
                         <InputNumber
                           style={{ width: '100%' }}
@@ -139,8 +136,8 @@ const ValidateInvoiceView: React.FunctionComponent<IValidateInvoiceViewProps> = 
                     <Col span={8}>
                       <Form.Item
                         label='Nro. factura anular'
-                        validateStatus={!!newDataInvoice.factura_anular ? 'success' : 'error'}
-                        help={!!newDataInvoice.factura_anular ? '' : 'Seleccionar'}
+                        // validateStatus={!!newDataInvoice.factura_anular ? 'success' : 'error'}
+                        // help={!!newDataInvoice.factura_anular ? '' : 'Seleccionar'}
                       >
                         <Input
                           onChange={(e) => setNewDataInvoice({ ...newDataInvoice, factura_anular: e.currentTarget.value })}
