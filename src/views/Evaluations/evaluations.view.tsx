@@ -297,6 +297,8 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
     }
   }, [ActualModal]);
 
+  console.log(evaluations)
+
   if (!authorized) {
     return <Redirect to='./login' />
   }
