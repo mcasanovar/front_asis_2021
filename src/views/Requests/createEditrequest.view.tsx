@@ -94,14 +94,25 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
     setLoading(false);
   };
 
-  const handleSelectRequestDate = (e: Moment) => {
-    setNewRequestData({
-      ...newRequestData,
-      fecha_solicitud: e.format(`${FORMAT_DATE} HH:mm`),
-      hora_solicitud: e.format('HH:mm'),
-      mes_solicitud: capitalize(e.format('MMMM')),
-      anio_solicitud: e.format('YYYY')
-    });
+  const handleSelectRequestDate = (e: Moment, ownSelected: boolean = false ) => {
+    if (type === 'edit' && !ownSelected) {
+      setNewRequestData({
+        ...newRequestData,
+        fecha_solicitud: newRequestData.fecha_solicitud,
+        hora_solicitud: newRequestData.hora_solicitud,
+        mes_solicitud: newRequestData.mes_solicitud,
+        anio_solicitud: newRequestData.anio_solicitud
+      });
+    }
+    else {
+      setNewRequestData({
+        ...newRequestData,
+        fecha_solicitud: e.format(FORMAT_DATE),
+        hora_solicitud: e.format('HH:mm'),
+        mes_solicitud: capitalize(e.format('MMMM')),
+        anio_solicitud: e.format('YYYY')
+      });
+    }
   };
 
   const handleSelectCategoria1 = (id: number) => {
@@ -319,7 +330,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
 
       setDisabledConfirm(false)
     }
-    else{
+    else {
       setDisabledConfirm(true)
     }
     // eslint-disable-next-line
@@ -327,8 +338,8 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
   newRequestData.id_GI_PersonalAsignado,
   newRequestData.id_GI_Principal,
   newRequestData.id_GI_Secundario,
-  isValidEmails,
-  checkSendMail
+    isValidEmails,
+    checkSendMail
   ]);
 
   //---RENDERS
@@ -344,9 +355,8 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                 <DatePicker
                   format={`${FORMAT_DATE}`}
                   style={{ width: '100%' }}
-                  value={newRequestData.fecha_solicitud !== '' ? moment(newRequestData.fecha_solicitud, FORMAT_DATE) : undefined}
-                  onSelect={(e: Moment) => handleSelectRequestDate(e)}
-                // showTime={{ defaultValue: moment('00:00:00', 'HH:mm') }}
+                  value={!!newRequestData.fecha_solicitud ? moment(newRequestData.fecha_solicitud, FORMAT_DATE) : undefined}
+                  onSelect={(e: Moment) => handleSelectRequestDate(e, true)}
                 />
               </Form.Item>
             </Col>

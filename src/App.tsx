@@ -9,6 +9,7 @@ import './App.css';
 
 import DrawerComponent from './component/Drawer/Drawer';
 
+import DashboardView from './views/Dashboard/dashboard.view';
 import GiView from "./views/Gi/gi.view";
 import RequestsView from "./views/Requests/requests.view";
 import EmployeesView from "./views/Employees/employees.view";
@@ -64,8 +65,8 @@ function App(): JSX.Element {
           <div className="mainContainer-modules">
             <DrawerComponent />
             <Switch>
-              {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_GI) > -1 ?
-                <Route exact path='/' component={() => <GiView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} /> :
+              {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_DASHBOARD) > -1 ?
+                <Route exact path='/' component={() => <DashboardView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} /> :
                 <Route exact path='/' component={() => <NotFoundView />} />
               }
 

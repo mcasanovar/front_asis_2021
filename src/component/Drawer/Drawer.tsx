@@ -32,7 +32,7 @@ const DrawerComponent: React.FunctionComponent<IDrawerComponentProps> = (props) 
     >
       {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_DASHBOARD) > -1 &&
         <Menu.Item key="1" icon={<PieChartOutlined />}>
-          <Link to='/dashboard'>Dashboard</Link>
+          <Link to='/'>Dashboard</Link>
         </Menu.Item>
       }
       <SubMenu key="2" icon={<MailOutlined />} title="Administración">

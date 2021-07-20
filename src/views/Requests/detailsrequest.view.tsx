@@ -124,7 +124,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
     }
   }, [messageAlert]);
 
-  console.log(workerSelected)
+  console.log(newRequestData)
 
   //---RENDERS
   const renderServiceInformation = () => {
