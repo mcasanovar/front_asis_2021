@@ -89,7 +89,7 @@ export interface GiModel {
   imagen_perfil_gi?: string,
   licencia_conduccion?: string,
   clase_licencia?: string[],
-  ley_aplicable?: number,
+  ley_aplicable?: number | string,
   estado_licencia?: string,
   nro_contrato?: string,
   faena?: string,

@@ -23,7 +23,7 @@ const MapAversionToCreateExam = (
     rut_cs: evaluation?.rut_cs,
     codigo: evaluation?.codigo,
     id_GI_personalAsignado: evaluation?.id_GI_personalAsignado,
-    fecha_evaluacion: moment().format(FORMAT_DATE),
+    fecha_evaluacion: moment(evaluation?.fecha_evaluacion, `${FORMAT_DATE} HH:mm`).format(FORMAT_DATE) || moment().format(FORMAT_DATE),
     ...aversion
   }
 };

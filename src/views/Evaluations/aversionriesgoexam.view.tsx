@@ -49,8 +49,6 @@ const AversionRiesgoExamView: React.FunctionComponent<IAversionRiesgoExamViewPro
             <Col span={8}>
               <Form.Item
                 label='Maquinaria a conducir'
-                validateStatus={newDataAversion.maquinaria !== '' ? 'success' : 'error'}
-                help={newDataAversion.maquinaria !== '' ? '' : 'seleccionar'}
                 style={{ width: '100%', height: '100%' }}
               >
                 <Input
@@ -357,7 +355,8 @@ const AversionRiesgoExamView: React.FunctionComponent<IAversionRiesgoExamViewPro
   //--------
 
   useEffect(() => {
-    if (newDataAversion.maquinaria !== '' && newDataAversion.meses_vigencia > 0) return setDisabledConfirm(false)
+    if (newDataAversion.meses_vigencia > 0) return setDisabledConfirm(false)
+    return setDisabledConfirm(true);
   }, [newDataAversion]);
 
   const handleChangeSelectionConclusion = (value: string) => {
