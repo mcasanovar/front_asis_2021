@@ -1053,8 +1053,8 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                         label='Ley aplicable'
                       >
                         <Input
-                          type='number'
-                          onChange={(e) => setNewGiData({ ...newGiData, ley_aplicable: parseInt(e.currentTarget.value) })}
+                          type='text'
+                          onChange={(e) => setNewGiData({ ...newGiData, ley_aplicable: e.currentTarget.value })}
                           value={newGiData.ley_aplicable}
                         />
                       </Form.Item>
@@ -1271,7 +1271,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
         <Col span={12}>
           <Form layout='vertical'>
             <Form.Item
-              label={type === 'edit' ? 'Cambiar archivo adjunto': 'Archivo Adjunto'}
+              label={type === 'edit' ? 'Cambiar archivo adjunto' : 'Archivo Adjunto'}
               getValueFromEvent={getFileUploaded}
               valuePropName="fileData"
             >
