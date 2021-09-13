@@ -144,6 +144,7 @@ const ConfirmResultView: React.FunctionComponent<IConfirmResultViewProps> = ({
                       >
                         <DatePicker
                           style={{ width: '100%' }}
+                          disabled
                           onChange={(e) => setNewDataResult({ ...newDataResult, fecha_resultado: e?.format(FORMAT_DATE) })}
                           value={!newDataResult.fecha_resultado ? moment(new Date(), FORMAT_DATE) : moment(newDataResult.fecha_resultado, FORMAT_DATE)}
                         />
@@ -157,6 +158,7 @@ const ConfirmResultView: React.FunctionComponent<IConfirmResultViewProps> = ({
                       >
                         <TimePicker
                           format='HH:mm'
+                          disabled
                           style={{ width: '100%' }}
                           onChange={(e) => setNewDataResult({ ...newDataResult, hora_resultado: e?.format('HH:mm') })}
                           defaultValue={moment(new Date(), 'HH:mm')}
