@@ -260,6 +260,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
     const aux: IResponseGI = await getCompanyGIService();
     setOrganizationsBelonging(aux.res || []);
     type === 'insert' && setLoading(false);
+    // setLoading(false)
   }
 
   async function getOneGI() {
@@ -284,11 +285,17 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
     }
   }, [organizationBelongingSelected, newGiData.nro_contrato])
 
+  // useEffect(() => {
+  //   if (!!organizationsBelonging && !!organizationsBelonging.length && type === 'edit') {
+  //     getOneGI();
+  //   }
+  // }, [organizationsBelonging])
+
   useEffect(() => {
-    if (!!organizationsBelonging && !!organizationsBelonging.length && type === 'edit') {
+    if (type === 'edit') {
       getOneGI();
     }
-  }, [organizationsBelonging])
+  }, [])
 
   useEffect(() => {
     if (messageAlert.show) {
