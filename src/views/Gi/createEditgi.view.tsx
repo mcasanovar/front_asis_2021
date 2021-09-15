@@ -285,17 +285,11 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
     }
   }, [organizationBelongingSelected, newGiData.nro_contrato])
 
-  // useEffect(() => {
-  //   if (!!organizationsBelonging && !!organizationsBelonging.length && type === 'edit') {
-  //     getOneGI();
-  //   }
-  // }, [organizationsBelonging])
-
   useEffect(() => {
-    if (type === 'edit') {
+    if (!!organizationsBelonging && !!organizationsBelonging.length && type === 'edit') {
       getOneGI();
     }
-  }, [])
+  }, [organizationsBelonging])
 
   useEffect(() => {
     if (messageAlert.show) {
