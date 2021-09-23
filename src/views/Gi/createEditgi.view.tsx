@@ -809,9 +809,12 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                   onChange={(e) => setNewGiData({ ...newGiData, pais_origen: e.toString() })}
                   value={newGiData.pais_origen ?? 'CHL'}
                 >
-                  {countries.length > 0 && countries.map((country, index) => (
+                  <Option key={1} value={'CHL'}>
+                    Chile
+                  </Option>
+                  {/* {countries.length > 0 && countries.map((country, index) => (
                     <Option key={index} value={country.alpha3Code}>{country.name}</Option>
-                  ))}
+                  ))} */}
                 </Select>
               </Form.Item>
             </Col>

@@ -228,7 +228,7 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
     if (!aux.err) {
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);
-      return setResults(aux.resultados.map((result) => {
+      setResults(aux.resultados.map((result) => {
         return {
           ...result,
           fecha_resultado: result?.fecha_resultado
@@ -236,6 +236,7 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
             : 'En Revisión'
         }
       }));
+      return setLoading(false);
     }
     if (aux.err) {
       return setMessageAlert({ message: aux.err, type: 'error', show: true });
