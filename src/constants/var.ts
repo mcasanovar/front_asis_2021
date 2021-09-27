@@ -16,6 +16,8 @@ export const FORMAT_DATE = 'DD-MM-YYYY';
 
 export const N_PER_PAGE = 12;
 
+export const MONTHS = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre",];
+
 export const YEARS_CHARTS = ["2020", "2021", "2022", "2023", "2024"]
 
 export const DEFAULT_PERCENTAGE_IVA = 0;

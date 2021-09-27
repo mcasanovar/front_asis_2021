@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { IAlertMessageContent, IButtonsProps } from '../../models/index.models';
+import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
 
 import { CANCEL, CONFIRM, EDIT, FILTERS_REQUEST, N_PER_PAGE, OK, PERMISSIONS, REQUESTS_COLUMNS_TABLE } from '../../constants/var';
 import { IResponseAllRequests, IResponseRequest, RequestModel } from '../../models/request.models';
@@ -20,7 +21,8 @@ import DetailsRequestView from "./detailsrequest.view";
 import GroupConfirmationView from "./groupconfirmation.view";
 import ConfirmRequestView from "./confirmrequest.view";
 import SendMailsTemplateView from './sendEmailsTemplate.view';
-import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
+import consolidateRequestsView from './consolidateRequests.view';
+import ConsolidateRequestsView from './consolidateRequests.view';
 
 interface IRequestViewProps {
   authorized: boolean
@@ -45,13 +47,21 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
     },
     {
       _id: 'confirm',
-      title: 'CONFIRMACIÓN GRUPAL',
+      title: 'GRUPAL',
       customTitle: 'CONFIRMACIÓN GRUPAL DE SOLICITUDES',
       size: 'small',
       widthModal: 1600,
       showButtons: [{ _id: CANCEL }, { _id: CONFIRM }],
       permission: PERMISSIONS.CONFIRM_GROUP_REQUEST
-    }
+    },
+    {
+      _id: 'consolidateRequests',
+      title: 'CONSOLIDADO',
+      size: 'small',
+      widthModal: 1200,
+      showButtons: [{ _id: CANCEL }, { _id: CONFIRM }],
+      permission: PERMISSIONS.CREATE_REQUEST //TODO : AGREAGR EL PERMISO CORRESPONIENTE
+    },
   ];
 
   const [permissions, setPermissions] = useState<string[]>([]);
@@ -370,6 +380,11 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
             onCloseModal={(value, message) => handleCloseModal(value, message)}
             request={selectedRequest}
             type='Solicitud'
+          />
+        }
+        {ActualModal._id === 'consolidateRequests' &&
+          <ConsolidateRequestsView
+            onCloseModal={(value, message) => handleCloseModal(value, message)}
           />
         }
       </ModalComponent>

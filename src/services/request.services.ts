@@ -142,6 +142,16 @@ const sendMailsTemplateService = async (data: any) => {
   }
 };
 
+const consolidateResquestService = async (month: string, year: string, data: any) => {
+  const extension = `${PREFIX_REQUEST}/consolidated/${year}/${month}`;
+  try {
+    const response = await httpClient.post(extension, data);
+    return response.data
+  } catch (error) {
+    return error.response.data
+  }
+};
+
 export {
   getAllRequestsService,
   getAllRequestToConfirmService,
@@ -155,5 +165,6 @@ export {
   confirmGroupRequestsService,
   filterRequestsService,
   getAllRequestsNoPaginationService,
-  sendMailsTemplateService
+  sendMailsTemplateService,
+  consolidateResquestService
 }
