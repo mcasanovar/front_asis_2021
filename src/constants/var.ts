@@ -7115,6 +7115,7 @@ export const PERMISSIONS = {
   CONFIRM_REQUEST: 'agendar_solicitud',
   NULLIFY_REQUEST: 'anular_solicitud',
   SEND_MAIL_TEMPLATE_REQUEST: 'enviar_correo_solicitud',
+  CONSOLIDATE_REQUESTS: 'consolidado_solicitudes',
   //reservations
   CONFIRM_RESERVATION: 'confirmar_reserva',
   CONFIRM_GROUP_RESERVATION: 'confirmar_grupal_reserva',

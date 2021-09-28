@@ -60,7 +60,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
       size: 'small',
       widthModal: 1200,
       showButtons: [{ _id: CANCEL }, { _id: CONFIRM }],
-      permission: PERMISSIONS.CREATE_REQUEST //TODO : AGREAGR EL PERMISO CORRESPONIENTE
+      permission: PERMISSIONS.CONSOLIDATE_REQUESTS
     },
   ];
 
