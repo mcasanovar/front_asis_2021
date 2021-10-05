@@ -26,9 +26,6 @@ interface IDataChart {
 interface IScalesOptions {
   y: {
     beginAtZero: boolean,
-    ticks?: {
-      callback?: any
-    },
     callback?: any
   }
 }
