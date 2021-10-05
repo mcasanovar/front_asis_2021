@@ -54,6 +54,9 @@ export const ROLES_GI = [
   'admin'
 ]
 
+//+++++++++++++++++++++++++++++++++++++ DASHBOARD +++++++++++++++++++++++++++++
+export const PREFIX_DASHBOARD = '/reportes';
+
 //+++++++++++++++++++++++++++++++++++++ GI +++++++++++++++++++++++++
 export const PREFIX_GIS = '/gi';
 

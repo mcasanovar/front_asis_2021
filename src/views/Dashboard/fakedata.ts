@@ -162,4 +162,11 @@ export const dataCashFlowAcum = [
     type: 'saldo',
     data: [760000, 780000, 890000, 970000, 1190000, 1230000, 1340000, 1780000, 1890000, 2900000, 2970000, 3100000]
   }
+];
+
+export const dataSucursal = [
+  {
+    type: ['Oficina Los Vilos', 'Oficinal Illapel', 'Oficina Salamanca'],
+    data: [20, 30, 50]
+  }
 ]
