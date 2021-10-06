@@ -34,6 +34,7 @@ interface IScalesOptions {
 }
 
 interface IOptionsChart {
+  responsive?: boolean
   maintainAspectRatio: boolean,
   scales?: IScalesOptions
 }
@@ -51,8 +52,8 @@ const ChartComponent: React.FunctionComponent<IChartComponentProps> = ({
       {type === 'bar' &&
         <Bar
           type
-          width={width}
-          height={height}
+          width={500}
+          height={115}
           data={data}
           options={options}
         />

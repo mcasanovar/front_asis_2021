@@ -94,8 +94,8 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
         <TabPane tab="Producción" key="1">
           {loading ? <SkeletonComponent active={true} rows={9} loading={loading} /> :
             <ChartComponent
-              width={600}
-              height={376}
+              width={500}
+              height={115}
               data={{
                 labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
                 datasets: [{
@@ -142,7 +142,8 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                 }]
               }}
               options={{
-                maintainAspectRatio: false,
+                responsive: true,
+                maintainAspectRatio: true,
                 scales: {
                   y: {
                     beginAtZero: true
@@ -155,8 +156,8 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
         <TabPane tab="Facturación" key="2">
           {loading ? <SkeletonComponent active={true} rows={9} loading={loading} /> :
             <ChartComponent
-              width={600}
-              height={376}
+              width={1200}
+              height={400}
               data={{
                 labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
                 datasets: [{
@@ -167,7 +168,7 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                 }]
               }}
               options={{
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -211,7 +212,7 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                 }]
               }}
               options={{
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -294,7 +295,7 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                 }]
               }}
               options={{
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
                 scales: {
                   y: {
                     beginAtZero: true
@@ -321,7 +322,7 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                 }]
               }}
               options={{
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -369,7 +370,7 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                 }]
               }}
               options={{
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -464,14 +465,14 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
 
   const renderTotalRegisters = () => {
     return (
-      <div className='container-first-row'>
-        <div className='container-simple-card-first'>
+      <div className='container-third-row'>
+        <div className='container-simple-card-third'>
           <h4 className='simple-card-text'>Sucursal</h4>
           {loading ? <SkeletonComponent active={true} rows={7} loading={loading} /> :
             <ChartComponent
               type='pie'
-              width={500}
-              height={200}
+              width={250}
+              height={220}
               data={{
                 labels: dataDashboard?.totalOffices[0].type || [],
                 datasets: [{
@@ -498,13 +499,14 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                 }]
               }}
               options={{
+                responsive: true,
                 maintainAspectRatio: false,
               }}
             />
           }
         </div>
-        <div className='container-simple-card-second'>
-          <h4 className='simple-card-text'>Sucursal</h4>
+        <div className='container-simple-card-third-2'>
+          <h4 className='simple-card-text'>--------</h4>
         </div>
       </div>
     );
