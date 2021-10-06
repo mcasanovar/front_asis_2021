@@ -255,6 +255,15 @@ th.column-money{
   color: black;
 }
 
+.container-third-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  color: black;
+}
+
 .container-simple-card-first {
   background-color: #fff;
   width: 33%;
@@ -263,10 +272,30 @@ th.column-money{
   color: black;
 }
 
+.container-simple-card-third {
+  background-color: #fff;
+  width: 33%;
+  /* height: 200px; */
+  padding: 1.3rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  color: black;
+}
+
+.container-simple-card-third-2 {
+  background-color: #fff;
+  width: 66%;
+  /* height: 200px; */
+  padding: 1.3rem;
+  /* margin: 1rem; */
+  color: black;
+}
+
 .container-simple-card-second {
   background-color: #fff;
   width: 80%;
-  height: 94%;
+  /* height: 94%; */
+  height: 570px;
   padding: 1.3rem;
   margin: 1rem;
   color: black;
