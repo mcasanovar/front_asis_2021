@@ -49,8 +49,8 @@ const ChartComponent: React.FunctionComponent<IChartComponentProps> = ({
       {type === 'bar' &&
         <Bar
           type
-          width={500}
-          height={115}
+          width={width}
+          height={height}
           data={data}
           options={options}
         />
@@ -67,8 +67,8 @@ const ChartComponent: React.FunctionComponent<IChartComponentProps> = ({
       {type === 'pie' &&
         <Pie
           type
-          width={width}
-          height={height}
+          width={0}
+          height={300}
           data={data}
           options={options}
         />

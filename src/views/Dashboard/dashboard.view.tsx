@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
+import CSS from 'csstype';
 
-import { Tabs, Statistic, List, Badge, Switch, Select, Button } from 'antd';
+import { Tabs, Statistic, List, Badge, Switch, Select, Button, Row, Col } from 'antd';
 
 import { getAllReportsServices } from '../../services/dashboard.services';
 
@@ -16,6 +17,21 @@ import { YEARS_CHARTS } from '../../constants/var';
 import { MilesFormat } from '../../libs/formattedPesos';
 import { IResponseDashboard, IResportsResponse } from '../../models/dashboard.models';
 import { getObjectToLocalStorage, setObjectToLocalStorage } from '../../functions/getLocalStorage';
+
+const styleRow: CSS.Properties = {
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: "space-between",
+  alignItems: 'center',
+  paddingRight: '1rem',
+  paddingLeft: '1rem'
+}
+
+const styleCol: CSS.Properties = {
+  backgroundColor: 'white',
+  padding: '0.8rem'
+}
 
 interface IDashboardScreenProps {
   authorized: boolean
@@ -41,6 +57,7 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
     }
     else {
       setObjectToLocalStorage('reports', result.res);
+      setObjectToLocalStorage('actual-year', { year: actualYear });
       setdataDashboard(result.res);
     }
   };
@@ -50,41 +67,50 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
     handleGetAllResports();
   }
 
+  const handleChangeYear = (value: string) => {
+    setactualYear(value);
+    handleGetAllResports();
+  };
+
   //------------------------------------------------renders
   const renderFirstCards = () => {
     return (
-      <div className='container-first-row'>
-        <div className='container-simple-card-first'>
-          {loading ? <SkeletonComponent active={true} rows={1} loading={loading} /> :
-            <Statistic
-              title="Grupo de interés activos"
-              value={dataDashboard?.activeGIs || 0}
-              precision={0}
-              valueStyle={{ color: '#3f8600' }}
-            />
-          }
-        </div>
-        <div className='container-simple-card-first'>
-          {loading ? <SkeletonComponent active={true} rows={1} loading={loading} /> :
-            <Statistic
-              title="Solicitudes Totales"
-              value={dataDashboard?.countRequests || 1}
-              precision={0}
-              valueStyle={{ color: '#3f8600' }}
-            />
-          }
-        </div>
-        <div className='container-simple-card-first'>
-          {loading ? <SkeletonComponent active={true} rows={1} loading={loading} /> :
-            <Statistic
-              title="Resultados Totales"
-              value={dataDashboard?.countResults || 1}
-              precision={0}
-              valueStyle={{ color: '#3f8600' }}
-            />
-          }
-        </div>
-      </div>
+      <>
+        <br />
+        <Row gutter={8} style={styleRow}>
+          <Col xs={24} sm={24} md={12} lg={7} xl={8} style={styleCol}>
+            {loading ? <SkeletonComponent active={true} rows={1} loading={loading} /> :
+              <Statistic
+                title="Grupo de interés activos"
+                value={dataDashboard?.activeGIs || 0}
+                precision={0}
+                valueStyle={{ color: '#3f8600' }}
+              />
+            }
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={7} xl={7} style={styleCol}>
+            {loading ? <SkeletonComponent active={true} rows={1} loading={loading} /> :
+              <Statistic
+                title="Solicitudes Totales"
+                value={dataDashboard?.countRequests || 1}
+                precision={0}
+                valueStyle={{ color: '#3f8600' }}
+              />
+            }
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={7} xl={8} style={styleCol}>
+            {loading ? <SkeletonComponent active={true} rows={1} loading={loading} /> :
+              <Statistic
+                title="Resultados Totales"
+                value={dataDashboard?.countResults || 1}
+                precision={0}
+                valueStyle={{ color: '#3f8600' }}
+              />
+            }
+          </Col>
+        </Row>
+        <br />
+      </>
     )
   };
 
@@ -156,8 +182,8 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
         <TabPane tab="Facturación" key="2">
           {loading ? <SkeletonComponent active={true} rows={9} loading={loading} /> :
             <ChartComponent
-              width={1200}
-              height={400}
+              width={500}
+              height={115}
               data={{
                 labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
                 datasets: [{
@@ -168,6 +194,7 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                 }]
               }}
               options={{
+                responsive: true,
                 maintainAspectRatio: true,
                 scales: {
                   y: {
@@ -188,8 +215,8 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
         <TabPane tab="Flujo Caja" key="3">
           {loading ? <SkeletonComponent active={true} rows={9} loading={loading} /> :
             <ChartComponent
-              width={600}
-              height={376}
+              width={500}
+              height={115}
               data={{
                 labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
                 datasets: [{
@@ -212,6 +239,7 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                 }]
               }}
               options={{
+                responsive: true,
                 maintainAspectRatio: true,
                 scales: {
                   y: {
@@ -393,23 +421,24 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
 
   const renderEvolutionAndRanking = () => {
     return (
-      <div className='container-first-row'>
-        <div className='container-simple-card-second'>
-          <div className='container-simple-card-second-title-and-switch'>
-            <h4 className='simple-card-text'>Solicitudes(Evolución)</h4>
-            <Switch
-              checkedChildren="Mensual"
-              unCheckedChildren="Acum"
-              defaultChecked
-              style={{ backgroundColor: '#33CD38' }}
-              onChange={() => setMonthAcumChecked({ monthChecked: !monthAcumChecked.monthChecked, acumChecked: !monthAcumChecked.acumChecked })}
-            />
+      <Row gutter={8} style={styleRow}>
+        <Col xs={24} sm={24} md={12} lg={16} xl={17} style={styleCol}>
+          <div className='container-simple-card-second'>
+            <div className='container-simple-card-second-title-and-switch'>
+              <h4 className='simple-card-text'>Solicitudes(Evolución)</h4>
+              <Switch
+                checkedChildren="Mensual"
+                unCheckedChildren="Acum"
+                defaultChecked
+                style={{ backgroundColor: '#33CD38' }}
+                onChange={() => setMonthAcumChecked({ monthChecked: !monthAcumChecked.monthChecked, acumChecked: !monthAcumChecked.acumChecked })}
+              />
+            </div>
+            {monthAcumChecked.monthChecked && renderEvolutionAndRankingMonth()}
+            {monthAcumChecked.acumChecked && renderEvolutionAndRankingAcum()}
           </div>
-          {monthAcumChecked.monthChecked && renderEvolutionAndRankingMonth()}
-          {monthAcumChecked.acumChecked && renderEvolutionAndRankingAcum()}
-        </div>
-        <div className='container-simple-card-ranking'>
-          <h4 className='simple-card-text'>Ranking Clientes</h4>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={8} xl={6} style={styleCol}>
           <Tabs defaultActiveKey="1">
             <TabPane tab="Facturación" key="1">
               {loading ? <SkeletonComponent active={true} rows={9} loading={loading} /> :
@@ -458,57 +487,134 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
               }
             </TabPane>
           </Tabs>
-        </div>
-      </div>
+        </Col>
+      </Row>
+
+      // <div className='container-first-row'>
+      //   <div className='container-simple-card-second'>
+      //     <div className='container-simple-card-second-title-and-switch'>
+      //       <h4 className='simple-card-text'>Solicitudes(Evolución)</h4>
+      //       <Switch
+      //         checkedChildren="Mensual"
+      //         unCheckedChildren="Acum"
+      //         defaultChecked
+      //         style={{ backgroundColor: '#33CD38' }}
+      //         onChange={() => setMonthAcumChecked({ monthChecked: !monthAcumChecked.monthChecked, acumChecked: !monthAcumChecked.acumChecked })}
+      //       />
+      //     </div>
+      //     {monthAcumChecked.monthChecked && renderEvolutionAndRankingMonth()}
+      //     {monthAcumChecked.acumChecked && renderEvolutionAndRankingAcum()}
+      //   </div>
+      //   <div className='container-simple-card-ranking'>
+      //     <h4 className='simple-card-text'>Ranking Clientes</h4>
+      //     <Tabs defaultActiveKey="1">
+      //       <TabPane tab="Facturación" key="1">
+      //         {loading ? <SkeletonComponent active={true} rows={9} loading={loading} /> :
+      //           <List
+      //             size="small"
+      //             dataSource={dataDashboard?.rankingInvoices || []}
+      //             renderItem={(item, index) =>
+      //               <List.Item>
+      //                 <List.Item.Meta
+      //                   avatar={
+      //                     <Badge
+      //                       className="site-badge-count-109"
+      //                       overflowCount={9999999}
+      //                       count={index + 1}
+      //                       style={index < 3 ? { backgroundColor: '#001529' } : { backgroundColor: '#B3B4B3' }}
+      //                     />
+      //                   }
+      //                   title={item.name}
+      //                 />
+      //                 <h3 className='simple-card-text'>{`$ ${MilesFormat(item.quantity)}`}</h3>
+      //               </List.Item>}
+      //           />
+      //         }
+      //       </TabPane>
+      //       <TabPane tab="Deudas" key="2">
+      //         {loading ? <SkeletonComponent active={true} rows={9} loading={loading} /> :
+      //           <List
+      //             size="small"
+      //             dataSource={dataDashboard?.rankingPayments}
+      //             renderItem={(item, index) =>
+      //               <List.Item>
+      //                 <List.Item.Meta
+      //                   avatar={
+      //                     <Badge
+      //                       className="site-badge-count-109"
+      //                       overflowCount={9999999}
+      //                       count={index + 1}
+      //                       style={index < 3 ? { backgroundColor: '#001529' } : { backgroundColor: '#B3B4B3' }}
+      //                     />
+      //                   }
+      //                   title={item.name}
+      //                 />
+      //                 <h3 className='simple-card-text'>{item.quantity}</h3>
+      //               </List.Item>}
+      //           />
+      //         }
+      //       </TabPane>
+      //     </Tabs>
+      //   </div>
+      // </div>
     )
   };
 
   const renderTotalRegisters = () => {
     return (
-      <div className='container-third-row'>
-        <div className='container-simple-card-third'>
-          <h4 className='simple-card-text'>Sucursal</h4>
-          {loading ? <SkeletonComponent active={true} rows={7} loading={loading} /> :
-            <ChartComponent
-              type='pie'
-              width={250}
-              height={220}
-              data={{
-                labels: dataDashboard?.totalOffices[0].type || [],
-                datasets: [{
-                  label: 'Data 1',
-                  data: dataDashboard?.totalOffices[0].data || [],
-                  backgroundColor: [
-                    'rgb(51, 102, 204)', 
-                    'rgb(44, 44, 44)', 
-                    'rgba(255, 205, 86, 1)',
-                    'rgba(88, 24, 69, 1)',
-                    'rgba(199, 0, 57, 1)',
-                    'rgba(255, 87, 51, 1)',
-                    'rgba(29, 142, 16, 1)'
-                  ],
-                  borderColor: [
-                    'rgb(51, 102, 204)', 
-                    'rgb(44, 44, 44)', 
-                    'rgba(255, 205, 86, 1)',
-                    'rgba(88, 24, 69, 1)',
-                    'rgba(199, 0, 57, 1)',
-                    'rgba(255, 87, 51, 1)',
-                    'rgba(29, 142, 16, 1)'
-                  ]
-                }]
-              }}
-              options={{
-                responsive: true,
-                maintainAspectRatio: false,
-              }}
-            />
-          }
-        </div>
-        <div className='container-simple-card-third-2'>
-          <h4 className='simple-card-text'>--------</h4>
-        </div>
-      </div>
+      <>
+        <br/>
+        <Row gutter={8} style={styleRow}>
+          <Col xs={24} sm={24} md={12} lg={10} xl={10} style={styleCol}>
+            <div className='container-third-row'>
+              <div className='container-simple-card-third'>
+                <h4 className='simple-card-text'>Sucursal</h4>
+                {loading ? <SkeletonComponent active={true} rows={7} loading={loading} /> :
+                  <ChartComponent
+                    type='pie'
+                    width={200}
+                    height={0}
+                    data={{
+                      labels: dataDashboard?.totalOffices[0].type || [],
+                      datasets: [{
+                        label: 'Data 1',
+                        data: dataDashboard?.totalOffices[0].data || [],
+                        backgroundColor: [
+                          'rgb(51, 102, 204)',
+                          'rgb(44, 44, 44)',
+                          'rgba(255, 205, 86, 1)',
+                          'rgba(88, 24, 69, 1)',
+                          'rgba(199, 0, 57, 1)',
+                          'rgba(255, 87, 51, 1)',
+                          'rgba(29, 142, 16, 1)'
+                        ],
+                        borderColor: [
+                          'rgb(51, 102, 204)',
+                          'rgb(44, 44, 44)',
+                          'rgba(255, 205, 86, 1)',
+                          'rgba(88, 24, 69, 1)',
+                          'rgba(199, 0, 57, 1)',
+                          'rgba(255, 87, 51, 1)',
+                          'rgba(29, 142, 16, 1)'
+                        ]
+                      }]
+                    }}
+                    options={{
+                      responsive: true,
+                      maintainAspectRatio: false,
+                    }}
+                  />
+                }
+              </div>
+            </div>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12} style={styleCol}>
+            <div className='container-simple-card-third-2'>
+              <h4 className='simple-card-text'>--------</h4>
+            </div>
+          </Col>
+        </Row>
+      </>
     );
   };
 
@@ -518,17 +624,19 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
   useEffect(() => {
     setloading(true)
     const reportsFormStorage = getObjectToLocalStorage('reports');
-    if(!!reportsFormStorage){
+    if (!!reportsFormStorage) {
+      const localyear = getObjectToLocalStorage('actual-year')
       setdataDashboard(reportsFormStorage);
+      !!localyear && setactualYear(localyear.year.toString());
       return
     }
-    else{
+    else {
       handleGetAllResports();
     }
   }, []);
 
   useEffect(() => {
-    if(dataDashboard){
+    if (dataDashboard) {
       setloading(false)
     }
   }, [dataDashboard])
@@ -542,13 +650,14 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
       <SubBarComponent title='Dashboard' />
       <br />
       <div className='container-dropdown-year'>
-      {messageAlert.show && <AlertComponent message={messageAlert.message} type={messageAlert.type} />}
+        {messageAlert.show && <AlertComponent message={messageAlert.message} type={messageAlert.type} />}
         <h4></h4>
         <div className='dropdown-year'>
-          <Button 
-            type="primary" 
+          <Button
+            type="primary"
             style={{ marginRight: '1rem' }}
             onClick={() => handleReloadReports()}
+            disabled={loading}
           >
             Recargar
           </Button>
@@ -556,7 +665,8 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
             defaultValue={actualYear}
             disabled={loading}
             style={{ width: 120 }}
-            onChange={(value) => setactualYear(value)}
+            onChange={(value) => handleChangeYear(value)}
+            value={actualYear}
           >
             {YEARS_CHARTS.map((year, index) => (
               <Option value={year} key={index}>{year}</Option>

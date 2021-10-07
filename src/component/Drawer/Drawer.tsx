@@ -27,7 +27,7 @@ const DrawerComponent: React.FunctionComponent<IDrawerComponentProps> = (props) 
       mode="inline"
       theme="dark"
       inlineCollapsed={true}
-      style={{ height: '95.9vh', width: 130 }}
+      style={{ height: 'auto', width: 130 }}
       onClick={(e) => { }}
     >
       {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_DASHBOARD) > -1 &&
