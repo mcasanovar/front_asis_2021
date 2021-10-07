@@ -628,8 +628,12 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
     if (!!reportsFormStorage) {
       const localyear = getObjectToLocalStorage('actual-year')
       setdataDashboard(reportsFormStorage);
-      !!localyear && setactualYear(localyear.year.toString());
-      return
+      if(!!localyear){
+        setactualYear(localyear.year.toString());
+      }
+      else{
+        setObjectToLocalStorage('actual-year', { year: actualYear });
+      }
     }
     else {
       handleGetAllResports();
