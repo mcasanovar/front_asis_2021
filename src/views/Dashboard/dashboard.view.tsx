@@ -49,15 +49,15 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
   const [actualYear, setactualYear] = useState<string>(moment().format('YYYY'))
   const [dataDashboard, setdataDashboard] = useState<IResportsResponse>();
 
-  const handleGetAllResports = async () => {
-    const result: IResponseDashboard = await getAllReportsServices(actualYear);
+  const handleGetAllResports = async (year: string = actualYear) => {
+    const result: IResponseDashboard = await getAllReportsServices(year);
     if (result.err) {
       setMessageAlert({ message: 'No puede seleccionar la misma actividad primaria y secundaria', type: 'error', show: true });
       setloading(false)
     }
     else {
       setObjectToLocalStorage('reports', result.res);
-      setObjectToLocalStorage('actual-year', { year: actualYear });
+      setObjectToLocalStorage('actual-year', { year });
       setdataDashboard(result.res);
     }
   };
@@ -68,8 +68,9 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
   }
 
   const handleChangeYear = (value: string) => {
+    setloading(true)
     setactualYear(value);
-    handleGetAllResports();
+    handleGetAllResports(value);
   };
 
   //------------------------------------------------renders
