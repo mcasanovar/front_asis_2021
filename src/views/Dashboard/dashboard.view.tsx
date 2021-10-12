@@ -15,8 +15,9 @@ import AlertComponent from "../../component/Alert/Alert";
 
 import { YEARS_CHARTS } from '../../constants/var';
 import { MilesFormat } from '../../libs/formattedPesos';
-import { IResponseDashboard, IResportsResponse } from '../../models/dashboard.models';
+import { IProduction, IResponseDashboard, IResportsResponse, ICashFlow } from '../../models/dashboard.models';
 import { getObjectToLocalStorage, setObjectToLocalStorage } from '../../functions/getLocalStorage';
+import calculateAcumulateArray from '../../functions/getAcumulatedArray';
 
 const styleRow: CSS.Properties = {
   width: '100%',
@@ -48,6 +49,9 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [actualYear, setactualYear] = useState<string>(moment().format('YYYY'))
   const [dataDashboard, setdataDashboard] = useState<IResportsResponse>();
+  const [productionAcc, setproductionAcc] = useState<IProduction[] | []>([]);
+  const [invoicesAcc, setinvoicesAcc] = useState<number[] | []>([]);
+  const [cashflowAcc, setcashflowAcc] = useState<ICashFlow[] | []>([]);
 
   const handleGetAllResports = async (year: string = actualYear) => {
     const result: IResponseDashboard = await getAllReportsServices(year);
@@ -72,6 +76,27 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
     setactualYear(value);
     handleGetAllResports(value);
   };
+
+  const calculateAcumulate = () => {
+    let auxProduction: IProduction[] = [];
+    let auxCashFlow: ICashFlow[] = [];
+
+    dataDashboard?.production.forEach(productionData => {
+      const acumArray: number[] = calculateAcumulateArray(productionData.data);
+      auxProduction.push({ type: productionData.type, data: acumArray });
+    });
+
+    const auxInvoices: number[] = calculateAcumulateArray(dataDashboard?.invoices || []);
+
+    dataDashboard?.cashFlow.forEach(cashflowData => {
+      const acumArrayCashflow: number[] = calculateAcumulateArray(cashflowData.data);
+      auxCashFlow.push({ type: cashflowData.type, data: acumArrayCashflow });
+    });
+
+    setproductionAcc(auxProduction);
+    setinvoicesAcc(auxInvoices);
+    setcashflowAcc(auxCashFlow);
+  }
 
   //------------------------------------------------renders
   const renderFirstCards = () => {
@@ -269,61 +294,55 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
           {loading ? <SkeletonComponent active={true} rows={9} loading={loading} /> :
             <ChartComponent
               type='line'
-              width={600}
-              height={376}
+              width={500}
+              height={115}
               data={{
                 labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
                 datasets: [{
                   label: 'Solicitudes',
-                  // data: dataProductionRequestsAcum.find((element) => element.type === 'solicitudes')?.data || [],
-                  data: [],
+                  data: productionAcc.find((element) => element.type === 'solicitudes')?.data || [],
                   backgroundColor: 'rgb(51, 102, 204)',
                   borderColor: 'rgb(51, 102, 204)'
                 },
                 {
                   label: 'Reservas',
-                  // data: dataProductionRequestsAcum.find((element) => element.type === 'reservas')?.data || [],
-                  data: [],
+                  data: productionAcc.find((element) => element.type === 'reservas')?.data || [],
                   backgroundColor: 'rgb(190, 25, 25)',
                   borderColor: 'rgb(190, 25, 25)'
                 },
                 {
                   label: 'Evaluaciones',
-                  // data: dataProductionRequestsAcum.find((element) => element.type === 'evaluaciones')?.data || [],
-                  data: [],
+                  data: productionAcc.find((element) => element.type === 'evaluaciones')?.data || [],
                   backgroundColor: 'rgba(255, 205, 86, 1)',
                   borderColor: 'rgb(255, 205, 86)'
                 },
                 {
                   label: 'Resultados',
-                  // data: dataProductionRequestsAcum.find((element) => element.type === 'resultados')?.data || [],
-                  data: [],
+                  data: productionAcc.find((element) => element.type === 'resultados')?.data || [],
                   backgroundColor: 'rgba(75, 192, 192, 1)',
                   borderColor: 'rgb(75, 192, 192)'
                 },
                 {
                   label: 'Facturaciones',
-                  // data: dataProductionRequestsAcum.find((element) => element.type === 'facturaciones')?.data || [],
-                  data: [],
+                  data: productionAcc.find((element) => element.type === 'facturaciones')?.data || [],
                   backgroundColor: 'rgba(54, 162, 235, 1)',
                   borderColor: 'rgb(54, 162, 235)'
                 },
                 {
                   label: 'Pagos',
-                  // data: dataProductionRequestsAcum.find((element) => element.type === 'pagos')?.data || [],
-                  data: [],
+                  data: productionAcc.find((element) => element.type === 'pagos')?.data || [],
                   backgroundColor: 'rgba(153, 102, 255, 1)',
                   borderColor: 'rgb(153, 102, 255)'
                 },
                 {
                   label: 'Cobranzas',
-                  // data: dataProductionRequestsAcum.find((element) => element.type === 'pagos')?.data || [],
-                  data: [],
+                  data: productionAcc.find((element) => element.type === 'pagos')?.data || [],
                   backgroundColor: 'rgba(201, 203, 207, 1)',
                   borderColor: 'rgb(201, 203, 207)'
                 }]
               }}
               options={{
+                responsive: true,
                 maintainAspectRatio: true,
                 scales: {
                   y: {
@@ -338,19 +357,19 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
           {loading ? <SkeletonComponent active={true} rows={9} loading={loading} /> :
             <ChartComponent
               type='line'
-              width={600}
-              height={376}
+              width={500}
+              height={115}
               data={{
                 labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
                 datasets: [{
                   label: 'Meses',
-                  // data: dataMonthyBillingAcum,
-                  data: [],
+                  data: invoicesAcc || [],
                   backgroundColor: 'rgb(51, 102, 204)',
                   borderColor: 'rgb(51, 102, 204)'
                 }]
               }}
               options={{
+                responsive: true,
                 maintainAspectRatio: true,
                 scales: {
                   y: {
@@ -372,33 +391,31 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
           {loading ? <SkeletonComponent active={true} rows={9} loading={loading} /> :
             <ChartComponent
               type='line'
-              width={600}
-              height={376}
+              width={500}
+              height={115}
               data={{
                 labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
                 datasets: [{
                   label: 'Ingresos',
-                  // data: dataCashFlowAcum.find((element) => element.type === 'ingresos')?.data || [],
-                  data: [],
+                  data: cashflowAcc.find((element) => element.type === 'ingresos')?.data || [],
                   backgroundColor: 'rgb(11, 163, 29)',
                   borderColor: 'rgb(11, 163, 29)'
                 },
                 {
                   label: 'Egresos',
-                  // data: dataCashFlowAcum.find((element) => element.type === 'egresos')?.data || [],
-                  data: [],
+                  data: cashflowAcc.find((element) => element.type === 'egresos')?.data || [],
                   backgroundColor: 'rgb(191, 28, 28)',
                   borderColor: 'rgb(191, 28, 28)'
                 },
                 {
                   label: 'Saldo',
-                  // data: dataCashFlowAcum.find((element) => element.type === 'saldo')?.data || [],
-                  data: [],
+                  data: cashflowAcc.find((element) => element.type === 'saldo')?.data || [],
                   backgroundColor: 'rgb(21, 40, 196)',
                   borderColor: 'rgb(21, 40, 196)'
                 }]
               }}
               options={{
+                responsive: true,
                 maintainAspectRatio: true,
                 scales: {
                   y: {
@@ -642,6 +659,7 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
 
   useEffect(() => {
     if (dataDashboard) {
+      calculateAcumulate();
       setloading(false)
     }
   }, [dataDashboard])

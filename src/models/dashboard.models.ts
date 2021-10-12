@@ -1,9 +1,9 @@
-interface IProduction {
+export interface IProduction {
   type: string,
   data: number[]
 }
 
-interface ICashFlow {
+export interface ICashFlow {
   type: string,
   data: number[]
 }
