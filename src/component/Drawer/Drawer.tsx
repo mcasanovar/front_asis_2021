@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Menu } from 'antd';
+import { Menu, Tooltip } from 'antd';
 import {
   Link
 } from "react-router-dom";
-import { PieChartOutlined, AppstoreOutlined, MailOutlined } from "@ant-design/icons";
+import { PieChartOutlined, BarChartOutlined, UsergroupAddOutlined, DollarCircleFilled } from "@ant-design/icons";
 import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
 import { MODULES_PERMISSION } from '../../constants/var';
 
@@ -31,11 +31,11 @@ const DrawerComponent: React.FunctionComponent<IDrawerComponentProps> = (props) 
       onClick={(e) => { }}
     >
       {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_DASHBOARD) > -1 &&
-        <Menu.Item key="1" icon={<PieChartOutlined />}>
+        <Menu.Item key="1" icon={<PieChartOutlined style={{ fontSize: '20px' }} />}>
           <Link to='/'>Dashboard</Link>
         </Menu.Item>
       }
-      <SubMenu key="2" icon={<MailOutlined />} title="Administración">
+      <SubMenu key="2" icon={<UsergroupAddOutlined style={{ fontSize: '20px' }} />} title="Administración">
         {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_GI) > -1 &&
           <Menu.Item key="gi">
             <Link to='/gi' style={{ ...styleText }}>Grupo de Interes</Link>
@@ -52,7 +52,7 @@ const DrawerComponent: React.FunctionComponent<IDrawerComponentProps> = (props) 
           </Menu.Item>
         }
       </SubMenu>
-      <SubMenu key="3" icon={<AppstoreOutlined />} title="Operaciones">
+      <SubMenu key="3" icon={<BarChartOutlined style={{ fontSize: '20px' }} />} title="Operaciones">
         {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_REQUESTS) > -1 &&
           <Menu.Item key="solicitudes">
             <Link to='/solicitudes' style={{ ...styleText }}>Solicitudes</Link>
@@ -74,7 +74,7 @@ const DrawerComponent: React.FunctionComponent<IDrawerComponentProps> = (props) 
           </Menu.Item>
         }
       </SubMenu>
-      <SubMenu key="4" icon={<AppstoreOutlined />} title="Finanzas">
+      <SubMenu key="4" icon={<DollarCircleFilled style={{ fontSize: '20px' }} />} title="Finanzas">
         <SubMenu key="sub8" title="Ingresos" style={{ ...styleText }}>
           {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_INVOICES) > -1 &&
             <Menu.Item key="facturaciones">

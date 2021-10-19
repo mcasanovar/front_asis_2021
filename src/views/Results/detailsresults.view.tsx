@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Row, Col, Tag, Typography, Table, Form, Spin, Button } from "antd";
 
-import { IResponseResults, ResultModel } from '../../models/results.model';
+import { IResponseResults, IResultObservations, ResultModel } from '../../models/results.model';
 import { ResultsInitalization } from '../../initializations/results.initialization';
 import { IAlertMessageContent } from '../../models/index.models';
 import { getOneResultService } from '../../services';
@@ -24,10 +24,12 @@ const DetailsResultView: React.FunctionComponent<IDetailsResultViewProps> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [newDataResult, setNewDataResult] = useState<ResultModel>(ResultsInitalization);
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
+  const [observations, setobservations] = useState<IResultObservations[]>();
 
   useEffect(() => {
     async function getOneResult() {
       const aux: IResponseResults = await getOneResultService(_id);
+      console.log('result', aux)
       if (aux.err !== null) {
         setMessageAlert({ message: aux.err, type: 'error', show: true });
         return
@@ -39,7 +41,12 @@ const DetailsResultView: React.FunctionComponent<IDetailsResultViewProps> = ({
       }
 
       const result: ResultModel = aux.res;
-      setNewDataResult(result);
+      const auxObservations = result.observaciones;
+      setobservations(auxObservations)
+      setNewDataResult({
+        ...result,
+        observaciones: []
+      });
     }
 
     getOneResult();
@@ -128,45 +135,47 @@ const DetailsResultView: React.FunctionComponent<IDetailsResultViewProps> = ({
               </Input.Group>
             </Col>
           </Row>
-          <Row>
-            <Col span={24} style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              width: '100%',
-            }}>
-              <Table style={{ width: '100%' }} showHeader={true} dataSource={newDataResult.observaciones} pagination={false}>
-                <Column width='20%' className='column-money' title="Fecha" dataIndex="fecha" key="fecha" />
-                <Column width='60%' className='column-money' title="Observación" dataIndex="obs" key="obs" />
-                <Column
-                  width='20%'
-                  title="Estado archivo"
-                  dataIndex="estado_archivo"
-                  key="estado_archivo"
-                  className='column-money'
-                  render={(_, record: any) => {
-                    let color = 'grey';
-                    if (record.estado === 'Cargado') {
-                      color = '#2db7f5';
-                    }
-                    if (record.estado === 'Aprobado') {
-                      color = '#4CAF50';
-                    }
-                    if (record.estado === 'Rechazado') {
-                      color = '#E41B0E';
-                    }
-                    return <>
-                      <Tag color={color}>
-                        {record.estado}
-                      </Tag>
-                    </>
-                  }}
-                />
-              </Table>
-            </Col>
-          </Row>
-          <br/>
+          {!!observations &&
+            <Row>
+              <Col span={24} style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+                width: '100%',
+              }}>
+                <Table style={{ width: '100%' }} showHeader={true} dataSource={observations} pagination={false}>
+                  <Column width='20%' className='column-money' title="Fecha" dataIndex="fecha" key="key" />
+                  <Column width='60%' className='column-money' title="Observación" dataIndex="obs" key="key" />
+                  <Column
+                    width='20%'
+                    title="Estado archivo"
+                    dataIndex="estado"
+                    key="key"
+                    className='column-money'
+                    render={(_, record: any) => {
+                      let color = 'grey';
+                      if (record.estado === 'Cargado') {
+                        color = '#2db7f5';
+                      }
+                      if (record.estado === 'Aprobado') {
+                        color = '#4CAF50';
+                      }
+                      if (record.estado === 'Rechazado') {
+                        color = '#E41B0E';
+                      }
+                      return <>
+                        <Tag color={color}>
+                          {record.estado}
+                        </Tag>
+                      </>
+                    }}
+                  />
+                </Table>
+              </Col>
+            </Row>
+          }
+          <br />
           <Row gutter={8} style={{
             display: 'flex',
             flexDirection: 'row',

@@ -39,28 +39,37 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
   const buttons: IButtonsProps[] = [
     {
       _id: 'newrequest',
-      title: 'NUEVA SOLICITUD',
-      size: 'small',
+      title: '',
+      size: 'large',
       widthModal: 1200,
       showButtons: [{ _id: CANCEL }, { _id: CONFIRM }],
-      permission: PERMISSIONS.CREATE_REQUEST
+      permission: PERMISSIONS.CREATE_REQUEST,
+      icon: 'new',
+      tooltipText: 'Nueva solicitud',
+      customStyle: { width: '50px' }
     },
     {
       _id: 'confirm',
       title: 'GRUPAL',
       customTitle: 'CONFIRMACIÓN GRUPAL DE SOLICITUDES',
-      size: 'small',
+      size: 'large',
       widthModal: 1600,
       showButtons: [{ _id: CANCEL }, { _id: CONFIRM }],
-      permission: PERMISSIONS.CONFIRM_GROUP_REQUEST
+      permission: PERMISSIONS.CONFIRM_GROUP_REQUEST,
+      icon: 'group',
+      tooltipText: 'Confirmación grupal de solicitudes',
+      customStyle: { width: '50px' }
     },
     {
       _id: 'consolidateRequests',
       title: 'CONSOLIDADO',
-      size: 'small',
+      size: 'large',
       widthModal: 1200,
       showButtons: [{ _id: CANCEL }, { _id: CONFIRM }],
-      permission: PERMISSIONS.CONSOLIDATE_REQUESTS
+      permission: PERMISSIONS.CONSOLIDATE_REQUESTS,
+      icon:'consolidated',
+      tooltipText: 'Informe consolidado de solicitudes',
+      customStyle: { width: '50px' }
     },
   ];
 
@@ -227,6 +236,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
     );
 
     if (!aux.err) {
+      console.log('sol', aux.solicitudes)
       setRequests(aux.solicitudes);
       setActualPage(aux.pagina_actual);
       setTotalItems(aux.total_items);

@@ -69,6 +69,8 @@ const DetailsInvoicesView: React.FunctionComponent<IDetailsInvoicesViewProps> = 
     }
   };
 
+  console.log(invoiceSelected)
+
   //------RENDERS
   const renderInformationOC = () => {
     return (

@@ -7,6 +7,8 @@ import { Tabs, Statistic, List, Badge, Switch, Select, Button, Row, Col } from '
 
 import { getAllReportsServices } from '../../services/dashboard.services';
 
+import { dataCategory1, dataCategory3, dataServiceName, dataServiceType, dataWorkplace } from './fakedata';
+
 import SubBarComponent from "../../component/Subbar/SubBar";
 import ChartComponent from '../../component/Charts/Chart';
 import SkeletonComponent from '../../component/Skeleton/skeleton';
@@ -56,7 +58,7 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
   const handleGetAllResports = async (year: string = actualYear) => {
     const result: IResponseDashboard = await getAllReportsServices(year);
     if (result.err) {
-      setMessageAlert({ message: 'No puede seleccionar la misma actividad primaria y secundaria', type: 'error', show: true });
+      setMessageAlert({ message: 'Se ha producido un error al cargar los datos. Por favor, intente mas tarde', type: 'error', show: true });
       setloading(false)
     }
     else {
@@ -269,14 +271,7 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                 maintainAspectRatio: true,
                 scales: {
                   y: {
-                    beginAtZero: true,
-                    callback: function (value: any, index: number, values: any) {
-                      if (parseInt(value) >= 1000) {
-                        return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                      } else {
-                        return '$' + value;
-                      }
-                    }
+                    beginAtZero: true
                   }
                 }
               }}
@@ -499,7 +494,7 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                         }
                         title={item.name}
                       />
-                      <h3 className='simple-card-text'>{item.quantity}</h3>
+                      <h3 className='simple-card-text'>{`$ ${MilesFormat(item.quantity)}`}</h3>
                     </List.Item>}
                 />
               }
@@ -581,17 +576,154 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
   const renderTotalRegisters = () => {
     return (
       <>
-        <br/>
+        <br />
         <Row gutter={8} style={styleRow}>
-          <Col xs={24} sm={24} md={12} lg={10} xl={10} style={styleCol}>
+          <Col xs={24} sm={24} md={12} lg={16} xl={17} style={styleCol}>
+            <div className='container-simple-card-third-2'>
+              <h4 className='simple-card-text'>Categorias</h4>
+              <Tabs defaultActiveKey="1" style={{ width: '100%' }}>
+                <TabPane tab='Categoria 1' key='1'>
+                  {loading ? <SkeletonComponent active={true} rows={5} loading={loading} /> :
+                    <ChartComponent
+                      width={500}
+                      height={115}
+                      data={{
+                        labels: dataDashboard?.categories?.category1.type || '',
+                        datasets: [{
+                          label: '',
+                          data: dataDashboard?.categories?.category1.data || [],
+                          backgroundColor: 'rgb(144, 12, 63)',
+                          borderColor: 'rgb(144, 12, 63)'
+                        }]
+                      }}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: {
+                          y: {
+                            beginAtZero: true,
+                          }
+                        }
+                      }}
+                    />
+                  }
+                </TabPane>
+                <TabPane tab='Categoria 3' key='2'>
+                  {loading ? <SkeletonComponent active={true} rows={5} loading={loading} /> :
+                    <ChartComponent
+                      width={500}
+                      height={115}
+                      data={{
+                        labels: dataDashboard?.categories?.category3.type || '',
+                        datasets: [{
+                          label: '',
+                          data: dataDashboard?.categories?.category3.data || [],
+                          backgroundColor: 'rgb(144, 12, 63)',
+                          borderColor: 'rgb(144, 12, 63)'
+                        }]
+                      }}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: {
+                          y: {
+                            beginAtZero: true,
+                          }
+                        }
+                      }}
+                    />
+                  }
+                </TabPane>
+                <TabPane tab='Nombre Servicio' key='3'>
+                  {loading ? <SkeletonComponent active={true} rows={5} loading={loading} /> :
+                    <ChartComponent
+                      width={500}
+                      height={115}
+                      data={{
+                        labels: dataDashboard?.categories?.services.type || '',
+                        datasets: [{
+                          label: '',
+                          data: dataDashboard?.categories?.services.data || [],
+                          backgroundColor: 'rgb(144, 12, 63)',
+                          borderColor: 'rgb(144, 12, 63)'
+                        }]
+                      }}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: {
+                          y: {
+                            beginAtZero: true,
+                          }
+                        }
+                      }}
+                    />
+                  }
+                </TabPane>
+                <TabPane tab='Tipo Servicio' key='4'>
+                  {loading ? <SkeletonComponent active={true} rows={5} loading={loading} /> :
+                    <ChartComponent
+                      width={500}
+                      height={115}
+                      data={{
+                        labels: dataDashboard?.categories?.typeServices.type || '',
+                        datasets: [{
+                          label: '',
+                          data: dataDashboard?.categories?.typeServices.data || [],
+                          backgroundColor: 'rgb(144, 12, 63)',
+                          borderColor: 'rgb(144, 12, 63)'
+                        }]
+                      }}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: {
+                          y: {
+                            beginAtZero: true,
+                          }
+                        }
+                      }}
+                    />
+                  }
+                </TabPane>
+                <TabPane tab='Sucursal' key='5'>
+                  {loading ? <SkeletonComponent active={true} rows={5} loading={loading} /> :
+                    <ChartComponent
+                      width={500}
+                      height={115}
+                      data={{
+                        labels: dataDashboard?.categories?.workplaces.type || '',
+                        datasets: [{
+                          label: '',
+                          data: dataDashboard?.categories?.workplaces.data || [],
+                          backgroundColor: 'rgb(144, 12, 63)',
+                          borderColor: 'rgb(144, 12, 63)'
+                        }]
+                      }}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: {
+                          y: {
+                            beginAtZero: true,
+                          }
+                        }
+                      }}
+                    />
+                  }
+                </TabPane>
+              </Tabs>
+            </div>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={8} xl={6} style={styleCol}>
             <div className='container-third-row'>
               <div className='container-simple-card-third'>
                 <h4 className='simple-card-text'>Sucursal</h4>
                 {loading ? <SkeletonComponent active={true} rows={7} loading={loading} /> :
                   <ChartComponent
                     type='pie'
-                    width={200}
-                    height={0}
+                    width={500}
+                    height={115}
                     data={{
                       labels: dataDashboard?.totalOffices[0].type || [],
                       datasets: [{
@@ -619,16 +751,11 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                     }}
                     options={{
                       responsive: true,
-                      maintainAspectRatio: false,
+                      maintainAspectRatio: true,
                     }}
                   />
                 }
               </div>
-            </div>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12} style={styleCol}>
-            <div className='container-simple-card-third-2'>
-              <h4 className='simple-card-text'>--------</h4>
             </div>
           </Col>
         </Row>
@@ -645,10 +772,10 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
     if (!!reportsFormStorage) {
       const localyear = getObjectToLocalStorage('actual-year')
       setdataDashboard(reportsFormStorage);
-      if(!!localyear){
+      if (!!localyear) {
         setactualYear(localyear.year.toString());
       }
-      else{
+      else {
         setObjectToLocalStorage('actual-year', { year: actualYear });
       }
     }

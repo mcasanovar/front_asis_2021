@@ -12,11 +12,14 @@ export interface ITableDeleteObject {
 export interface IButtonsProps {
   _id: string
   title: string,
-  customTitle?: string
+  customTitle?: string,
+  customStyle?: object,
   size: SizeType,
   widthModal: number,
   showButtons: IShowButtonModals[] | [],
-  permission?: string
+  permission?: string,
+  icon?: string,
+  tooltipText?: string
 };
 
 export interface IExamPsicoExtras {

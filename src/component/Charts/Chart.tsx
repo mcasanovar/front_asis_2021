@@ -67,8 +67,8 @@ const ChartComponent: React.FunctionComponent<IChartComponentProps> = ({
       {type === 'pie' &&
         <Pie
           type
-          width={0}
-          height={300}
+          width={width}
+          height={height}
           data={data}
           options={options}
         />

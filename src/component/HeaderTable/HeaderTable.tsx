@@ -28,7 +28,8 @@ interface IHeaderTableProps {
   notSearch?: boolean,
   notClean?: boolean,
   onClickClean: () => void,
-  userPermissions?: string[]
+  userPermissions?: string[],
+  icon?: string
 }
 
 const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
@@ -49,7 +50,7 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
   notSearch = false,
   notClean = false,
   onClickClean,
-  userPermissions = []
+  userPermissions = [],
 }) => {
 
   const { Option } = Select;
@@ -67,6 +68,9 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
           size={button.size}
           ghost={true}
           onClick={() => onClick(button)}
+          icon={button.icon}
+          customStyle={button.customStyle}
+          tooltipText={button.tooltipText}
         />
       );
     }

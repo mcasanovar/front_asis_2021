@@ -86,6 +86,7 @@ const LoginView: React.FunctionComponent<ILoginViewProps> = ({ authorized }) => 
                 maxLength={10}
                 value={rut}
                 disabled={loading}
+                onPressEnter={() => handleLogin()}
               />
             </Form.Item>
 
@@ -97,6 +98,7 @@ const LoginView: React.FunctionComponent<ILoginViewProps> = ({ authorized }) => 
                 onChange={(e) => setPassword(e.currentTarget.value)}
                 value={password}
                 disabled={loading}
+                onPressEnter={() => handleLogin()}
               />
             </Form.Item>
 

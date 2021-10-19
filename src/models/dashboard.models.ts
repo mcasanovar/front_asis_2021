@@ -20,9 +20,17 @@ interface IRankingPayment {
   quantity: number
 }
 
-interface ITotalOffices {
+interface IResponseTypeData {
   type: string[],
   data: number[]
+}
+
+interface ITotalCategories {
+  category1: IResponseTypeData,
+  category3: IResponseTypeData,
+  services: IResponseTypeData,
+  typeServices: IResponseTypeData,
+  workplaces: IResponseTypeData
 }
 
 export interface IResportsResponse {
@@ -34,7 +42,8 @@ export interface IResportsResponse {
   cashFlow: ICashFlow[],
   rankingInvoices: IRankingInvoices[],
   rankingPayments: IRankingPayment[],
-  totalOffices: ITotalOffices[]
+  totalOffices: IResponseTypeData[],
+  categories: ITotalCategories
 }
 
 export interface IResponseDashboard {

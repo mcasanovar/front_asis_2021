@@ -170,3 +170,37 @@ export const dataSucursal = [
     data: [20, 30, 50]
   }
 ]
+
+export const dataCategory1 = {
+  type: ['Evaluación Psicológica y Psicolaboral', 'Exámen Psicosensotécnico', 'Intervención Individual y Grupal', 'Total Resultados'],
+  data: [92, 211, 5, 308]
+}
+
+export const dataCategory3 = {
+  type: ['Evaluación', 'Exámen Psicosensotécnico', 'Intervención', 'Total Resultados'],
+  data: [92, 211, 5, 308]
+}
+
+export const dataServiceName = {
+  type: [
+    'Aversión al Riesgo', 
+    'Aversión al Riesgo para Cargos Críticos', 
+    'Evaluación Psicolaboral por Competencias',
+    'Examen Psicológico de Altura Física',
+    'Psicolaboral Liderazgo',
+    'Psicosensotécnico Riguroso',
+    'Psicoterapia y Trat. Asoc. (ACHS)',
+    'Total Resultados' 
+  ],
+  data: [72, 5, 2, 11, 2, 211, 5, 308]
+}
+
+export const dataServiceType = {
+  type: ['Online', 'Presencial'],
+  data: [136, 172, 308]
+}
+
+export const dataWorkplace = {
+  type: ['Fuera de oficina', 'Oficina Illapel', 'Oficina Salamanca'],
+  data: [164, 45, 99, 308]
+}
