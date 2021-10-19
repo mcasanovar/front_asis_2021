@@ -154,7 +154,6 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
   useEffect(() => {
     if (!!dataConfirmation.fecha_facturacion
       && !!dataConfirmation.nro_factura
-      && !!dataConfirmation.monto_neto
       && !!companyBusinessName
       && !!file
       && !!selectedInvoices.length) {
@@ -231,7 +230,7 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
             </Col>
           </Row>
           <br />
-          <Row>
+          {/* <Row>
             <Col span={24}>
               <Form.Item
                 getValueFromEvent={getFileUploaded}
@@ -254,7 +253,29 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
                 </Upload.Dragger>
               </Form.Item>
             </Col>
-          </Row>
+          </Row> */}
+        </Col>
+        <Col span={12} style={{ paddingTop: '1.70rem' }}>
+          <Form.Item
+            getValueFromEvent={getFileUploaded}
+            valuePropName="fileData"
+            validateStatus={file !== null ? 'success' : 'error'}
+            help={file !== null ? '' : 'Seleccione'}
+          >
+            <Upload.Dragger
+              name="file"
+              customRequest={getFileUploaded}
+              accept='.pdf'
+              maxCount={1}
+              onRemove={() => setFile(null)}
+            >
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">Click o arrastra el archivo para subirlo</p>
+              <p className="ant-upload-hint">10mb max.</p>
+            </Upload.Dragger>
+          </Form.Item>
         </Col>
       </>
     );
@@ -411,7 +432,7 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
         <Input.Group>
           <Row gutter={8}>
             {renderInformation()}
-            {renderValuesInformation()}
+            {/* {renderValuesInformation()} */}
           </Row>
           <br />
           <Row gutter={8}>
