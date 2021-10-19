@@ -384,7 +384,7 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
           type: 'checkbox',
           ...rowSelection
         }}
-        rowKey={record => record._id}
+        rowKey={record => record.codigo}
         pagination={{ position: ['bottomCenter'] }}
       >
         <Column className='column-money' title="Código" dataIndex="codigo" key="codigo" />
@@ -395,8 +395,8 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
         <Column
           className='column-money'
           title="Total"
-          dataIndex="total"
-          key="total"
+          dataIndex="valor_servicio"
+          key="valor_servicio"
           render={(text) => `$${MilesFormat(text)}`}
         />
         <Column className='column-money' title="Nombre Servicio" dataIndex="nombre_servicio" key="nombre_servicio" />

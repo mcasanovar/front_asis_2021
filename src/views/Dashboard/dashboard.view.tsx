@@ -3,11 +3,9 @@ import { Redirect } from 'react-router-dom';
 import moment from 'moment';
 import CSS from 'csstype';
 
-import { Tabs, Statistic, List, Badge, Switch, Select, Button, Row, Col } from 'antd';
+import { Tabs, Statistic, List, Badge, Switch, Select, Button, Row, Col, Typography } from 'antd';
 
 import { getAllReportsServices } from '../../services/dashboard.services';
-
-import { dataCategory1, dataCategory3, dataServiceName, dataServiceType, dataWorkplace } from './fakedata';
 
 import SubBarComponent from "../../component/Subbar/SubBar";
 import ChartComponent from '../../component/Charts/Chart';
@@ -20,6 +18,10 @@ import { MilesFormat } from '../../libs/formattedPesos';
 import { IProduction, IResponseDashboard, IResportsResponse, ICashFlow } from '../../models/dashboard.models';
 import { getObjectToLocalStorage, setObjectToLocalStorage } from '../../functions/getLocalStorage';
 import calculateAcumulateArray from '../../functions/getAcumulatedArray';
+
+import { COLORS_RANDOM } from '../../constants/var';
+
+const { Title } = Typography;
 
 const styleRow: CSS.Properties = {
   width: '100%',
@@ -592,8 +594,8 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                         datasets: [{
                           label: '',
                           data: dataDashboard?.categories?.category1.data || [],
-                          backgroundColor: 'rgb(144, 12, 63)',
-                          borderColor: 'rgb(144, 12, 63)'
+                          backgroundColor: COLORS_RANDOM,
+                          borderColor: COLORS_RANDOM
                         }]
                       }}
                       options={{
@@ -618,8 +620,8 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                         datasets: [{
                           label: '',
                           data: dataDashboard?.categories?.category3.data || [],
-                          backgroundColor: 'rgb(144, 12, 63)',
-                          borderColor: 'rgb(144, 12, 63)'
+                          backgroundColor: COLORS_RANDOM,
+                          borderColor: COLORS_RANDOM
                         }]
                       }}
                       options={{
@@ -644,8 +646,8 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                         datasets: [{
                           label: '',
                           data: dataDashboard?.categories?.services.data || [],
-                          backgroundColor: 'rgb(144, 12, 63)',
-                          borderColor: 'rgb(144, 12, 63)'
+                          backgroundColor: COLORS_RANDOM,
+                          borderColor: COLORS_RANDOM
                         }]
                       }}
                       options={{
@@ -670,8 +672,8 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                         datasets: [{
                           label: '',
                           data: dataDashboard?.categories?.typeServices.data || [],
-                          backgroundColor: 'rgb(144, 12, 63)',
-                          borderColor: 'rgb(144, 12, 63)'
+                          backgroundColor: COLORS_RANDOM,
+                          borderColor: COLORS_RANDOM
                         }]
                       }}
                       options={{
@@ -696,8 +698,8 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                         datasets: [{
                           label: '',
                           data: dataDashboard?.categories?.workplaces.data || [],
-                          backgroundColor: 'rgb(144, 12, 63)',
-                          borderColor: 'rgb(144, 12, 63)'
+                          backgroundColor: COLORS_RANDOM,
+                          borderColor: COLORS_RANDOM
                         }]
                       }}
                       options={{
@@ -729,24 +731,8 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                       datasets: [{
                         label: 'Data 1',
                         data: dataDashboard?.totalOffices[0].data || [],
-                        backgroundColor: [
-                          'rgb(51, 102, 204)',
-                          'rgb(44, 44, 44)',
-                          'rgba(255, 205, 86, 1)',
-                          'rgba(88, 24, 69, 1)',
-                          'rgba(199, 0, 57, 1)',
-                          'rgba(255, 87, 51, 1)',
-                          'rgba(29, 142, 16, 1)'
-                        ],
-                        borderColor: [
-                          'rgb(51, 102, 204)',
-                          'rgb(44, 44, 44)',
-                          'rgba(255, 205, 86, 1)',
-                          'rgba(88, 24, 69, 1)',
-                          'rgba(199, 0, 57, 1)',
-                          'rgba(255, 87, 51, 1)',
-                          'rgba(29, 142, 16, 1)'
-                        ]
+                        backgroundColor: COLORS_RANDOM,
+                        borderColor: COLORS_RANDOM
                       }]
                     }}
                     options={{
@@ -801,7 +787,9 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
       <br />
       <div className='container-dropdown-year'>
         {messageAlert.show && <AlertComponent message={messageAlert.message} type={messageAlert.type} />}
-        <h4></h4>
+        {loading ? <Title level={4}>Recargando datos...Esto puede tardar hasta 50 segundos...</Title> :
+          <h4></h4>
+        }
         <div className='dropdown-year'>
           <Button
             type="primary"

@@ -54,7 +54,12 @@ const MapGroupInvoiceToConfirmOC = (data: IGroupConfirmOC, selectedKeyInvoices: 
   return aux;
 };
 
-const MapGroupInvoiceToUpload = (data: IGroupUploadInvoices, selectedKeyInvoices: React.Key[], company: ICompanyInfo | undefined, companyBussinesName: string) => {
+const MapGroupInvoiceToUpload = (
+  data: IGroupUploadInvoices, 
+  selectedKeyInvoices: React.Key[], 
+  company: ICompanyInfo | undefined, 
+  companyBussinesName: string
+) => {
   const aux = [
     {
       ...data,
@@ -63,7 +68,7 @@ const MapGroupInvoiceToUpload = (data: IGroupUploadInvoices, selectedKeyInvoices
       email_empresa: company?.email
     },
     {
-      ids: selectedKeyInvoices
+      codes: selectedKeyInvoices
     }
   ];
 
