@@ -47,6 +47,7 @@ const ButtonComponent: React.FunctionComponent<IButtonProps> = ({
         }}
         ghost={ghost}
         size={size}
+        onClick={() => onClick()}
       />
     </Tooltip>
   ) : (

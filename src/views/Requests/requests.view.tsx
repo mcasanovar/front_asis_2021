@@ -39,7 +39,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
   const buttons: IButtonsProps[] = [
     {
       _id: 'newrequest',
-      title: '',
+      title: 'NUEVA SOLICITUD',
       size: 'large',
       widthModal: 1200,
       showButtons: [{ _id: CANCEL }, { _id: CONFIRM }],
@@ -90,6 +90,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
   const [filterObjectSelected, setFilterObjectSelected] = useState<IFilterSelected | null>();
 
   const handleClickButton = (button: IButtonsProps) => {
+    console.log('click button', button)
     setActualModal(button);
     setOpenModal(true);
   };
