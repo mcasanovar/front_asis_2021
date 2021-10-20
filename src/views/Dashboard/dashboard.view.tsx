@@ -711,10 +711,10 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                       width={500}
                       height={115}
                       data={{
-                        labels: dataDashboard?.categories?.placeServices.type || '',
+                        labels: dataDashboard?.categories?.placeServices?.type || '',
                         datasets: [{
                           label: 'Lugar Servicio',
-                          data: dataDashboard?.categories?.placeServices.data || [],
+                          data: dataDashboard?.categories?.placeServices?.data || [],
                           backgroundColor: COLORS_RANDOM,
                           borderColor: COLORS_RANDOM
                         }]
