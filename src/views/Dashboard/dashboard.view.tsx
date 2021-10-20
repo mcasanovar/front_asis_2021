@@ -592,7 +592,7 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                       data={{
                         labels: dataDashboard?.categories?.category1.type || '',
                         datasets: [{
-                          label: '',
+                          label: 'Categoria 1',
                           data: dataDashboard?.categories?.category1.data || [],
                           backgroundColor: COLORS_RANDOM,
                           borderColor: COLORS_RANDOM
@@ -601,6 +601,23 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                       options={{
                         responsive: true,
                         maintainAspectRatio: true,
+                        legend:{
+                          display: true,
+                          labels: {
+                            fontSize: 0
+                          }
+                        },
+                        title:{
+                          display: true,
+                          text: ''
+                        },
+                        tooltips: {
+                          callbacks: {
+                             label: function(tooltipItem: any) {
+                                    return tooltipItem.yLabel;
+                             }
+                          }
+                        },
                         scales: {
                           y: {
                             beginAtZero: true,
@@ -618,7 +635,7 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                       data={{
                         labels: dataDashboard?.categories?.category3.type || '',
                         datasets: [{
-                          label: '',
+                          label: 'Categoria 3',
                           data: dataDashboard?.categories?.category3.data || [],
                           backgroundColor: COLORS_RANDOM,
                           borderColor: COLORS_RANDOM
@@ -644,7 +661,7 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                       data={{
                         labels: dataDashboard?.categories?.services.type || '',
                         datasets: [{
-                          label: '',
+                          label: 'Nombre Servicio',
                           data: dataDashboard?.categories?.services.data || [],
                           backgroundColor: COLORS_RANDOM,
                           borderColor: COLORS_RANDOM
@@ -670,7 +687,7 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                       data={{
                         labels: dataDashboard?.categories?.typeServices.type || '',
                         datasets: [{
-                          label: '',
+                          label: 'Tipo Servicio',
                           data: dataDashboard?.categories?.typeServices.data || [],
                           backgroundColor: COLORS_RANDOM,
                           borderColor: COLORS_RANDOM
@@ -688,7 +705,33 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                     />
                   }
                 </TabPane>
-                <TabPane tab='Sucursal' key='5'>
+                <TabPane tab='Lugar Servicio' key='5'>
+                  {loading ? <SkeletonComponent active={true} rows={5} loading={loading} /> :
+                    <ChartComponent
+                      width={500}
+                      height={115}
+                      data={{
+                        labels: dataDashboard?.categories?.placeServices.type || '',
+                        datasets: [{
+                          label: 'Lugar Servicio',
+                          data: dataDashboard?.categories?.placeServices.data || [],
+                          backgroundColor: COLORS_RANDOM,
+                          borderColor: COLORS_RANDOM
+                        }]
+                      }}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: {
+                          y: {
+                            beginAtZero: true,
+                          }
+                        }
+                      }}
+                    />
+                  }
+                </TabPane>
+                <TabPane tab='Sucursal' key='6'>
                   {loading ? <SkeletonComponent active={true} rows={5} loading={loading} /> :
                     <ChartComponent
                       width={500}
@@ -696,7 +739,7 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
                       data={{
                         labels: dataDashboard?.categories?.workplaces.type || '',
                         datasets: [{
-                          label: '',
+                          label: 'Sucursal',
                           data: dataDashboard?.categories?.workplaces.data || [],
                           backgroundColor: COLORS_RANDOM,
                           borderColor: COLORS_RANDOM
@@ -776,6 +819,14 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({ autho
       setloading(false)
     }
   }, [dataDashboard])
+
+  useEffect(() => {
+    if (messageAlert.show) {
+      setTimeout(() => {
+        setMessageAlert({ ...messageAlert, show: false });
+      }, 2500);
+    }
+  }, [messageAlert]);
 
   if (!authorized) {
     return <Redirect to='./login' />

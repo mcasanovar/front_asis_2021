@@ -38,10 +38,13 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
       _id: 'confirm',
       title: 'CONFIRMACION GRUPAL',
       customTitle: 'Confirmación grupal de reservas,',
-      size: 'small',
+      size: 'large',
       widthModal: 1600,
       showButtons: [],
-      permission: PERMISSIONS.CONFIRM_GROUP_RESERVATION
+      permission: PERMISSIONS.CONFIRM_GROUP_RESERVATION,
+      icon: 'group',
+      tooltipText: 'Confirmación grupal de reservas',
+      customStyle: { width: '50px' }
     },
   ];
 

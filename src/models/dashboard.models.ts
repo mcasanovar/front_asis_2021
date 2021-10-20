@@ -30,6 +30,7 @@ interface ITotalCategories {
   category3: IResponseTypeData,
   services: IResponseTypeData,
   typeServices: IResponseTypeData,
+  placeServices: IResponseTypeData,
   workplaces: IResponseTypeData
 }
 

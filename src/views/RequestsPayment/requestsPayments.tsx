@@ -37,10 +37,13 @@ const RequestsPaymentView: React.FunctionComponent<IRequestsPaymentViewProps> = 
     {
       _id: 'consolidatereport',
       title: 'INFORME CONSOLIDADO',
-      size: 'small',
+      size: 'large',
       widthModal: 1600,
       showButtons: [],
-      permission: PERMISSIONS.CONSOLIDATE_REPORT
+      permission: PERMISSIONS.CONSOLIDATE_REPORT,
+      icon: 'consolidated',
+      tooltipText: 'Informe consolidado de cobranza',
+      customStyle: { width: '50px' }
     },
   ];
 

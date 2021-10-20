@@ -37,10 +37,13 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
     {
       _id: 'consolidatereport',
       title: 'INFORME CONSOLIDADO DE RESULTADOS',
-      size: 'small',
+      size: 'large',
       widthModal: 1600,
       showButtons: [],
-      permission: PERMISSIONS.CONSOLIDATE_REPORT
+      permission: PERMISSIONS.CONSOLIDATE_REPORT,
+      icon: 'consolidated',
+      tooltipText: 'Informe consolidado de resultados',
+      customStyle: { width: '50px' }
     },
   ];
 

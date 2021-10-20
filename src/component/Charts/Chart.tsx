@@ -11,7 +11,7 @@ interface IChartComponentProps {
 }
 
 interface IDataSetsInfo {
-  label: string,
+  label?: string,
   data: string|number[],
   backgroundColor: string | string[],
   borderColor: string | string[],
@@ -30,10 +30,27 @@ interface IScalesOptions {
   }
 }
 
+interface ILabelsLegend {
+  fontSize: number
+}
+
+interface ILegend {
+  display: boolean,
+  labels?: ILabelsLegend
+}
+
+interface ITitle {
+  display: boolean,
+  text: ''
+}
+
 interface IOptionsChart {
   responsive?: boolean
   maintainAspectRatio: boolean,
-  scales?: IScalesOptions
+  scales?: IScalesOptions,
+  legend?: ILegend,
+  title?: ITitle,
+  tooltips?: any
 }
 
 const ChartComponent: React.FunctionComponent<IChartComponentProps> = ({
