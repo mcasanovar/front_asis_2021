@@ -93,7 +93,7 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
   async function deleteResult(id: string) {
     const aux: IResponseResults = await deleteResultService(id);
     if (aux.err === null) {
-      setMessageAlert({ message: aux.res, type: 'success', show: true });
+      setMessageAlert({ message: aux.msg, type: 'success', show: true });
       getResults(1);
       return setLoading(false);
     }
@@ -202,7 +202,6 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       const fileName = aux?.filename || 'examen';
-
       link.setAttribute('href', url);
       link.setAttribute('download', fileName);
       link.style.visibility = 'hidden';

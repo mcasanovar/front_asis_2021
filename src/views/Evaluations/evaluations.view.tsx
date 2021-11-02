@@ -151,7 +151,7 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
   async function deleteEvaluation(id: string) {
     const aux: IResponseEvaluation = await deleteEvaluationService(id);
     if (aux.err === null) {
-      setMessageAlert({ message: aux.res, type: 'success', show: true });
+      setMessageAlert({ message: aux.msg, type: 'success', show: true });
       getEvaluations(1);
       return setLoading(false);
     }
@@ -173,8 +173,12 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
       const link = document.createElement("a");
       const fileName = aux?.filename || 'examen';
 
-      link.setAttribute('href', url);
-      link.setAttribute('download', fileName);
+      // link.setAttribute('href', url);
+      // link.setAttribute('download', fileName);
+      console.log('file name', fileName)
+      link.href = url;
+      link.target = '_blank';
+      link.download = fileName;
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
       link.click();

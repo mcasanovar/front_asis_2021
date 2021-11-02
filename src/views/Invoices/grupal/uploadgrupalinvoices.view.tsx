@@ -409,10 +409,11 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
         pagination={{ position: ['bottomCenter'] }}
       >
         <Column className='column-money' title="Código" dataIndex="codigo" key="codigo" />
-        <Column className='column-money' title="Estado" dataIndex="estado" key="estado" />
-        <Column className='column-money' title="Estado Archivo" dataIndex="estado_archivo" key="estado_archivo" />
         <Column className='column-money' title="Rut (CP)" dataIndex="rut_cp" key="rut_cp" />
-        <Column className='column-money' title="Cliente Principal (CP)" dataIndex="razon_social_cp" key="razon_social_cp" />
+        <Column className='column-money' title="Razon Social (CP)" dataIndex="razon_social_cp" key="razon_social_cp" />
+        <Column className='column-money' title="Rut (CS)" dataIndex="rut_cs" key="rut_cs" />
+        <Column className='column-money' title="Razon Social (CS)" dataIndex="razon_social_cs" key="razon_social_cs" />
+        <Column className='column-money' title="Nombre Servicio" dataIndex="nombre_servicio" key="nombre_servicio" />
         <Column
           className='column-money'
           title="Total"
@@ -420,7 +421,6 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
           key="valor_servicio"
           render={(text) => `$${MilesFormat(text)}`}
         />
-        <Column className='column-money' title="Nombre Servicio" dataIndex="nombre_servicio" key="nombre_servicio" />
       </Table>
     );
   };

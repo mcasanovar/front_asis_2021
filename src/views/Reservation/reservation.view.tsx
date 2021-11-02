@@ -214,7 +214,7 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({ autho
   async function hanbleDeleteRequest(id: string) {
     const aux: IResponseReservation = await deleteReservationService(id);
     if (aux.err === null) {
-      setMessageAlert({ message: aux.res, type: 'success', show: true });
+      setMessageAlert({ message: aux.msg, type: 'success', show: true });
       getReservations(1);
       return setLoading(false);
     }

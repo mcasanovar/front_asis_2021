@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, Row, Col, Upload, Table, Tag, Spin, Typography, Form, Button } from "antd";
+import { Input, Row, Col, Upload, Table, Tag, Spin, Typography, Form, Button, message } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 
 import { EvaluationModel, IResponseEvaluation } from '../../models/evaluations.models';
@@ -10,6 +10,7 @@ import AlertComponent from "../../component/Alert/Alert";
 import { uploadExamService } from '../../services';
 import { EvaluationInitialization } from '../../initializations/evaluation.initialization';
 import { MapEvaluationToSend } from '../../functions/mappers';
+import { RcFile } from 'antd/lib/upload';
 
 interface IUploadExamViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -77,8 +78,14 @@ const UploadExamView: React.FunctionComponent<IUploadExamViewProps> = ({
                     <Upload.Dragger
                       name="file"
                       customRequest={getFileUploaded}
-                      accept='.pdf'
+                      accept='*'
                       maxCount={1}
+                      beforeUpload={file =>{
+                        if(file.type !== 'application/pdf'){
+                          message.error("Solo se permiten archivo con extensión .pdf")
+                        }
+                        return file.type === 'application/pdf' ? true : Upload.LIST_IGNORE
+                      }}
                       onRemove={() => setFile(null)}
                     >
                       <p className="ant-upload-drag-icon">

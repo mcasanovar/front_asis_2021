@@ -88,7 +88,7 @@ const ConsolidateRequestsView: React.FunctionComponent<IConsolidateRequestsViewP
   }, [isValidEmails, emails, year, month]);
 
   return (
-    <Spin spinning={loading} size='large' tip='Cargando...'>
+    <Spin spinning={loading} size='large' tip='Cargando...Esto puede llegar a tardar hasta 1 minuto...'>
       {messageAlert.show && <AlertComponent message={messageAlert.message} type={messageAlert.type} />}
       <Input.Group>
         <Form layout='vertical'>

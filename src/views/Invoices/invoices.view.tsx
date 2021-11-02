@@ -68,7 +68,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
           _id: value,
           title: 'Carga grupal de OC',
           size: 'small',
-          widthModal: 1100,
+          widthModal: 1400,
           showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
         })
         setOpenModal(true);
@@ -78,7 +78,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
           _id: value,
           title: 'Validación grupal de OC',
           size: 'small',
-          widthModal: 1100,
+          widthModal: 1400,
           showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
         })
         setOpenModal(true);
@@ -88,7 +88,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
           _id: value,
           title: 'Subida grupal de facturas',
           size: 'small',
-          widthModal: 1400,
+          widthModal: 1500,
           showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
         })
         setOpenModal(true);
@@ -98,7 +98,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
           _id: value,
           title: 'Validación grupal de facturas',
           size: 'small',
-          widthModal: 1100,
+          widthModal: 1500,
           showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
         })
         setOpenModal(true);

@@ -220,7 +220,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({ authorized })
   async function hanbleDeleteRequest(id: string) {
     const aux: IResponseRequest = await deleteOneRequestService(id);
     if (aux.err === null) {
-      setMessageAlert({ message: aux.res, type: 'success', show: true });
+      setMessageAlert({ message: aux.msg, type: 'success', show: true });
       getRequests(1);
       return setLoading(false);
     }

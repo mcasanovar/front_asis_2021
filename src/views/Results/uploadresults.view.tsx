@@ -1,5 +1,5 @@
 import React, { useState, FunctionComponent } from 'react';
-import { Input, Row, Col, Upload, Table, Tag, Spin, Typography, Form, Button } from "antd";
+import { Input, Row, Col, Upload, Table, Tag, Spin, Typography, Form, Button, message } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 
 import { IAlertMessageContent } from '../../models/index.models';
@@ -78,8 +78,14 @@ const UploadResultsView: FunctionComponent<IUploadResultsViewProps> = ({
                     <Upload.Dragger
                       name="file"
                       customRequest={getFileUploaded}
-                      accept='.pdf'
+                      accept='*'
                       maxCount={1}
+                      beforeUpload={file =>{
+                        if(file.type !== 'application/pdf'){
+                          message.error("Solo se permiten archivo con extensión .pdf")
+                        }
+                        return file.type === 'application/pdf' ? true : Upload.LIST_IGNORE
+                      }}
                       onRemove={() => setFile(null)}
                       id='error'
                     >

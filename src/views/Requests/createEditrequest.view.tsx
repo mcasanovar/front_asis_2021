@@ -242,8 +242,9 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
       return
     }
     const request: RequestModel = aux.res;
-    console.log(aux.res)
-    setNewRequestData({ ...request, observacion_solicitud: '' });
+    console.log(request)
+    const lastObservation = request.observacion_solicitud || '';
+    setNewRequestData({ ...request, observacion_solicitud: lastObservation });
 
     getGIByRut(request.rut_CP, 1);
     getGIByRut(request.rut_cs, 2);
@@ -886,6 +887,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                 <TextArea
                   rows={3}
                   onChange={(e) => setNewRequestData({ ...newRequestData, observacion_solicitud: e.currentTarget.value })}
+                  defaultValue={newRequestData.observacion_solicitud[newRequestData.observacion_solicitud.length - 1 || 0]}
                   value={newRequestData.observacion_solicitud}
                 />
               </Form.Item>
