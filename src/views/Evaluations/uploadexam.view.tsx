@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, Row, Col, Upload, Table, Tag, Spin, Typography, Form, Button, message } from "antd";
+import { Input, Row, Col, Upload, Table, Tag, Spin, Typography, Form, Button } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 
 import { EvaluationModel, IResponseEvaluation } from '../../models/evaluations.models';
@@ -80,12 +80,6 @@ const UploadExamView: React.FunctionComponent<IUploadExamViewProps> = ({
                       customRequest={getFileUploaded}
                       accept='*'
                       maxCount={1}
-                      beforeUpload={file =>{
-                        if(file.type !== 'application/pdf'){
-                          message.error("Solo se permiten archivo con extensión .pdf")
-                        }
-                        return file.type === 'application/pdf' ? true : Upload.LIST_IGNORE
-                      }}
                       onRemove={() => setFile(null)}
                     >
                       <p className="ant-upload-drag-icon">

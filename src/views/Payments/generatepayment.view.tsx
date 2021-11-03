@@ -320,7 +320,7 @@ const GeneratePaymentView: React.FunctionComponent<IGeneratePaymentViewProps> = 
                 <Upload.Dragger
                   name="file"
                   customRequest={getFileUploaded}
-                  accept='.pdf'
+                  accept='*'
                   maxCount={1}
                   onRemove={() => setFile(null)}
                 >

@@ -184,7 +184,7 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
               <Upload.Dragger
                 name="file"
                 customRequest={getFileUploaded}
-                accept='.pdf'
+                accept='*'
                 id='error_4'
                 maxCount={1}
                 onRemove={() => setFile(null)}

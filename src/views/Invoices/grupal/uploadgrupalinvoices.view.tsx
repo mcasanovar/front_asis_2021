@@ -265,7 +265,7 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
             <Upload.Dragger
               name="file"
               customRequest={getFileUploaded}
-              accept='.pdf'
+              accept='*'
               maxCount={1}
               onRemove={() => setFile(null)}
             >

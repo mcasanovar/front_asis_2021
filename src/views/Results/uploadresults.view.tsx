@@ -80,12 +80,6 @@ const UploadResultsView: FunctionComponent<IUploadResultsViewProps> = ({
                       customRequest={getFileUploaded}
                       accept='*'
                       maxCount={1}
-                      beforeUpload={file =>{
-                        if(file.type !== 'application/pdf'){
-                          message.error("Solo se permiten archivo con extensión .pdf")
-                        }
-                        return file.type === 'application/pdf' ? true : Upload.LIST_IGNORE
-                      }}
                       onRemove={() => setFile(null)}
                       id='error'
                     >

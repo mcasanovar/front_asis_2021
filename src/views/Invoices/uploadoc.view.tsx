@@ -149,7 +149,7 @@ const UploadOCView: React.FunctionComponent<IUploadOCViewProps> = ({
                 <Upload.Dragger
                   name="file"
                   customRequest={getFileUploaded}
-                  accept='.pdf'
+                  accept='*'
                   id='error_4'
                   maxCount={1}
                   onRemove={() => setFile(null)}

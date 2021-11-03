@@ -288,7 +288,7 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
                     <Upload.Dragger
                       name="file"
                       customRequest={getFileUploaded}
-                      accept='.pdf'
+                      accept='*'
                       maxCount={1}
                       onRemove={() => setFile(null)}
                     >
