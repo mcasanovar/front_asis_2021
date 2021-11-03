@@ -455,7 +455,7 @@ const GenerateInvoice: React.FunctionComponent<IGenerateInvoiceProps> = ({
 									<Upload.Dragger
 										name="file"
 										customRequest={getFileUploaded}
-										accept='.pdf'
+										accept='*'
 										maxCount={1}
 										onRemove={() => setFile(null)}
 									>
