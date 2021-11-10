@@ -20,6 +20,7 @@ import { deleteEvaluationService, downloadExamService, filterEvaluationsService,
 import AlertComponent from "../../component/Alert/Alert";
 import PaginationComponent from '../../component/Pagination/Pagination';
 import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
+import removeAccents from '../../functions/removeAccents';
 
 interface IEvaluationsViewProps {
   authorized: boolean
@@ -173,13 +174,11 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
       const link = document.createElement("a");
       const fileName = aux?.filename || 'examen';
 
-      // link.setAttribute('href', url);
-      // link.setAttribute('download', fileName);
-      console.log('file name', fileName)
       link.href = url;
       link.target = '_blank';
-      link.download = fileName;
+      link.download = removeAccents(fileName);
       link.style.visibility = 'hidden';
+      console.log('link', link)
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
