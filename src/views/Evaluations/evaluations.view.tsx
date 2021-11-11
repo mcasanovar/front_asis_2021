@@ -21,6 +21,7 @@ import AlertComponent from "../../component/Alert/Alert";
 import PaginationComponent from '../../component/Pagination/Pagination';
 import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
 import removeAccents from '../../functions/removeAccents';
+import removeUidName from '../../functions/removeUidName';
 
 interface IEvaluationsViewProps {
   authorized: boolean
@@ -176,7 +177,7 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({ autho
 
       link.href = url;
       link.target = '_blank';
-      link.download = removeAccents(fileName);
+      link.download = removeUidName(removeAccents(fileName));
       link.style.visibility = 'hidden';
       console.log('link', link)
       document.body.appendChild(link);
