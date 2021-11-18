@@ -115,6 +115,13 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
         // return element?.fecha_cobranza && element.fecha_cobranza >= daterange[0].toDate() && element.fecha_cobranza <= daterange[1].toDate()
         return element?.fecha_resultado_date && moment(element.fecha_resultado_date).isBetween(dateValueRange[0], dateValueRange[1])
       })
+
+      //agregar los extremos del rango al resultado
+      const aux = results?.filter(element => element.fecha_resultado === moment(dateValueRange[0]).format(FORMAT_DATE) 
+        || element.fecha_resultado === moment(dateValueRange[1]).format(FORMAT_DATE));
+      if(!!aux?.length && !!result){
+        result = [...result, ...aux]
+      }
     };
 
     //si tambien filtra por faena
@@ -126,6 +133,7 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
     if (showServiceNameFilter) {
       result = result?.filter((element) => element.nombre_servicio === serviceSelected);
     }
+
 
     setResultsFiltered(result)
   };
