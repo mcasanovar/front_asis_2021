@@ -46,7 +46,8 @@ export interface InvoicesModel {
   nro_nota_credito?: string,
   fecha_nota_credito?: string,
   monto_nota_credito?: number,
-  factura_anular?: string
+  factura_anular?: string,
+  fecha_resultado?: string,
   isActive: boolean
 };
 

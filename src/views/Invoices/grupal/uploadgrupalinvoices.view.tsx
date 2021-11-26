@@ -7,13 +7,16 @@ import { ICompanyInfo, IGroupUploadInvoices, InvoicesModel, IResponseInvoices } 
 import { MilesFormat } from '../../../libs/formattedPesos';
 import { IGroupUploadInvoicesInitialization } from '../../../initializations/invoices.initialization';
 import { DEFAULT_PERCENTAGE_IVA, FORMAT_DATE } from '../../../constants/var';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import { CalculateIVA } from '../../../libs/calculateIVA';
-import { getGroupInvoiceToUploadService, uploadGroupInvoicesService } from '../../../services';
+import { getGroupInvoiceToUploadService, getResultsByDateService, uploadGroupInvoicesService } from '../../../services';
 import { IAlertMessageContent } from '../../../models/index.models';
 import { MapGroupInvoiceToUpload } from '../../../functions/mappers';
 import AlertComponent from '../../../component/Alert/Alert';
 import { FormatingRut } from '../../../functions/validators/index.validators';
+import { IResponseResults } from '../../../models/results.model';
+import getFilteredInvoicesByResults from '../../../functions/getFilteredInvoicesByResults';
+import sortingObjects from '../../../functions/sortingObjects';
 
 interface IUploadGroupInvoicesViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -38,6 +41,7 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
   const [file, setFile] = useState<string | Blob | null>(null);
   const [disabledConfirm, setDisabledConfirm] = useState<boolean>(true);
   const [rutSearchInput, setRutSearchInput] = useState<string>('');
+  const [dateResultFilter, setDateResultFilter] = useState<Moment | undefined>();
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[]) => {
@@ -111,8 +115,9 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
     if (!aux.err) {
       const filteredInvoices = aux.res.filter((invoice: InvoicesModel) =>
         invoice.estado_archivo === 'Aprobado' || invoice.estado_archivo === 'Rechazado' || invoice.estado_archivo === 'Sin Documento');
-      setInvoices(filteredInvoices);
-      setInvoicesFiltered(filteredInvoices);
+      const filteredAux = sortingObjects(filteredInvoices, 'codigo', 'desc')
+      setInvoices(filteredAux);
+      setInvoicesFiltered(filteredAux);
       setLoading(false);
       return
     }
@@ -120,6 +125,27 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
     console.log(aux.err)
     setLoading(false)
   };
+
+  const handleFilterByDate = async (date: Moment) => {
+    setLoading(true);
+    setDateResultFilter(date)
+    const aux: IResponseResults = await getResultsByDateService(moment(date).format(FORMAT_DATE));
+    if (aux.err) {
+      setLoading(false)
+      setMessageAlert({ message: aux.msg, type: 'error', show: true });
+      return
+    }
+    const invoicesRes = getFilteredInvoicesByResults(aux.res, invoices || []);
+    const invoicesResFiltered = sortingObjects(invoicesRes, 'codigo', 'desc');
+
+    setInvoicesFiltered(invoicesResFiltered)
+    setLoading(false)
+  };
+
+  const handleCleanDateResult = () => {
+    setDateResultFilter(undefined);
+    setInvoicesFiltered(invoices)
+  }
 
   //-------------------------------------------USEEFECT
   useEffect(() => {
@@ -435,17 +461,46 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
             {/* {renderValuesInformation()} */}
           </Row>
           <br />
-          <Row gutter={8}>
+          <Row gutter={8} style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
             <Col span={12}>
-              <Search
-                placeholder="Rut CP"
-                allowClear
-                enterButton="Buscar"
-                size="large"
-                onChange={(e) => handleFormatingRut(e)}
-                onSearch={handleSearchInput}
-                value={rutSearchInput}
-              />
+              <Form.Item
+                label="Buscar por Rut CP"
+                style={{ width: '100%' }}
+              >
+                <Search
+                  placeholder="Rut CP"
+                  allowClear
+                  enterButton="Buscar"
+                  size="large"
+                  onChange={(e) => handleFormatingRut(e)}
+                  onSearch={handleSearchInput}
+                  value={rutSearchInput}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item
+                label="Buscar por Fecha Resultado"
+              >
+                <DatePicker
+                  style={{ width: '100%', marginRight: '10px', height: '100%' }}
+                  onSelect={(e) => handleFilterByDate(e)}
+                  format={FORMAT_DATE}
+                  value={dateResultFilter}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={3}>
+              <Form.Item
+                label="."
+              >
+                <Button
+                  onClick={() => handleCleanDateResult()}
+                  style={{ backgroundColor: '#E10D17', color: 'white' }}
+                >
+                  Limpiar
+                </Button>
+              </Form.Item>
             </Col>
           </Row>
           <br />

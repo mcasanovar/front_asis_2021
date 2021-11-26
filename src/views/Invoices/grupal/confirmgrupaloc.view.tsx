@@ -1,15 +1,20 @@
 import React, { useState, useEffect, FormEvent } from 'react';
-import { Input, Row, Col, Select, Spin, Form, Table, Button } from "antd";
+import { Input, Row, Col, Select, Spin, Form, Table, Button, DatePicker } from "antd";
 
 import { IGroupConfirmOC, InvoicesModel, IResponseInvoices } from '../../../models/invoices.models';
 import { IGroupConfirmOCInitialization } from '../../../initializations/invoices.initialization';
-import { confirmGroupOCService, getGroupOCConfirmService } from '../../../services';
+import { confirmGroupOCService, getGroupOCConfirmService, getResultsByDateService } from '../../../services';
 import { IAlertMessageContent } from '../../../models/index.models';
 import { MilesFormat } from '../../../libs/formattedPesos';
 import { MapGroupInvoiceToConfirmOC } from '../../../functions/mappers';
 
 import AlertComponent from '../../../component/Alert/Alert';
 import { FormatingRut } from '../../../functions/validators/index.validators';
+import { FORMAT_DATE } from '../../../constants/var';
+import moment, { Moment } from 'moment';
+import { IResponseResults } from '../../../models/results.model';
+import getFilteredInvoicesByResults from '../../../functions/getFilteredInvoicesByResults';
+import sortingObjects from '../../../functions/sortingObjects';
 
 interface IConfirmGroupOCViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -30,6 +35,7 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
   const [selectedInvoices, setSelectedInvoices] = useState<React.Key[]>([]);
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [rutSearchInput, setRutSearchInput] = useState<string>('');
+  const [dateResultFilter, setDateResultFilter] = useState<Moment | undefined>();
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[]) => {
@@ -55,7 +61,7 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
 
   const handleSearchInput = () => {
     const aux: InvoicesModel[] | undefined = invoices?.filter((invoice) => invoice.rut_cp === rutSearchInput);
-    if(aux){
+    if (aux) {
       setLoading(true);
       setTimeout(() => {
         setInvoicesFiltered(aux);
@@ -64,11 +70,33 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
     }
   };
 
+  const handleFilterByDate = async (date: Moment) => {
+    setLoading(true);
+    setDateResultFilter(date)
+    const aux: IResponseResults = await getResultsByDateService(moment(date).format(FORMAT_DATE));
+    if (aux.err) {
+      setLoading(false)
+      setMessageAlert({ message: aux.msg, type: 'error', show: true });
+      return
+    }
+    const invoicesRes = getFilteredInvoicesByResults(aux.res, invoices || []);
+    const invoicesResFiltered = sortingObjects(invoicesRes, 'codigo', 'desc');
+
+    setInvoicesFiltered(invoicesResFiltered)
+    setLoading(false)
+  };
+
+  const handleCleanDateResult = () => {
+    setDateResultFilter(undefined);
+    setInvoicesFiltered(invoices)
+  }
+
   async function getInvoicesWithOC() {
     const aux: IResponseInvoices = await getGroupOCConfirmService();
     if (!aux.err) {
-      setInvoices(aux.res);
-      setInvoicesFiltered(aux.res);
+      const filteredAux = sortingObjects(aux.res, 'codigo', 'desc')
+      setInvoices(filteredAux);
+      setInvoicesFiltered(filteredAux);
       setLoading(false);
       return
     }
@@ -99,10 +127,10 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
   }, [dataConfirmation, selectedInvoices]);
 
   useEffect(() => {
-    if(!rutSearchInput){
-     setInvoicesFiltered(invoices)
+    if (!rutSearchInput) {
+      setInvoicesFiltered(invoices)
     }
- }, [rutSearchInput]);
+  }, [rutSearchInput]);
 
   //----------------------------------------------RENDERS
   const renderInformation = () => {
@@ -182,20 +210,49 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
             {renderInformation()}
           </Col>
         </Row>
-        <Row gutter={8}>
+        <Row gutter={8} style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
           <Col span={12}>
-            <Search
-              placeholder="Rut CP"
-              allowClear
-              enterButton="Buscar"
-              size="large"
-              onChange={(e) => handleFormatingRut(e)}
-              onSearch={handleSearchInput}
-              value={rutSearchInput}
-            />
+            <Form.Item
+              label="Buscar por Rut CP"
+              style={{ width: '100%' }}
+            >
+              <Search
+                placeholder="Rut CP"
+                allowClear
+                enterButton="Buscar"
+                size="large"
+                onChange={(e) => handleFormatingRut(e)}
+                onSearch={handleSearchInput}
+                value={rutSearchInput}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item
+              label="Buscar por Fecha Resultado"
+            >
+              <DatePicker
+                style={{ width: '100%', marginRight: '10px', height: '100%' }}
+                onSelect={(e) => handleFilterByDate(e)}
+                format={FORMAT_DATE}
+                value={dateResultFilter}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={3}>
+            <Form.Item
+              label="."
+            >
+              <Button
+                onClick={() => handleCleanDateResult()}
+                style={{ backgroundColor: '#E10D17', color: 'white' }}
+              >
+                Limpiar
+            </Button>
+            </Form.Item>
           </Col>
         </Row>
-        <br/>
+        <br />
         <Row>
           <Col span='24'>
             {renderListInvoices()}

@@ -4,14 +4,17 @@ import { InboxOutlined } from '@ant-design/icons';
 import { IGroupUploadOC, InvoicesModel, IResponseInvoices } from '../../../models/invoices.models';
 import { IGroupUploadOCInitialization } from '../../../initializations/invoices.initialization';
 import { FORMAT_DATE } from '../../../constants/var';
-import moment from 'moment';
-import { getGroupOCService, uploadGroupOCService } from '../../../services';
+import moment, { Moment } from 'moment';
+import { getGroupOCService, getResultsByDateService, uploadGroupOCService } from '../../../services';
 import { IAlertMessageContent } from '../../../models/index.models';
 import { MilesFormat } from '../../../libs/formattedPesos';
 import { MapGroupInvoiceToUploadOC } from '../../../functions/mappers';
 
 import AlertComponent from "../../../component/Alert/Alert";
 import { FormatingRut } from '../../../functions/validators/index.validators';
+import { IResponseResults, ResultModel } from '../../../models/results.model';
+import getFilteredInvoicesByResults from '../../../functions/getFilteredInvoicesByResults';
+import sortingObjects from '../../../functions/sortingObjects';
 
 interface IUploadGrupalOCViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -28,10 +31,12 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [file, setFile] = useState<string | Blob | null>(null);
   const [invoices, setInvoices] = useState<InvoicesModel[]>();
+  const [results, setResults] = useState<ResultModel[]>([]);
   const [invoicesFiltered, setInvoicesFiltered] = useState<InvoicesModel[]>();
   const [selectedInvoices, setSelectedInvoices] = useState<React.Key[]>([]);
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [rutSearchInput, setRutSearchInput] = useState<string>('');
+  const [dateResultFilter, setDateResultFilter] = useState<Moment | undefined>();
 
   const getFileUploaded = (e: any) => {
     e && setFile(e.file)
@@ -74,11 +79,28 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
     }
   };
 
+  const handleFilterByDate = async (date: Moment) => {
+    setLoading(true);
+    setDateResultFilter(date)
+    const aux: IResponseResults = await getResultsByDateService(moment(date).format(FORMAT_DATE));
+    if (aux.err) {
+      setLoading(false)
+      setMessageAlert({ message: aux.msg, type: 'error', show: true });
+      return
+    }
+    const invoicesRes = getFilteredInvoicesByResults(aux.res, invoices || []);
+    const invoicesResFiltered = sortingObjects(invoicesRes, 'codigo', 'desc');
+
+    setInvoicesFiltered(invoicesResFiltered)
+    setLoading(false)
+  };
+
   async function getInvoicesWithOC() {
     const aux: IResponseInvoices = await getGroupOCService();
     if (!aux.err) {
-      setInvoices(aux.res);
-      setInvoicesFiltered(aux.res);
+      const filteredAux = sortingObjects(aux.res, 'codigo', 'desc')
+      setInvoices(filteredAux);
+      setInvoicesFiltered(filteredAux);
       setDataConfirmation({
         ...dataConfirmation,
         fecha_oc: moment().format(FORMAT_DATE),
@@ -90,6 +112,11 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
     setMessageAlert({ message: aux.msg, type: 'error', show: true });
     setLoading(false)
   };
+
+  const handleCleanDateResult = () => {
+    setDateResultFilter(undefined);
+    setInvoicesFiltered(invoices)
+  }
 
   //--------------------------------USEEFECT
   useEffect(() => {
@@ -223,6 +250,9 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
         <Column className='column-money' title="Rut (CS)" dataIndex="rut_cs" key="rut_cs" />
         <Column className='column-money' title="Razon Social (CS)" dataIndex="razon_social_cs" key="razon_social_cs" />
         <Column className='column-money' title="Nombre Servicio" dataIndex="nombre_servicio" key="nombre_servicio" />
+        {!!dateResultFilter &&
+          <Column className='column-money' title="Fecha Resultado" dataIndex="fecha_resultado" key="fecha_resultado" />
+        }
         <Column
           className='column-money'
           title="Total"
@@ -244,17 +274,46 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
           </Col>
         </Row>
         <br />
-        <Row gutter={8}>
+        <Row gutter={8} style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
           <Col span={12}>
-            <Search
-              placeholder="Rut CP"
-              allowClear
-              enterButton="Buscar"
-              size="large"
-              onChange={(e) => handleFormatingRut(e)}
-              onSearch={handleSearchInput}
-              value={rutSearchInput}
-            />
+            <Form.Item
+              label="Buscar por Rut CP"
+              style={{ width: '100%' }}
+            >
+              <Search
+                placeholder="Rut CP"
+                allowClear
+                enterButton="Buscar"
+                size="large"
+                onChange={(e) => handleFormatingRut(e)}
+                onSearch={handleSearchInput}
+                value={rutSearchInput}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item
+              label="Buscar por Fecha Resultado"
+            >
+              <DatePicker
+                style={{ width: '100%', marginRight: '10px', height: '100%' }}
+                onSelect={(e) => handleFilterByDate(e)}
+                format={FORMAT_DATE}
+                value={dateResultFilter}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={3}>
+            <Form.Item
+              label="."
+            >
+              <Button
+                onClick={() => handleCleanDateResult()}
+                style={{ backgroundColor: '#E10D17', color: 'white' }}
+              >
+                Limpiar
+            </Button>
+            </Form.Item>
           </Col>
         </Row>
         <br />
@@ -279,7 +338,7 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
           alignItems: 'flex-end'
         }}>
           <Col
-            span={5}
+            span={4}
             style={{ display: 'flex', justifyContent: 'space-between' }}
           >
             <Button

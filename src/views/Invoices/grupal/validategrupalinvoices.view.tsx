@@ -3,13 +3,16 @@ import { Input, Row, Col, Select, Spin, Form, DatePicker, InputNumber, Table, Bu
 import { IGroupConfirmInvoices, InvoicesModel, IResponseInvoices } from '../../../models/invoices.models';
 import { IGroupConfirmInvoicesInitialization } from '../../../initializations/invoices.initialization';
 import { FORMAT_DATE } from '../../../constants/var';
-import { confirmGroupInvoicesService, getGroupInvoiceToUploadService } from '../../../services';
+import { confirmGroupInvoicesService, getGroupInvoiceToUploadService, getResultsByDateService } from '../../../services';
 import { IAlertMessageContent } from '../../../models/index.models';
 import AlertComponent from '../../../component/Alert/Alert';
 import { MilesFormat } from '../../../libs/formattedPesos';
 import { MapGroupConfirmInvoices } from '../../../functions/mappers';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import { FormatingRut } from '../../../functions/validators/index.validators';
+import { IResponseResults } from '../../../models/results.model';
+import getFilteredInvoicesByResults from '../../../functions/getFilteredInvoicesByResults';
+import sortingObjects from '../../../functions/sortingObjects';
 
 interface IValidateGroupInvoicesViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -30,6 +33,7 @@ const ValidateGroupInvoicesView: React.FunctionComponent<IValidateGroupInvoicesV
   const [selectedInvoices, setSelectedInvoices] = useState<React.Key[]>([]);
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [rutSearchInput, setRutSearchInput] = useState<string>('');
+  const [dateResultFilter, setDateResultFilter] = useState<Moment | undefined>();
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[]) => {
@@ -68,8 +72,9 @@ const ValidateGroupInvoicesView: React.FunctionComponent<IValidateGroupInvoicesV
     const aux: IResponseInvoices = await getGroupInvoiceToUploadService();
     if (!aux.err) {
       const filteredInvoices = aux.res.filter((invoice: InvoicesModel) => invoice.estado_archivo === 'Cargado');
-      setInvoices(filteredInvoices);
-      setInvoicesFiltered(filteredInvoices);
+      const filteredAux = sortingObjects(filteredInvoices, 'codigo', 'desc')
+      setInvoices(filteredAux);
+      setInvoicesFiltered(filteredAux);
       setLoading(false);
       return
     }
@@ -77,6 +82,27 @@ const ValidateGroupInvoicesView: React.FunctionComponent<IValidateGroupInvoicesV
     console.log(aux.err)
     setLoading(false)
   };
+
+  const handleFilterByDate = async (date: Moment) => {
+    setLoading(true);
+    setDateResultFilter(date)
+    const aux: IResponseResults = await getResultsByDateService(moment(date).format(FORMAT_DATE));
+    if (aux.err) {
+      setLoading(false)
+      setMessageAlert({ message: aux.msg, type: 'error', show: true });
+      return
+    }
+    const invoicesRes = getFilteredInvoicesByResults(aux.res, invoices || []);
+    const invoicesResFiltered = sortingObjects(invoicesRes, 'codigo', 'desc');
+
+    setInvoicesFiltered(invoicesResFiltered)
+    setLoading(false)
+  };
+
+  const handleCleanDateResult = () => {
+    setDateResultFilter(undefined);
+    setInvoicesFiltered(invoices)
+  }
 
   //-----------------------------------------USEEFECT
   useEffect(() => {
@@ -249,20 +275,49 @@ const ValidateGroupInvoicesView: React.FunctionComponent<IValidateGroupInvoicesV
       {messageAlert.show && <AlertComponent message={messageAlert.message} type={messageAlert.type} />}
       <Form layout='vertical'>
         {renderInformation()}
-        <Row gutter={8}>
+        <Row gutter={8} style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
           <Col span={12}>
-            <Search
-              placeholder="Rut CP"
-              allowClear
-              enterButton="Buscar"
-              size="large"
-              onChange={(e) => handleFormatingRut(e)}
-              onSearch={handleSearchInput}
-              value={rutSearchInput}
-            />
+            <Form.Item
+              label="Buscar por Rut CP"
+              style={{ width: '100%' }}
+            >
+              <Search
+                placeholder="Rut CP"
+                allowClear
+                enterButton="Buscar"
+                size="large"
+                onChange={(e) => handleFormatingRut(e)}
+                onSearch={handleSearchInput}
+                value={rutSearchInput}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item
+              label="Buscar por Fecha Resultado"
+            >
+              <DatePicker
+                style={{ width: '100%', marginRight: '10px', height: '100%' }}
+                onSelect={(e) => handleFilterByDate(e)}
+                format={FORMAT_DATE}
+                value={dateResultFilter}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={3}>
+            <Form.Item
+              label="."
+            >
+              <Button
+                onClick={() => handleCleanDateResult()}
+                style={{ backgroundColor: '#E10D17', color: 'white' }}
+              >
+                Limpiar
+                </Button>
+            </Form.Item>
           </Col>
         </Row>
-        <br/>
+        <br />
         <Row>
           <Col span='24'>
             {renderListInvoices()}

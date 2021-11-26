@@ -68,7 +68,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({ authorized 
           _id: value,
           title: 'Carga grupal de OC',
           size: 'small',
-          widthModal: 1400,
+          widthModal: 1600,
           showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
         })
         setOpenModal(true);
