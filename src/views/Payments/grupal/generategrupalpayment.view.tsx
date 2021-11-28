@@ -4,7 +4,7 @@ import { DollarOutlined, InboxOutlined } from '@ant-design/icons';
 import { IGroupConfirmPayment, IResponsePayment, PaymentModel } from '../../../models/payments.models';
 import { IGroupConfirmPaymentInitialization } from '../../../initializations/payments.initialization';
 import { BANKING_INSTITUTION, FORMAT_DATE, PAYMENT_METHODS, SUCURSAL } from '../../../constants/var';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import { IAlertMessageContent } from '../../../models/index.models';
 import AlertComponent from '../../../component/Alert/Alert';
 import { MilesFormat } from '../../../libs/formattedPesos';
@@ -31,6 +31,8 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
   const [paymentsSelected, setPaymentsSelected] = useState<PaymentModel[]>([]);
   const [selectedPayments, setSelectedPayments] = useState<React.Key[]>([]);
   const [file, setFile] = useState<string | Blob | null>(null);
+  const [dateResultFilter, setDateResultFilter] = useState<Moment | undefined>();
+  const [filteredPayments, setFilteredPayments] = useState<PaymentModel[]>()
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedPayments: PaymentModel[]) => {
@@ -49,7 +51,7 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
     e && setFile(e.file)
     e.onSuccess('ok');
   };
-  
+
   const handleGroupConfirmPayments = async () => {
     setLoading(true);
     let formData = new FormData();
@@ -57,7 +59,7 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
     formData.append("data", JSON.stringify(dataMapped));
     file !== null && formData.append("archivo", file);
     const aux: IResponsePayment = await generateGroupPaymentsService(formData);
-    if(!aux.err){
+    if (!aux.err) {
       return onCloseModal('reload', aux.msg)
     }
     setMessageAlert({ message: aux.msg, type: 'error', show: true });
@@ -68,6 +70,7 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
     const aux: IResponsePayment = await getAllPendingPaymentsService();
     if (!aux.err) {
       setPayments(aux.res);
+      setFilteredPayments(aux.res);
       setDataConfirmation({
         ...dataConfirmation,
         fecha_pago: moment().format(FORMAT_DATE),
@@ -80,6 +83,17 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
     console.log(aux.err)
     setLoading(false)
   };
+
+  const handleFilterByDate = async (date: Moment) => {
+    setDateResultFilter(date)
+    const filteredByDate = payments?.filter((payment) => payment.fecha_facturacion === moment(date).format(FORMAT_DATE));
+    setFilteredPayments(filteredByDate)
+  };
+
+  const handleCleanDateResult = () => {
+    setDateResultFilter(undefined);
+    setFilteredPayments(payments)
+  }
 
   //-----------------------------------------USEEFECT
   useEffect(() => {
@@ -96,13 +110,13 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
   }, [messageAlert]);
 
   useEffect(() => {
-    if(!!dataConfirmation.fecha_pago
+    if (!!dataConfirmation.fecha_pago
       && !!dataConfirmation.hora_pago
       && !!dataConfirmation.sucursal
       && !!dataConfirmation.tipo_pago
       && !!dataConfirmation.institucion_bancaria
-      && !!amount){
-        return setDisabledConfirm(false)
+      && !!amount) {
+      return setDisabledConfirm(false)
     }
     return setDisabledConfirm(true)
   }, [dataConfirmation, amount]);
@@ -268,7 +282,7 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
       <Table
         style={{ width: '100%' }}
         showHeader={true}
-        dataSource={payments || []}
+        dataSource={filteredPayments || []}
         // columns={columns}
         loading={loading}
         rowSelection={{
@@ -305,6 +319,32 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
       {messageAlert.show && <AlertComponent message={messageAlert.message} type={messageAlert.type} />}
       <Form layout='vertical'>
         {renderInformation()}
+        <Row gutter={8}>
+          <Col span={6}>
+            <Form.Item
+              label="Buscar por Fecha Facturación"
+            >
+              <DatePicker
+                style={{ width: '100%', marginRight: '10px', height: '100%' }}
+                onSelect={(e) => handleFilterByDate(e)}
+                format={FORMAT_DATE}
+                value={dateResultFilter}
+              />
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item
+              label="."
+            >
+              <Button
+                onClick={() => handleCleanDateResult()}
+                style={{ backgroundColor: '#E10D17', color: 'white' }}
+              >
+                Limpiar
+                </Button>
+            </Form.Item>
+          </Col>
+        </Row>
         {renderListInvoices()}
       </Form>
       <Row gutter={8} style={{
