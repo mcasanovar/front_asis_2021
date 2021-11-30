@@ -21,6 +21,7 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
   const { Option } = Select;
   const { TextArea } = Input;
   const { Column } = Table;
+  const { RangePicker } = DatePicker;
 
   const [loading, setLoading] = useState<boolean>(false);
   const [dataConfirmation, setDataConfirmation] = useState<IGroupConfirmPayment>(IGroupConfirmPaymentInitialization);
@@ -31,7 +32,7 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
   const [paymentsSelected, setPaymentsSelected] = useState<PaymentModel[]>([]);
   const [selectedPayments, setSelectedPayments] = useState<React.Key[]>([]);
   const [file, setFile] = useState<string | Blob | null>(null);
-  const [dateResultFilter, setDateResultFilter] = useState<Moment | undefined>();
+  const [dateResultFilter, setDateResultFilter] = useState<any>(null);
   const [filteredPayments, setFilteredPayments] = useState<PaymentModel[]>()
 
   const rowSelection = {
@@ -84,9 +85,19 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
     setLoading(false)
   };
 
-  const handleFilterByDate = async (date: Moment) => {
+  const handleFilterByDate = async (date: any) => {
+    if(!date) return;
     setDateResultFilter(date)
-    const filteredByDate = payments?.filter((payment) => payment.fecha_facturacion === moment(date).format(FORMAT_DATE));
+    const firstDate = date[0];
+    const secondDate = date[1];
+    let filteredByDate = payments?.filter((payment) => {
+      return moment(payment.fecha_facturacion, FORMAT_DATE).isBetween(firstDate, secondDate)
+    });
+    const aux = payments?.filter(element => element.fecha_facturacion === moment(firstDate).format(FORMAT_DATE)
+      || element.fecha_facturacion === moment(secondDate).format(FORMAT_DATE));
+    if (!!aux?.length && !!filteredByDate) {
+      filteredByDate = [...filteredByDate, ...aux]
+    }
     setFilteredPayments(filteredByDate)
   };
 
@@ -295,6 +306,7 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
         <Column className='column-money' title="Código" dataIndex="codigo" key="codigo" />
         <Column className='column-money' title="Estado" dataIndex="estado" key="estado" />
         <Column className='column-money' title="Fecha Pago" dataIndex="fecha_pago" key="fecha_pago" />
+        <Column className='column-money' title="Fecha Facturación" dataIndex="fecha_facturacion" key="fecha_facturacion" />
         <Column
           className='column-money'
           title="Valor Servicio"
@@ -324,9 +336,14 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
             <Form.Item
               label="Buscar por Fecha Facturación"
             >
-              <DatePicker
+              {/* <DatePicker
                 style={{ width: '100%', marginRight: '10px', height: '100%' }}
                 onSelect={(e) => handleFilterByDate(e)}
+                format={FORMAT_DATE}
+                value={dateResultFilter}
+              /> */}
+              <RangePicker
+                onChange={(e) => handleFilterByDate(e)}
                 format={FORMAT_DATE}
                 value={dateResultFilter}
               />

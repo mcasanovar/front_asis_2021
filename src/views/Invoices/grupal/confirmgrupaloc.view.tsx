@@ -26,6 +26,7 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
   const { Option } = Select;
   const { TextArea, Search } = Input;
   const { Column } = Table;
+  const { RangePicker } = DatePicker;
 
   const [dataConfirmation, setDataConfirmation] = useState<IGroupConfirmOC>(IGroupConfirmOCInitialization);
   const [loading, setLoading] = useState<boolean>(false);
@@ -35,7 +36,7 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
   const [selectedInvoices, setSelectedInvoices] = useState<React.Key[]>([]);
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [rutSearchInput, setRutSearchInput] = useState<string>('');
-  const [dateResultFilter, setDateResultFilter] = useState<Moment | undefined>();
+  const [dateResultFilter, setDateResultFilter] = useState<any>(null);
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[]) => {
@@ -70,10 +71,13 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
     }
   };
 
-  const handleFilterByDate = async (date: Moment) => {
+  const handleFilterByDate = async (date: any) => {
+    if(!date) return;
     setLoading(true);
     setDateResultFilter(date)
-    const aux: IResponseResults = await getResultsByDateService(moment(date).format(FORMAT_DATE));
+    const aux: IResponseResults = await getResultsByDateService(
+      moment(date[0]).format(FORMAT_DATE),
+      moment(date[1]).format(FORMAT_DATE));
     if (aux.err) {
       setLoading(false)
       setMessageAlert({ message: aux.msg, type: 'error', show: true });
@@ -190,6 +194,9 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
         <Column className='column-money' title="Rut (CS)" dataIndex="rut_cs" key="rut_cs" />
         <Column className='column-money' title="Razon Social (CS)" dataIndex="razon_social_cs" key="razon_social_cs" />
         <Column className='column-money' title="Nombre Servicio" dataIndex="nombre_servicio" key="nombre_servicio" />
+        {!!dateResultFilter &&
+          <Column className='column-money' title="Fecha Resultado" dataIndex="fecha_resultado" key="fecha_resultado" />
+        }
         <Column
           className='column-money'
           title="Total"
@@ -231,9 +238,14 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
             <Form.Item
               label="Buscar por Fecha Resultado"
             >
-              <DatePicker
+              {/* <DatePicker
                 style={{ width: '100%', marginRight: '10px', height: '100%' }}
                 onSelect={(e) => handleFilterByDate(e)}
+                format={FORMAT_DATE}
+                value={dateResultFilter}
+              /> */}
+              <RangePicker
+                onChange={(e) => handleFilterByDate(e)}
                 format={FORMAT_DATE}
                 value={dateResultFilter}
               />

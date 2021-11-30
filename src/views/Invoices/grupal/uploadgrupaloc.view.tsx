@@ -25,6 +25,7 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
 }) => {
   const { TextArea, Search } = Input;
   const { Column } = Table;
+  const { RangePicker } = DatePicker;
 
   const [dataConfirmation, setDataConfirmation] = useState<IGroupUploadOC>(IGroupUploadOCInitialization);
   const [disabledConfirm, setDisabledConfirm] = useState<boolean>(true);
@@ -36,7 +37,7 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
   const [selectedInvoices, setSelectedInvoices] = useState<React.Key[]>([]);
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [rutSearchInput, setRutSearchInput] = useState<string>('');
-  const [dateResultFilter, setDateResultFilter] = useState<Moment | undefined>();
+  const [dateResultFilter, setDateResultFilter] = useState<any>(null);
 
   const getFileUploaded = (e: any) => {
     e && setFile(e.file)
@@ -79,10 +80,15 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
     }
   };
 
-  const handleFilterByDate = async (date: Moment) => {
+  const handleFilterByDate = async (date: any) => {
+    if(!date) return;
     setLoading(true);
     setDateResultFilter(date)
-    const aux: IResponseResults = await getResultsByDateService(moment(date).format(FORMAT_DATE));
+    console.log([new Date(moment(date[0]).format('YYYY-MM-DD')), new Date(moment(date[1]).format('YYYY-MM-DD'))])
+    const aux: IResponseResults = await getResultsByDateService(
+      moment(date[0]).format(FORMAT_DATE),
+      moment(date[1]).format(FORMAT_DATE)
+    );
     if (aux.err) {
       setLoading(false)
       setMessageAlert({ message: aux.msg, type: 'error', show: true });
@@ -295,9 +301,14 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
             <Form.Item
               label="Buscar por Fecha Resultado"
             >
-              <DatePicker
+              {/* <DatePicker
                 style={{ width: '100%', marginRight: '10px', height: '100%' }}
                 onSelect={(e) => handleFilterByDate(e)}
+                format={FORMAT_DATE}
+                value={dateResultFilter}
+              /> */}
+              <RangePicker
+                onChange={(e) => handleFilterByDate(e)}
                 format={FORMAT_DATE}
                 value={dateResultFilter}
               />

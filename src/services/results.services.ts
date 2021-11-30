@@ -113,8 +113,8 @@ const generateConsolidatedReportResultsService = async (data: any) => {
   }
 };
 
-const getResultsByDateService = async (date: string) => {
-  const extension = `${PREFIX_RESULTS}/filter/${date}`;
+const getResultsByDateService = async (firstDate: string, secondDate: string) => {
+  const extension = `${PREFIX_RESULTS}/filter/${firstDate}/${secondDate}`;
   try {
     const response = await httpClient.post(extension);
     return response.data;

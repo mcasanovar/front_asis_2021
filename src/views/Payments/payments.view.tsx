@@ -38,7 +38,7 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({ authorized 
       _id: 'grouppayment',
       title: 'PAGO GRUPAL',
       size: 'large',
-      widthModal: 1200,
+      widthModal: 1400,
       showButtons: [{ _id: CANCEL }, { _id: CONFIRM }],
       permission: PERMISSIONS.PAYMENT_GROUP,
       icon: 'group',
