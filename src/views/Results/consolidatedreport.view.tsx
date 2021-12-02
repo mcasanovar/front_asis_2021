@@ -14,6 +14,7 @@ import { parse } from 'node:url';
 import { MapDataResultToConsolidatedReport } from '../../functions/mappers/result.mappers';
 import { validateEmail } from '../../functions/validators/index.validators';
 import { IResponseResults, ResultModel } from '../../models/results.model';
+import sortingObjects from '../../functions/sortingObjects';
 
 interface IConsolidatedReportViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -116,12 +117,25 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
         return element?.fecha_resultado_date && moment(element.fecha_resultado_date).isBetween(dateValueRange[0], dateValueRange[1])
       })
 
-      //agregar los extremos del rango al resultado
-      const aux = results?.filter(element => element.fecha_resultado === moment(dateValueRange[0]).format(FORMAT_DATE) 
+      //agregar los extremos de las fechas
+      let aux = results?.filter(element => element.fecha_resultado === moment(dateValueRange[0]).format(FORMAT_DATE)
         || element.fecha_resultado === moment(dateValueRange[1]).format(FORMAT_DATE));
-      if(!!aux?.length && !!result){
+
+      if (!!aux?.length && !!result) {
         result = [...result, ...aux]
       }
+
+      //eliminar cualquier repetido posible
+      let hash: any = {};
+      result = result?.filter(function (current) {
+        var exists = !hash[current.codigo];
+        hash[current.codigo] = true;
+        return exists;
+      });
+
+      //ordenar por codigo
+      result = sortingObjects(result, 'codigo', 'desc')
+
     };
 
     //si tambien filtra por faena
@@ -178,15 +192,15 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
       });
     };
     const dataMapped = MapDataResultToConsolidatedReport(
-      companySelected, 
-      resultsFiltered, 
+      companySelected,
+      resultsFiltered,
       arrayEmails,
       showDateFilter && !!dateValueRange ? `${moment(dateValueRange[0]).format(FORMAT_DATE)} - ${moment(dateValueRange[1]).format(FORMAT_DATE)}` : null,
       showContractFilter && !!contractSelected ? contractSelected.nro_contrato : null,
       showContractFilter && !!faenaSelected ? faenaSelected : null
     );
     const aux: IResponseRequestPayment = await generateConsolidatedReportResultsService(dataMapped);
-    if(!aux.err){
+    if (!aux.err) {
       onCloseModal('sended', aux.msg)
       return
     }
@@ -348,10 +362,10 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
   useEffect(() => {
     if (!emails) return setDisabledConfirm(true);
     if (!isValidEmails) return setDisabledConfirm(true);
-    if(!!resultsFiltered && !resultsFiltered.length){
+    if (!!resultsFiltered && !resultsFiltered.length) {
       setDisabledConfirm(true);
     }
-    if(!!resultsFiltered && !!resultsFiltered.length) return setDisabledConfirm(false);
+    if (!!resultsFiltered && !!resultsFiltered.length) return setDisabledConfirm(false);
   }, [isValidEmails, emails, resultsFiltered]);
 
   return (
@@ -398,7 +412,7 @@ const ConsolidatedReportView: React.FunctionComponent<IConsolidatedReportViewPro
           </Row>
         </Form>
       </Input.Group>
-      <br/>
+      <br />
       <Row>
         <Col span={24}>
           <Form layout='vertical'>
