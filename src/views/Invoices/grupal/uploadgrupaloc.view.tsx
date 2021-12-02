@@ -1,5 +1,5 @@
 import React, { useState, useEffect, FormEvent } from 'react';
-import { Input, Row, Col, Upload, DatePicker, TimePicker, Spin, Form, Table, Button } from "antd";
+import { Input, Row, Col, Upload, DatePicker, TimePicker, Spin, Form, Table, Button, Checkbox } from "antd";
 import { InboxOutlined } from '@ant-design/icons';
 import { IGroupUploadOC, InvoicesModel, IResponseInvoices } from '../../../models/invoices.models';
 import { IGroupUploadOCInitialization } from '../../../initializations/invoices.initialization';
@@ -38,6 +38,9 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [rutSearchInput, setRutSearchInput] = useState<string>('');
   const [dateResultFilter, setDateResultFilter] = useState<any>(null);
+  //filters
+  const [checkRutFilter, setCheckRutFilter] = useState<boolean>(false);
+  const [checkRangeDateFilter, setCheckRangeDateFilter] = useState<boolean>(false);
 
   const getFileUploaded = (e: any) => {
     e && setFile(e.file)
@@ -70,35 +73,63 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
   };
 
   const handleSearchInput = () => {
-    const aux: InvoicesModel[] | undefined = invoices?.filter((invoice) => invoice.rut_cp === rutSearchInput);
-    if (aux) {
-      setLoading(true);
+    let aux: InvoicesModel[] | undefined = invoices?.filter((invoice) => invoice.rut_cp === rutSearchInput);
+
+    setLoading(true);
+
+    if (!checkRangeDateFilter) {
+      if (aux) {
+        setTimeout(() => {
+          setInvoicesFiltered(aux);
+          setLoading(false);
+          return
+        }, 2000);
+      }
+    }
+
+    if (checkRangeDateFilter && !!dateResultFilter) {
+      const filteredInvoicesByRutCP = !!invoicesFiltered?.length ?
+        invoicesFiltered.filter(invoice => invoice.rut_cp === rutSearchInput) : [];
+
       setTimeout(() => {
-        setInvoicesFiltered(aux);
+        setInvoicesFiltered(filteredInvoicesByRutCP);
         setLoading(false);
+        return
       }, 2000);
     }
   };
 
   const handleFilterByDate = async (date: any) => {
-    if(!date) return;
+    if (!date) return;
     setLoading(true);
     setDateResultFilter(date)
-    console.log([new Date(moment(date[0]).format('YYYY-MM-DD')), new Date(moment(date[1]).format('YYYY-MM-DD'))])
-    const aux: IResponseResults = await getResultsByDateService(
+
+    let aux: IResponseResults = await getResultsByDateService(
       moment(date[0]).format(FORMAT_DATE),
       moment(date[1]).format(FORMAT_DATE)
     );
+
     if (aux.err) {
       setLoading(false)
       setMessageAlert({ message: aux.msg, type: 'error', show: true });
       return
     }
-    const invoicesRes = getFilteredInvoicesByResults(aux.res, invoices || []);
-    const invoicesResFiltered = sortingObjects(invoicesRes, 'codigo', 'desc');
 
-    setInvoicesFiltered(invoicesResFiltered)
-    setLoading(false)
+    let invoicesRes = getFilteredInvoicesByResults(aux.res, invoices || []);
+    let invoicesResFiltered = sortingObjects(invoicesRes, 'codigo', 'desc');
+
+    if(!checkRutFilter){
+      setInvoicesFiltered(invoicesResFiltered)
+      setLoading(false)
+      return
+    }
+
+    if(checkRutFilter && !!rutSearchInput){
+      const filteredInvoicesByRutCP = invoicesResFiltered.filter((invoice: any) => invoice.rut_cp === rutSearchInput);
+      setInvoicesFiltered(sortingObjects(filteredInvoicesByRutCP, 'codigo', 'desc'))
+      setLoading(false)
+      return
+    }
   };
 
   async function getInvoicesWithOC() {
@@ -121,7 +152,12 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
 
   const handleCleanDateResult = () => {
     setDateResultFilter(undefined);
-    setInvoicesFiltered(invoices)
+    if(checkRutFilter && !!rutSearchInput){
+      handleSearchInput();
+    }
+    else{
+      setInvoicesFiltered(invoices)
+    }
   }
 
   //--------------------------------USEEFECT
@@ -151,6 +187,21 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
       setInvoicesFiltered(invoices)
     }
   }, [rutSearchInput]);
+
+  useEffect(() => {
+    if(!checkRangeDateFilter){
+      handleCleanDateResult();
+    }
+  }, [checkRangeDateFilter])
+
+  useEffect(() => {
+    if(!checkRangeDateFilter && !checkRutFilter){
+      if(!checkRutFilter){
+        setRutSearchInput('')
+      }
+      setInvoicesFiltered(invoices);
+    }
+  }, [checkRutFilter, checkRangeDateFilter])
 
   //--------------------------------------------RENDERS
   const renderInformation = () => {
@@ -280,8 +331,13 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
           </Col>
         </Row>
         <br />
-        <Row gutter={8} style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
-          <Col span={12}>
+        <Row gutter={2} style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
+          <Col span={12} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Checkbox
+              style={{ marginRight: '10px' }}
+              onChange={() => setCheckRutFilter(!checkRutFilter)}
+              value={checkRutFilter}
+            />
             <Form.Item
               label="Buscar por Rut CP"
               style={{ width: '100%' }}
@@ -291,36 +347,38 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
                 allowClear
                 enterButton="Buscar"
                 size="large"
+                disabled={checkRutFilter ? false : true}
                 onChange={(e) => handleFormatingRut(e)}
                 onSearch={handleSearchInput}
                 value={rutSearchInput}
               />
             </Form.Item>
           </Col>
-          <Col span={6}>
+          <Col span={6} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Checkbox
+              style={{ marginRight: '10px' }}
+              onChange={() => setCheckRangeDateFilter(!checkRangeDateFilter)}
+              value={checkRangeDateFilter}
+            />
             <Form.Item
               label="Buscar por Fecha Resultado"
             >
-              {/* <DatePicker
-                style={{ width: '100%', marginRight: '10px', height: '100%' }}
-                onSelect={(e) => handleFilterByDate(e)}
-                format={FORMAT_DATE}
-                value={dateResultFilter}
-              /> */}
               <RangePicker
                 onChange={(e) => handleFilterByDate(e)}
                 format={FORMAT_DATE}
                 value={dateResultFilter}
+                disabled={checkRangeDateFilter ? false : true}
               />
             </Form.Item>
           </Col>
-          <Col span={3}>
+          <Col span={2}>
             <Form.Item
               label="."
             >
               <Button
                 onClick={() => handleCleanDateResult()}
-                style={{ backgroundColor: '#E10D17', color: 'white' }}
+                style={{ backgroundColor: checkRangeDateFilter ? '#E10D17' : 'gray', color: 'white' }}
+                disabled={checkRangeDateFilter ? false : true}
               >
                 Limpiar
             </Button>
