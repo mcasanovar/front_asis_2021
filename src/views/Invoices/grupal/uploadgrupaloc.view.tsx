@@ -97,6 +97,11 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
         return
       }, 2000);
     }
+    else{
+      setTimeout(() => {
+        setLoading(false)
+      }, 2000);
+    }
   };
 
   const handleFilterByDate = async (date: any) => {
@@ -115,6 +120,17 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
       return
     }
 
+    //eliminar rastros de otra fecha que no sea la del rango enviado
+    aux.res = aux.res.filter((result: ResultModel) => {
+      const dateResultFormatted = moment(result.fecha_resultado, FORMAT_DATE);
+      const firstFormattedDate = moment(date[0], FORMAT_DATE);
+      const secondFormattedDate = moment(date[1], FORMAT_DATE);
+
+      if(dateResultFormatted.isBetween(firstFormattedDate, secondFormattedDate, 'days', '[]')){
+        return result;
+      }
+    });
+
     let invoicesRes = getFilteredInvoicesByResults(aux.res, invoices || []);
     let invoicesResFiltered = sortingObjects(invoicesRes, 'codigo', 'desc');
 
@@ -126,7 +142,8 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
 
     if(checkRutFilter && !!rutSearchInput){
       const filteredInvoicesByRutCP = invoicesResFiltered.filter((invoice: any) => invoice.rut_cp === rutSearchInput);
-      setInvoicesFiltered(sortingObjects(filteredInvoicesByRutCP, 'codigo', 'desc'))
+      const sortedInvoices = sortingObjects(filteredInvoicesByRutCP, 'codigo', 'desc');
+      setInvoicesFiltered(sortedInvoices)
       setLoading(false)
       return
     }
