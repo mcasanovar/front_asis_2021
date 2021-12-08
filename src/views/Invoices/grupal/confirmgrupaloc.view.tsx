@@ -1,5 +1,5 @@
 import React, { useState, useEffect, FormEvent } from 'react';
-import { Input, Row, Col, Select, Spin, Form, Table, Button, DatePicker } from "antd";
+import { Input, Row, Col, Select, Spin, Form, Table, Button, DatePicker, Checkbox } from "antd";
 
 import { IGroupConfirmOC, InvoicesModel, IResponseInvoices } from '../../../models/invoices.models';
 import { IGroupConfirmOCInitialization } from '../../../initializations/invoices.initialization';
@@ -12,7 +12,7 @@ import AlertComponent from '../../../component/Alert/Alert';
 import { FormatingRut } from '../../../functions/validators/index.validators';
 import { FORMAT_DATE } from '../../../constants/var';
 import moment, { Moment } from 'moment';
-import { IResponseResults } from '../../../models/results.model';
+import { IResponseResults, ResultModel } from '../../../models/results.model';
 import getFilteredInvoicesByResults from '../../../functions/getFilteredInvoicesByResults';
 import sortingObjects from '../../../functions/sortingObjects';
 
@@ -37,6 +37,9 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
   const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
   const [rutSearchInput, setRutSearchInput] = useState<string>('');
   const [dateResultFilter, setDateResultFilter] = useState<any>(null);
+  //filters
+  const [checkRutFilter, setCheckRutFilter] = useState<boolean>(false);
+  const [checkRangeDateFilter, setCheckRangeDateFilter] = useState<boolean>(false);
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[]) => {
@@ -61,38 +64,89 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
   };
 
   const handleSearchInput = () => {
-    const aux: InvoicesModel[] | undefined = invoices?.filter((invoice) => invoice.rut_cp === rutSearchInput);
-    if (aux) {
-      setLoading(true);
+    let aux: InvoicesModel[] | undefined = invoices?.filter((invoice) => invoice.rut_cp === rutSearchInput);
+    
+    setLoading(true);
+
+    if (!checkRangeDateFilter) {
+      if (aux) {
+        setTimeout(() => {
+          setInvoicesFiltered(aux);
+          setLoading(false);
+          return
+        }, 2000);
+      }
+    }
+
+    if (checkRangeDateFilter && !!dateResultFilter) {
+      const filteredInvoicesByRutCP = !!invoicesFiltered?.length ?
+        invoicesFiltered.filter(invoice => invoice.rut_cp === rutSearchInput) : [];
+
       setTimeout(() => {
-        setInvoicesFiltered(aux);
+        setInvoicesFiltered(filteredInvoicesByRutCP);
         setLoading(false);
+        return
+      }, 2000);
+    }
+    else{
+      setTimeout(() => {
+        setLoading(false)
       }, 2000);
     }
   };
 
   const handleFilterByDate = async (date: any) => {
-    if(!date) return;
+    if (!date) return;
     setLoading(true);
     setDateResultFilter(date)
+
     const aux: IResponseResults = await getResultsByDateService(
       moment(date[0]).format(FORMAT_DATE),
       moment(date[1]).format(FORMAT_DATE));
+
     if (aux.err) {
       setLoading(false)
       setMessageAlert({ message: aux.msg, type: 'error', show: true });
       return
     }
-    const invoicesRes = getFilteredInvoicesByResults(aux.res, invoices || []);
-    const invoicesResFiltered = sortingObjects(invoicesRes, 'codigo', 'desc');
 
-    setInvoicesFiltered(invoicesResFiltered)
-    setLoading(false)
+    //eliminar rastros de otra fecha que no sea la del rango enviado
+    aux.res = aux.res.filter((result: ResultModel) => {
+      const dateResultFormatted = moment(result.fecha_resultado, FORMAT_DATE);
+      const firstFormattedDate = moment(date[0], FORMAT_DATE);
+      const secondFormattedDate = moment(date[1], FORMAT_DATE);
+
+      if(dateResultFormatted.isBetween(firstFormattedDate, secondFormattedDate, 'days', '[]')){
+        return result;
+      }
+    });
+
+    let invoicesRes = getFilteredInvoicesByResults(aux.res, invoices || []);
+    let invoicesResFiltered = sortingObjects(invoicesRes, 'codigo', 'desc');
+
+    if(!checkRutFilter){
+      setInvoicesFiltered(invoicesResFiltered)
+      setLoading(false)
+      return
+    }
+
+    if(checkRutFilter && !!rutSearchInput){
+      const filteredInvoicesByRutCP = invoicesResFiltered.filter((invoice: any) => invoice.rut_cp === rutSearchInput);
+      const sortedInvoices = sortingObjects(filteredInvoicesByRutCP, 'codigo', 'desc');
+      setInvoicesFiltered(sortedInvoices)
+      setLoading(false)
+      return
+    }
   };
 
   const handleCleanDateResult = () => {
     setDateResultFilter(undefined);
-    setInvoicesFiltered(invoices)
+    if(checkRutFilter && !!rutSearchInput){
+      handleSearchInput();
+    }
+    else{
+      setInvoicesFiltered(invoices)
+    }
   }
 
   async function getInvoicesWithOC() {
@@ -135,6 +189,21 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
       setInvoicesFiltered(invoices)
     }
   }, [rutSearchInput]);
+
+  useEffect(() => {
+    if(!checkRangeDateFilter){
+      handleCleanDateResult();
+    }
+  }, [checkRangeDateFilter])
+
+  useEffect(() => {
+    if(!checkRangeDateFilter && !checkRutFilter){
+      if(!checkRutFilter){
+        setRutSearchInput('')
+      }
+      setInvoicesFiltered(invoices);
+    }
+  }, [checkRutFilter, checkRangeDateFilter])
 
   //----------------------------------------------RENDERS
   const renderInformation = () => {
@@ -218,7 +287,12 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
           </Col>
         </Row>
         <Row gutter={8} style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
-          <Col span={12}>
+          <Col span={12} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Checkbox
+              style={{ marginRight: '10px' }}
+              onChange={() => setCheckRutFilter(!checkRutFilter)}
+              value={checkRutFilter}
+            />
             <Form.Item
               label="Buscar por Rut CP"
               style={{ width: '100%' }}
@@ -228,25 +302,26 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
                 allowClear
                 enterButton="Buscar"
                 size="large"
+                disabled={checkRutFilter ? false : true}
                 onChange={(e) => handleFormatingRut(e)}
                 onSearch={handleSearchInput}
                 value={rutSearchInput}
               />
             </Form.Item>
           </Col>
-          <Col span={6}>
+          <Col span={6} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Checkbox
+              style={{ marginRight: '10px' }}
+              onChange={() => setCheckRangeDateFilter(!checkRangeDateFilter)}
+              value={checkRangeDateFilter}
+            />
             <Form.Item
               label="Buscar por Fecha Resultado"
             >
-              {/* <DatePicker
-                style={{ width: '100%', marginRight: '10px', height: '100%' }}
-                onSelect={(e) => handleFilterByDate(e)}
-                format={FORMAT_DATE}
-                value={dateResultFilter}
-              /> */}
               <RangePicker
                 onChange={(e) => handleFilterByDate(e)}
                 format={FORMAT_DATE}
+                disabled={checkRangeDateFilter ? false : true}
                 value={dateResultFilter}
               />
             </Form.Item>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, FormEvent } from 'react';
-import { Col, Input, Row, DatePicker, Upload, Table, Form, InputNumber, Button, Select, Spin } from 'antd';
+import { Col, Input, Row, DatePicker, Upload, Checkbox, Table, Form, InputNumber, Button, Select, Spin } from 'antd';
 import { DollarOutlined, PercentageOutlined, InboxOutlined } from "@ant-design/icons";
 
 import TableComponent from "../../../component/Table/Table";
@@ -14,7 +14,7 @@ import { IAlertMessageContent } from '../../../models/index.models';
 import { MapGroupInvoiceToUpload } from '../../../functions/mappers';
 import AlertComponent from '../../../component/Alert/Alert';
 import { FormatingRut } from '../../../functions/validators/index.validators';
-import { IResponseResults } from '../../../models/results.model';
+import { IResponseResults, ResultModel } from '../../../models/results.model';
 import getFilteredInvoicesByResults from '../../../functions/getFilteredInvoicesByResults';
 import sortingObjects from '../../../functions/sortingObjects';
 
@@ -43,6 +43,9 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
   const [disabledConfirm, setDisabledConfirm] = useState<boolean>(true);
   const [rutSearchInput, setRutSearchInput] = useState<string>('');
   const [dateResultFilter, setDateResultFilter] = useState<any>(null);
+  //filters
+  const [checkRutFilter, setCheckRutFilter] = useState<boolean>(false);
+  const [checkRangeDateFilter, setCheckRangeDateFilter] = useState<boolean>(false);
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[]) => {
@@ -100,12 +103,33 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
   };
 
   const handleSearchInput = () => {
-    const aux: InvoicesModel[] | undefined = invoices?.filter((invoice) => invoice.rut_cp === rutSearchInput);
-    if (aux) {
-      setLoading(true);
+    let aux: InvoicesModel[] | undefined = invoices?.filter((invoice) => invoice.rut_cp === rutSearchInput);
+    
+    setLoading(true)
+
+    if (!checkRangeDateFilter) {
+      if (aux) {
+        setTimeout(() => {
+          setInvoicesFiltered(aux);
+          setLoading(false);
+          return
+        }, 2000);
+      }
+    }
+
+    if (checkRangeDateFilter && !!dateResultFilter) {
+      const filteredInvoicesByRutCP = !!invoicesFiltered?.length ?
+        invoicesFiltered.filter(invoice => invoice.rut_cp === rutSearchInput) : [];
+
       setTimeout(() => {
-        setInvoicesFiltered(aux);
+        setInvoicesFiltered(filteredInvoicesByRutCP);
         setLoading(false);
+        return
+      }, 2000);
+    }
+    else{
+      setTimeout(() => {
+        setLoading(false)
       }, 2000);
     }
   };
@@ -128,27 +152,57 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
   };
 
   const handleFilterByDate = async (date: any) => {
-    if(!date) return;
+    if (!date) return;
     setLoading(true);
-    setDateResultFilter(date)
-    const aux: IResponseResults = await getResultsByDateService(
+    setDateResultFilter(date);
+
+    let aux: IResponseResults = await getResultsByDateService(
       moment(date[0]).format(FORMAT_DATE),
       moment(date[1]).format(FORMAT_DATE));
+
     if (aux.err) {
       setLoading(false)
       setMessageAlert({ message: aux.msg, type: 'error', show: true });
       return
     }
-    const invoicesRes = getFilteredInvoicesByResults(aux.res, invoices || []);
-    const invoicesResFiltered = sortingObjects(invoicesRes, 'codigo', 'desc');
 
-    setInvoicesFiltered(invoicesResFiltered)
-    setLoading(false)
+    //eliminar rastros de otra fecha que no sea la del rango enviado
+    aux.res = aux.res.filter((result: ResultModel) => {
+      const dateResultFormatted = moment(result.fecha_resultado, FORMAT_DATE);
+      const firstFormattedDate = moment(date[0], FORMAT_DATE);
+      const secondFormattedDate = moment(date[1], FORMAT_DATE);
+
+      if(dateResultFormatted.isBetween(firstFormattedDate, secondFormattedDate, 'days', '[]')){
+        return result;
+      }
+    });
+
+    let invoicesRes = getFilteredInvoicesByResults(aux.res, invoices || []);
+    let invoicesResFiltered = sortingObjects(invoicesRes, 'codigo', 'desc');
+
+    if(!checkRutFilter){
+      setInvoicesFiltered(invoicesResFiltered)
+      setLoading(false)
+      return
+    }
+
+    if(checkRutFilter && !!rutSearchInput){
+      const filteredInvoicesByRutCP = invoicesResFiltered.filter((invoice: any) => invoice.rut_cp === rutSearchInput);
+      const sortedInvoices = sortingObjects(filteredInvoicesByRutCP, 'codigo', 'desc');
+      setInvoicesFiltered(sortedInvoices)
+      setLoading(false)
+      return
+    }
   };
 
   const handleCleanDateResult = () => {
     setDateResultFilter(undefined);
-    setInvoicesFiltered(invoices)
+    if(checkRutFilter && !!rutSearchInput){
+      handleSearchInput();
+    }
+    else{
+      setInvoicesFiltered(invoices)
+    }
   }
 
   //-------------------------------------------USEEFECT
@@ -197,6 +251,21 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
       setInvoicesFiltered(invoices)
     }
   }, [rutSearchInput]);
+
+  useEffect(() => {
+    if(!checkRangeDateFilter){
+      handleCleanDateResult();
+    }
+  }, [checkRangeDateFilter])
+
+  useEffect(() => {
+    if(!checkRangeDateFilter && !checkRutFilter){
+      if(!checkRutFilter){
+        setRutSearchInput('')
+      }
+      setInvoicesFiltered(invoices);
+    }
+  }, [checkRutFilter, checkRangeDateFilter])
 
   //------------------------------------------RENDERS
   const renderInformation = () => {
@@ -465,11 +534,15 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
         <Input.Group>
           <Row gutter={8}>
             {renderInformation()}
-            {/* {renderValuesInformation()} */}
           </Row>
           <br />
           <Row gutter={8} style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
-            <Col span={12}>
+            <Col span={12} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Checkbox
+                style={{ marginRight: '10px' }}
+                onChange={() => setCheckRutFilter(!checkRutFilter)}
+                value={checkRutFilter}
+              />
               <Form.Item
                 label="Buscar por Rut CP"
                 style={{ width: '100%' }}
@@ -479,26 +552,27 @@ const UploadGroupInvoicesView: React.FunctionComponent<IUploadGroupInvoicesViewP
                   allowClear
                   enterButton="Buscar"
                   size="large"
+                  disabled={checkRutFilter ? false : true}
                   onChange={(e) => handleFormatingRut(e)}
                   onSearch={handleSearchInput}
                   value={rutSearchInput}
                 />
               </Form.Item>
             </Col>
-            <Col span={6}>
+            <Col span={6} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Checkbox
+                style={{ marginRight: '10px' }}
+                onChange={() => setCheckRangeDateFilter(!checkRangeDateFilter)}
+                value={checkRangeDateFilter}
+              />
               <Form.Item
                 label="Buscar por Fecha Resultado"
               >
-                {/* <DatePicker
-                  style={{ width: '100%', marginRight: '10px', height: '100%' }}
-                  onSelect={(e) => handleFilterByDate(e)}
-                  format={FORMAT_DATE}
-                  value={dateResultFilter}
-                /> */}
                 <RangePicker
                   onChange={(e) => handleFilterByDate(e)}
                   format={FORMAT_DATE}
                   value={dateResultFilter}
+                  disabled={checkRangeDateFilter ? false : true}
                 />
               </Form.Item>
             </Col>

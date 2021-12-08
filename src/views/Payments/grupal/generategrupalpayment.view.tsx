@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Input, Row, Col, Select, DatePicker, Upload, TimePicker, Spin, Form, InputNumber, Table, Button } from "antd";
+import React, { useState, useEffect, FormEvent } from 'react';
+import { Input, Row, Col, Select, DatePicker, Upload, Checkbox, TimePicker, Spin, Form, InputNumber, Table, Button } from "antd";
 import { DollarOutlined, InboxOutlined } from '@ant-design/icons';
 import { IGroupConfirmPayment, IResponsePayment, PaymentModel } from '../../../models/payments.models';
 import { IGroupConfirmPaymentInitialization } from '../../../initializations/payments.initialization';
@@ -10,6 +10,8 @@ import AlertComponent from '../../../component/Alert/Alert';
 import { MilesFormat } from '../../../libs/formattedPesos';
 import { generateGroupPaymentsService, getAllPendingPaymentsService } from '../../../services';
 import { MapGroupConfirmPayments } from '../../../functions/mappers';
+import { FormatingRut } from '../../../functions/validators/index.validators';
+import sortingObjects from '../../../functions/sortingObjects';
 
 interface IGenerateGroupPaymentViewProps {
   onCloseModal: (value: string, message: string) => string | void
@@ -19,7 +21,7 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
   onCloseModal
 }) => {
   const { Option } = Select;
-  const { TextArea } = Input;
+  const { TextArea, Search } = Input;
   const { Column } = Table;
   const { RangePicker } = DatePicker;
 
@@ -33,7 +35,11 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
   const [selectedPayments, setSelectedPayments] = useState<React.Key[]>([]);
   const [file, setFile] = useState<string | Blob | null>(null);
   const [dateResultFilter, setDateResultFilter] = useState<any>(null);
-  const [filteredPayments, setFilteredPayments] = useState<PaymentModel[]>()
+  const [filteredPayments, setFilteredPayments] = useState<PaymentModel[]>();
+  const [rutSearchInput, setRutSearchInput] = useState<string>('');
+  //filters
+  const [checkRutFilter, setCheckRutFilter] = useState<boolean>(false);
+  const [checkRangeDateFilter, setCheckRangeDateFilter] = useState<boolean>(false);
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedPayments: PaymentModel[]) => {
@@ -85,26 +91,76 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
     setLoading(false)
   };
 
-  const handleFilterByDate = async (date: any) => {
-    if(!date) return;
-    setDateResultFilter(date)
-    const firstDate = date[0];
-    const secondDate = date[1];
-    let filteredByDate = payments?.filter((payment) => {
-      return moment(payment.fecha_facturacion, FORMAT_DATE).isBetween(firstDate, secondDate)
-    });
-    const aux = payments?.filter(element => element.fecha_facturacion === moment(firstDate).format(FORMAT_DATE)
-      || element.fecha_facturacion === moment(secondDate).format(FORMAT_DATE));
-    if (!!aux?.length && !!filteredByDate) {
-      filteredByDate = [...filteredByDate, ...aux]
+  const handleSearchInput = () => {
+    let aux: PaymentModel[] | undefined = payments?.filter((payment) => payment.rut_cp === rutSearchInput);
+
+    setLoading(true);
+
+    if (!checkRangeDateFilter) {
+      if (aux) {
+        setTimeout(() => {
+          setFilteredPayments(aux);
+          setLoading(false);
+          return
+        }, 2000);
+      }
     }
-    setFilteredPayments(filteredByDate)
+
+    if (checkRangeDateFilter && !!dateResultFilter) {
+      const filteredPaymentsByRutCP = !!filteredPayments?.length ?
+        filteredPayments.filter(payment => payment.rut_cp === rutSearchInput) : [];
+
+      setTimeout(() => {
+        setFilteredPayments(filteredPaymentsByRutCP);
+        setLoading(false);
+        return
+      }, 2000);
+    }
+    else {
+      setTimeout(() => {
+        setLoading(false)
+      }, 2000);
+    }
+  };
+
+  const handleFilterByDate = async (date: any) => {
+    if (!date) return;
+
+    setLoading(true)
+
+    setTimeout(() => {
+      setDateResultFilter(date);
+
+      const firstDate = date[0];
+      const secondDate = date[1];
+
+      let filteredByDate = payments?.filter((payment) => {
+        return moment(payment.fecha_facturacion, FORMAT_DATE).isBetween(firstDate, secondDate)
+      });
+
+      const aux = payments?.filter(element => element.fecha_facturacion === moment(firstDate).format(FORMAT_DATE)
+        || element.fecha_facturacion === moment(secondDate).format(FORMAT_DATE));
+
+      if (!!aux?.length && !!filteredByDate) {
+        filteredByDate = [...filteredByDate, ...aux]
+      }
+
+      filteredByDate = sortingObjects(filteredByDate, 'codigo', 'desc')
+
+      setFilteredPayments(filteredByDate);
+
+      setLoading(false)
+    }, 2000);
   };
 
   const handleCleanDateResult = () => {
     setDateResultFilter(undefined);
     setFilteredPayments(payments)
   }
+
+  const handleFormatingRut = (e: FormEvent<HTMLInputElement>) => {
+    setRutSearchInput(FormatingRut(e.currentTarget.value));
+  };
 
   //-----------------------------------------USEEFECT
   useEffect(() => {
@@ -131,6 +187,21 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
     }
     return setDisabledConfirm(true)
   }, [dataConfirmation, amount]);
+
+  useEffect(() => {
+    if (!checkRangeDateFilter) {
+      handleCleanDateResult();
+    }
+  }, [checkRangeDateFilter])
+
+  useEffect(() => {
+    if (!checkRangeDateFilter && !checkRutFilter) {
+      if (!checkRutFilter) {
+        setRutSearchInput('')
+      }
+      setFilteredPayments(payments);
+    }
+  }, [checkRutFilter, checkRangeDateFilter])
 
   //----------------------------------------------RENDERS
   const renderInformation = () => {
@@ -307,6 +378,7 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
         <Column className='column-money' title="Estado" dataIndex="estado" key="estado" />
         <Column className='column-money' title="Fecha Pago" dataIndex="fecha_pago" key="fecha_pago" />
         <Column className='column-money' title="Fecha Facturación" dataIndex="fecha_facturacion" key="fecha_facturacion" />
+        <Column className='column-money' title="Rut CP" dataIndex="rut_cp" key="rut_cp" />
         <Column
           className='column-money'
           title="Valor Servicio"
@@ -331,20 +403,42 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
       {messageAlert.show && <AlertComponent message={messageAlert.message} type={messageAlert.type} />}
       <Form layout='vertical'>
         {renderInformation()}
-        <Row gutter={8}>
-          <Col span={6}>
+        <Row gutter={8} style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
+          <Col span={12} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Checkbox
+              style={{ marginRight: '10px' }}
+              onChange={() => setCheckRutFilter(!checkRutFilter)}
+              value={checkRutFilter}
+            />
+            <Form.Item
+              label="Buscar por Rut CP"
+              style={{ width: '100%' }}
+            >
+              <Search
+                placeholder="Rut CP"
+                allowClear
+                enterButton="Buscar"
+                size="large"
+                disabled={checkRutFilter ? false : true}
+                onChange={(e) => handleFormatingRut(e)}
+                onSearch={handleSearchInput}
+                value={rutSearchInput}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={6} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Checkbox
+              style={{ marginRight: '10px' }}
+              onChange={() => setCheckRangeDateFilter(!checkRangeDateFilter)}
+              value={checkRangeDateFilter}
+            />
             <Form.Item
               label="Buscar por Fecha Facturación"
             >
-              {/* <DatePicker
-                style={{ width: '100%', marginRight: '10px', height: '100%' }}
-                onSelect={(e) => handleFilterByDate(e)}
-                format={FORMAT_DATE}
-                value={dateResultFilter}
-              /> */}
               <RangePicker
                 onChange={(e) => handleFilterByDate(e)}
                 format={FORMAT_DATE}
+                disabled={checkRangeDateFilter ? false : true}
                 value={dateResultFilter}
               />
             </Form.Item>
@@ -372,7 +466,7 @@ const GenerateGroupPaymentView: React.FunctionComponent<IGenerateGroupPaymentVie
         alignItems: 'flex-end'
       }}>
         <Col
-          span={5}
+          span={4}
           style={{ display: 'flex', justifyContent: 'space-between' }}
         >
           <Button
