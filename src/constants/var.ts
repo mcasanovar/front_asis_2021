@@ -18,6 +18,21 @@ export const N_PER_PAGE = 12;
 
 export const MONTHS = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre",];
 
+export const MONTH_TRANSFORM = {
+  '01': 'enero',
+  '02': 'febrero',
+  '03': 'marzo',
+  '04': 'abril',
+  '05': 'mayo',
+  '06': 'junio',
+  '07': 'julio',
+  '08': 'agosto',
+  '09': 'septiembre',
+  '10': 'octubre',
+  '11': 'noviembre',
+  '12': 'diciembre'
+}
+
 export const YEARS_CHARTS = ["2020", "2021", "2022", "2023", "2024"]
 
 export const DEFAULT_PERCENTAGE_IVA = 0;

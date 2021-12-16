@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Col, Input, Row, Select, TimePicker, Upload, Form, DatePicker, Button, Spin, Tag, Typography } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 
-import { CANCEL, CONFIRM, FORMAT_DATE, RAZON_AUSENCES } from '../../constants/var';
+import { CANCEL, CONFIRM, FORMAT_DATE, MONTH_TRANSFORM, RAZON_AUSENCES } from '../../constants/var';
 
 import CalendarComponent from "../../component/Calendar/Calendar";
 import ModalComponent from "../../component/Modal/Modal";
@@ -14,6 +14,7 @@ import { MapAbsenseToInsert } from '../../functions/mappers';
 import { getAbsensesByIdAndDateService, insertAbsenseService } from '../../services';
 import { IAlertMessageContent } from '../../models/index.models';
 import { GiModel } from '../../models/gi.models';
+import ButtonComponent from '../../component/Button/Button';
 
 interface IAbsensesEmployeeViewProps {
   onCloseModal: (value: string, message: string) => string | void,
@@ -57,7 +58,7 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
     setcurrentDate({ month: date.format('MMMM'), year: date.format('YYYY') })
     setHackValue(undefined);
     setValue([date, date]);
-    setOpenNewAbsense(true);
+    // setOpenNewAbsense(true);
   };
 
   const handleSelectedHours = (abreviation: string) => {
@@ -136,8 +137,8 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
 
   const handleDataRenderMonths = (value: Moment) => {
     const aux = absenses.filter((absense) => {
-      if(moment(absense.fecha_inicio_ausencia, FORMAT_DATE).format('MMMM') === moment(value.format(FORMAT_DATE), FORMAT_DATE).format('MMMM') &&
-      moment(absense.fecha_inicio_ausencia, FORMAT_DATE).format('YYYY') === moment(value.format(FORMAT_DATE), FORMAT_DATE).format('YYYY')){
+      if (moment(absense.fecha_inicio_ausencia, FORMAT_DATE).format('MMMM') === moment(value.format(FORMAT_DATE), FORMAT_DATE).format('MMMM') &&
+        moment(absense.fecha_inicio_ausencia, FORMAT_DATE).format('YYYY') === moment(value.format(FORMAT_DATE), FORMAT_DATE).format('YYYY')) {
         return absense
       }
     });
@@ -154,9 +155,22 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
     }
   };
 
-  async function getAbsenses() {
+  const handlePanelChange = (e: Moment, type: string) => {
+    const year: string = e.format('YYYY');
+    const month: string = e.format('MMMM');
+
+    setLoading(true);
+
+    getAbsenses(month, year)
+  }
+
+  async function getAbsenses(
+    month: string = moment().format('MMMM'),
+    year: string = moment().format('YYYY')
+  ) {
     setLoading(true)
-    const aux: IResponseAusences = await getAbsensesByIdAndDateService(idEmployee, moment().format('MMMM'), moment().format('YYYY'));
+    const aux: IResponseAusences =
+      await getAbsensesByIdAndDateService(idEmployee, month, year);
     if (aux.err === null) {
       setAbsenses(aux.res);
       setLoading(false);
@@ -339,10 +353,23 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
   return (
     <>
       <Title>{`${currentDate.month.toUpperCase()} - ${currentDate.year}`}</Title>
-      {<Title level={4}>{`${employeeSelected?.razon_social} - ${employeeSelected?.codigo}`}</Title>}
+      {
+        <Row gutter={8} style={{ width: '100%' }}>
+          <Col span={24} style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+            <Title level={4}>{`${employeeSelected?.razon_social} - ${employeeSelected?.codigo}`}</Title>
+            <ButtonComponent
+              title="Nueva Ausencia"
+              size="middle"
+              ghost={false}
+              customStyle={{ backgroundColor: 'blue', color: 'white' }}
+              onClick={() => setOpenNewAbsense(true)}
+            />
+          </Col>
+        </Row>
+      }
       <CalendarComponent
         onSelect={(e: Moment) => handleSelectedDate(e)}
-        onPanelChange={(e: Moment, type: string) => { }}
+        onPanelChange={(e: Moment, type: string) => handlePanelChange(e, type)}
         dateCellRender={handleDataRenderDates}
         monthCellRender={handleDataRenderMonths}
       />
