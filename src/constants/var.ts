@@ -7016,6 +7016,7 @@ export const ISAPRE_LIST = [
   "ISAPRE Ríoblanco",
   "ISAPRE SanLorenzo",
   "ISAPRE Cruz del Norte",
+  "FONASA"
 ];
 
 export const SECURITY_WORK = [
