@@ -57,6 +57,8 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
     setOpenModal(true);
   };
 
+  console.log(employees)
+
   const handleCLickActionTable = (id: string, idregister: string | undefined) => {
     switch (id) {
       case 'edit':
@@ -67,7 +69,7 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
           widthModal: 1050,
           showButtons: [{ _id: CANCEL }, { _id: EDIT }]
         });
-        idregister && setEmployeeSelected(employees.find((employee) => employee._id === idregister));
+        idregister && setEmployeeSelected(employees.find((employee) => employee._id === idregister && employee.activo_inactivo === true));
         setOpenModal(true);
         break;
       case 'details':
@@ -78,7 +80,7 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
           widthModal: 1200,
           showButtons: [{ _id: CANCEL }]
         });
-        idregister && setEmployeeSelected(employees.find((employee) => employee._id === idregister));
+        idregister && setEmployeeSelected(employees.find((employee) => employee._id === idregister && employee.activo_inactivo === true));
         setOpenModal(true);
         break;
       case 'absense':
@@ -90,7 +92,7 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
           showButtons: [{ _id: CANCEL }, { _id: CONFIRM }]
         });
         idregister && setIdEmployeeSelected(idregister);
-        idregister && setEmployeeSelected(employees.find((employee) => employee._id === idregister));
+        idregister && setEmployeeSelected(employees.find((employee) => employee._id === idregister && employee.activo_inactivo === true));
         setOpenModal(true);
         break;
       case 'delete':

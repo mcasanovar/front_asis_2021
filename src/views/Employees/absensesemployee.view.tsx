@@ -38,6 +38,7 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
   const { Title } = Typography;
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingAbsenses, setLoadingAbsenses] = useState<boolean>(false);
   const [absenses, setAbsenses] = useState<AusencesModel[]>([]);
   const [disabledConfirm, setDisabledConfirm] = useState<boolean>(true);
   const [openNewAbsense, setOpenNewAbsense] = useState<boolean>(false);
@@ -169,20 +170,22 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
     year: string = moment().format('YYYY')
   ) {
     setLoading(true)
-    const aux: IResponseAusences =
-      await getAbsensesByIdAndDateService(idEmployee, month, year);
+    const aux: IResponseAusences = await getAbsensesByIdAndDateService(idEmployee, month, year);
     if (aux.err === null) {
       setAbsenses(aux.res);
       setLoading(false);
+      setLoadingAbsenses(false);
       return
     };
     setMessageAlert({ message: aux.err, type: 'error', show: true });
-    setLoading(false)
+    setLoading(false);
+    setLoadingAbsenses(false);
   };
 
   //----------------------------------------USEEFECT
   useEffect(() => {
     setLoading(true)
+    setLoadingAbsenses(true)
     getAbsenses();
   }, []);
 
@@ -352,28 +355,30 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
 
   return (
     <>
-      <Title>{`${currentDate.month.toUpperCase()} - ${currentDate.year}`}</Title>
-      {
-        <Row gutter={8} style={{ width: '100%' }}>
-          <Col span={24} style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-            <Title level={4}>{`${employeeSelected?.razon_social} - ${employeeSelected?.codigo}`}</Title>
-            <ButtonComponent
-              title="Nueva Ausencia"
-              size="middle"
-              ghost={false}
-              customStyle={{ backgroundColor: 'blue', color: 'white' }}
-              onClick={() => setOpenNewAbsense(true)}
-            />
-          </Col>
-        </Row>
-      }
-      <CalendarComponent
-        onSelect={(e: Moment) => handleSelectedDate(e)}
-        onPanelChange={(e: Moment, type: string) => handlePanelChange(e, type)}
-        dateCellRender={handleDataRenderDates}
-        monthCellRender={handleDataRenderMonths}
-      />
-      {renderModalNewAbsense()}
+      <Spin spinning={loadingAbsenses} size='large' tip='Cargando ausencias...'>
+        <Title>{`${currentDate.month.toUpperCase()} - ${currentDate.year}`}</Title>
+        {
+          <Row gutter={8} style={{ width: '100%' }}>
+            <Col span={24} style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+              <Title level={4}>{`${employeeSelected?.razon_social} - ${employeeSelected?.codigo}`}</Title>
+              <ButtonComponent
+                title="Nueva Ausencia"
+                size="middle"
+                ghost={false}
+                customStyle={{ backgroundColor: 'blue', color: 'white' }}
+                onClick={() => setOpenNewAbsense(true)}
+              />
+            </Col>
+          </Row>
+        }
+        <CalendarComponent
+          onSelect={(e: Moment) => handleSelectedDate(e)}
+          onPanelChange={(e: Moment, type: string) => handlePanelChange(e, type)}
+          dateCellRender={handleDataRenderDates}
+          monthCellRender={handleDataRenderMonths}
+        />
+        {renderModalNewAbsense()}
+      </Spin>
     </>
   );
 };
