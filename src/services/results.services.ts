@@ -123,6 +123,16 @@ const getResultsByDateService = async (firstDate: string, secondDate: string) =>
   }
 }
 
+const consolidateResultsService = async (month: string, year: string, data: any) => {
+  const extension = `${PREFIX_RESULTS}/consolidated/${year}/${month}`;
+  try {
+    const response = await httpClient.post(extension, data);
+    return response.data
+  } catch (error) {
+    return error.response.data
+  }
+};
+
 export { 
   getAllResultsService, 
   downloadResultService, 
@@ -134,5 +144,6 @@ export {
   sendMailsTemplatResultService,
   getResultsByRutGIService,
   generateConsolidatedReportResultsService,
-  getResultsByDateService
+  getResultsByDateService,
+  consolidateResultsService
 }

@@ -21,6 +21,7 @@ import SendMailsTemplateView from '../Requests/sendEmailsTemplate.view';
 
 import AlertComponent from "../../component/Alert/Alert";
 import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
+import ConsolidateResultsView from './consolidateResults';
 
 interface IResultsViewProps {
   authorized: boolean
@@ -45,6 +46,17 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
       tooltipText: 'Informe consolidado de resultados',
       customStyle: { width: '50px' }
     },
+    {
+      _id: 'consolidateresults',
+      title: 'INFORME DE RESULTADOS MENSUALES',
+      size: 'large',
+      widthModal: 1600,
+      showButtons: [],
+      permission: PERMISSIONS.CONSOLIDATE_REPORT,
+      icon: 'consolidated',
+      tooltipText: 'Informe de resultados mensual',
+      customStyle: { width: '50px' }
+    }
   ];
 
   const [permissions, setPermissions] = useState<string[]>([]);
@@ -418,6 +430,11 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({ authorized })
           }
           {ActualModal._id === 'consolidatereport' &&
             <ConsolidatedReportResultsView
+              onCloseModal={(value, message) => handleCloseModal(value, message)}
+            />
+          }
+          {ActualModal._id === 'consolidateresults' &&
+            <ConsolidateResultsView
               onCloseModal={(value, message) => handleCloseModal(value, message)}
             />
           }

@@ -6,13 +6,13 @@ import { MONTHS, YEARS_CHARTS } from '../../constants/var';
 import { SelectValue } from 'antd/lib/select';
 import { validateEmail } from '../../functions/validators/index.validators';
 import { IResponseRequest } from '../../models/request.models';
-import { consolidateResquestService } from '../../services';
+import { consolidateResquestService, consolidateResultsService } from '../../services';
 
-interface IConsolidateRequestsViewProps {
+interface IConsolidateResultsViewProps {
   onCloseModal: (value: string, message: string) => string | void
 }
 
-const ConsolidateRequestsView: React.FunctionComponent<IConsolidateRequestsViewProps> = ({
+const ConsolidateResultsView: React.FunctionComponent<IConsolidateResultsViewProps> = ({
   onCloseModal
 }) => {
   const { Option } = Select;
@@ -44,7 +44,7 @@ const ConsolidateRequestsView: React.FunctionComponent<IConsolidateRequestsViewP
       });
     };
 
-    const aux: IResponseRequest = await consolidateResquestService(month, year, { emails: arrayEmails });
+    const aux: IResponseRequest = await consolidateResultsService(month, year, { emails: arrayEmails });
     if (!aux.err) {
       onCloseModal('sended', aux.msg)
       return
@@ -181,4 +181,4 @@ const ConsolidateRequestsView: React.FunctionComponent<IConsolidateRequestsViewP
   )
 }
 
-export default ConsolidateRequestsView
+export default ConsolidateResultsView
