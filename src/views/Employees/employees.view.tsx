@@ -112,8 +112,10 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
 
   const handleCloseModal = (value: string, message: string) => {
     setOpenModal(false)
+
     if (value === '') return
     setMessageAlert({ message, type: 'success', show: true });
+    
     if (value === 'reload') {
       getEmployees(1);
     }
@@ -286,7 +288,10 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({ authorized }) => 
           visible={OpenModal}
           title={ActualModal.title}
           width={ActualModal.widthModal || 500}
-          onClose={() => setOpenModal(false)}
+          onClose={() => {
+            setOpenModal(false)
+            ActualModal._id === 'absense' && getEmployees(1)
+          }}
           onClickConfirm={(id) => { }}
           showButtons={ActualModal.showButtons || []}
         >

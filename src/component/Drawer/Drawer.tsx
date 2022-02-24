@@ -3,7 +3,13 @@ import { Menu, Tooltip } from 'antd';
 import {
   Link
 } from "react-router-dom";
-import { PieChartOutlined, BarChartOutlined, UsergroupAddOutlined, DollarCircleFilled } from "@ant-design/icons";
+import {
+  PieChartOutlined,
+  BarChartOutlined,
+  UsergroupAddOutlined,
+  DollarCircleFilled,
+  ControlFilled
+} from "@ant-design/icons";
 import { getUserFromLocalStorage } from '../../functions/getLocalStorage';
 import { MODULES_PERMISSION } from '../../constants/var';
 
@@ -110,6 +116,15 @@ const DrawerComponent: React.FunctionComponent<IDrawerComponentProps> = (props) 
           }
         </SubMenu>
       </SubMenu>
+      {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_ADMIN) > -1 &&
+        <SubMenu key="5" icon={<ControlFilled style={{ fontSize: '20px' }} />} title="Administración">
+          <SubMenu key="sub10" title="Procesos" style={{ ...styleText }}>
+            <Menu.Item key="adminSolicitudes">
+              <Link to='/admin/solicitudes' style={{ ...styleText }}>Solicitudes</Link>
+            </Menu.Item>
+          </SubMenu>
+        </SubMenu>
+      }
     </Menu>
   );
 };

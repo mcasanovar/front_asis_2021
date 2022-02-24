@@ -7111,7 +7111,8 @@ export const MODULES_PERMISSION = {
   M_REQUESTPAYMENT: 'modulo_cobranzas',
   M_EXPENSES: 'modulo_gastos',
   M_OUTPUTS: 'modulos_salidas',
-  M_EXISTENSES: 'modulo_existencias'
+  M_EXISTENSES: 'modulo_existencias',
+  M_ADMIN: 'modulo_admin'
 }
 
 export const PERMISSIONS = {

@@ -258,6 +258,8 @@ const DetailsEmployee: React.FunctionComponent<IDetailsEmployeeProps> = ({
     );
   };
 
+  console.log("EMPLOYYED SELECTES", employeesSelected)
+
   return (
     <Collapse accordion defaultActiveKey={['1']}>
       <Panel header="Empleado" key="1">

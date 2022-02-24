@@ -24,6 +24,8 @@ import OutputsView from "./views/outputs/outputs.view";
 import ExistenceView from "./views/Existence/existence.view";
 import CalendarView from './views/Calendar/calendar.view';
 import NotFoundView from './views/NotFound/notfound.view';
+//admin views
+import RequestAdminView from './views/Admin/requestAdmin.view';
 
 import LoginView from './views/Login/Login';
 
@@ -122,6 +124,11 @@ function App(): JSX.Element {
               }
               {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_EXISTENSES) > -1 ?
                 <Route exact path='/existencia' component={() => <ExistenceView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} /> :
+                <Route exact path='/' component={() => <NotFoundView />} />
+              }
+              {/* admin section */}
+              {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_ADMIN) > -1 ?
+                <Route exact path='/admin/solicitudes' component={() => <RequestAdminView authorized={localStorage.getItem('authorizated') !== null ? authorized : false} />} /> :
                 <Route exact path='/' component={() => <NotFoundView />} />
               }
             </Switch>
