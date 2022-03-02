@@ -6,7 +6,7 @@ import { editRequestService, getGIByRutService, getOneRequestService, getWorkers
 
 import AlertComponent from "../../component/Alert/Alert";
 
-import { ICategory1, IResponseRequest, RequestModel } from '../../models/request.models';
+import { ICategory1, ICategory2, ICategory3, ICategory4, IResponseRequest, RequestModel } from '../../models/request.models';
 import { RequestInitialization } from '../../initializations/request.initialization';
 import { CATEGORIES_REQUESTS, FORMAT_DATE, SERVICES_TYPE, SERVICES_PLACE, SUCURSAL, DEFAULT_PERCENTAGE_IVA } from '../../constants/var';
 import { capitalize } from '../../libs/capitalize';
@@ -115,26 +115,35 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
     }
   };
 
-  const handleSelectCategoria1 = (id: number) => {
-    const aux = CATEGORIES_REQUESTS.find((category) => category.id === id);
-    if (!aux) return;
-    setSelectionsCategories({ ...selectionsCategories, level_1: id });
-    setNewRequestData({ ...newRequestData, categoria1: aux.nivel_1, categoria2: '', categoria3: '', nombre_servicio: '' });
-  };
+  const handleSelectCategory = (id: number, category: number) => {
+    let aux: ICategory1 | ICategory2 | ICategory3 | ICategory4 | undefined;
+    let data: RequestModel | undefined = undefined;
+    let selectedCategories: ISelectedCategories | undefined = undefined;
+    
+    if(category === 1){
+      aux = CATEGORIES_REQUESTS.find((category) => category.id === id);
+      if (!aux) return;
+      selectedCategories = { ...selectionsCategories, level_1: id };
+      data = { ...newRequestData, categoria1: aux.nivel_1, categoria2: '', categoria3: '', nombre_servicio: '' }
+    }
 
-  const handleSelectCategoria2 = (id: number) => {
-    const aux = CATEGORIES_REQUESTS[selectionsCategories.level_1 - 1].nivel_2.find((category) => category.id === id);
-    if (!aux) return;
-    setSelectionsCategories({ ...selectionsCategories, level_2: id });
-    setNewRequestData({ ...newRequestData, categoria2: aux.nivel_2, categoria3: '', nombre_servicio: '' });
-  };
+    if(category === 2){
+      aux = CATEGORIES_REQUESTS[selectionsCategories.level_1 - 1].nivel_2.find((category) => category.id === id);
+      if (!aux) return;
+      selectedCategories = { ...selectionsCategories, level_2: id };
+      data = { ...newRequestData, categoria2: aux.nivel_2, categoria3: '', nombre_servicio: '' }
+    }
 
-  const handleSelectCategoria3 = (id: number) => {
-    const aux = CATEGORIES_REQUESTS[selectionsCategories.level_1 - 1].nivel_2[selectionsCategories.level_2 - 1].nivel_3.find((category) => category.id === id);
-    if (!aux) return;
-    setSelectionsCategories({ ...selectionsCategories, level_3: id });
-    setNewRequestData({ ...newRequestData, categoria3: aux.nivel_3, nombre_servicio: '' });
-  };
+    if(category === 3){
+      aux = CATEGORIES_REQUESTS[selectionsCategories.level_1 - 1].nivel_2[selectionsCategories.level_2 - 1].nivel_3.find((category) => category.id === id);
+      if (!aux) return;
+      selectedCategories = { ...selectionsCategories, level_3: id };
+      data = { ...newRequestData, categoria3: aux.nivel_3, nombre_servicio: '' }
+    }
+
+    setSelectionsCategories(selectedCategories ?? selectionsCategories);
+    setNewRequestData(data ?? RequestInitialization);
+  }
 
   const handleSelectServiceName = (name: string) => {
     const aux = CATEGORIES_REQUESTS[selectionsCategories.level_1 - 1].nivel_2[selectionsCategories.level_2 - 1].nivel_3[selectionsCategories.level_3 - 1].nivel_4.find((category) => category.nivel_4 === name);
@@ -146,16 +155,10 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
     setNewRequestData({ ...newRequestData, [type]: price });
   };
 
-  const handleSearchPrimaryClient = (e: string) => {
+  const handleSearchClient = (e: string, type: string) => {
     const rutFormatted = FormatingRut(e);
     setNewRequestData({ ...newRequestData, rut_CP: rutFormatted });
-    getGIByRut(rutFormatted, 1);
-  };
-
-  const handleSearchSecondaryClient = (e: string) => {
-    const rutFormatted = FormatingRut(e);
-    setNewRequestData({ ...newRequestData, rut_cs: rutFormatted });
-    getGIByRut(rutFormatted, 2);
+    type === 'primary' ?  getGIByRut(rutFormatted, 1) : getGIByRut(rutFormatted, 2);
   };
 
   const handleSetContractNumber = (e: string) => {
@@ -390,7 +393,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                 <Select
                   style={{ width: '100%' }}
                   optionFilterProp="children"
-                  onSelect={(e) => handleSelectCategoria1(parseInt(e.toString()))}
+                  onSelect={(e) => handleSelectCategory(parseInt(e.toString()), 1)}
                   filterOption={(input, option) =>
                     option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                   }
@@ -409,7 +412,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                 <Select
                   style={{ width: '100%' }}
                   optionFilterProp="children"
-                  onSelect={(e) => handleSelectCategoria2(parseInt(e.toString()))}
+                  onSelect={(e) => handleSelectCategory(parseInt(e.toString()), 2)}
                   filterOption={(input, option) =>
                     option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                   }
@@ -429,7 +432,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                 <Select
                   style={{ width: '100%' }}
                   optionFilterProp="children"
-                  onSelect={(e) => handleSelectCategoria3(parseInt(e.toString()))}
+                  onSelect={(e) => handleSelectCategory(parseInt(e.toString()), 3)}
                   filterOption={(input, option) =>
                     option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                   }
@@ -525,7 +528,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                 <InputNumber
                   style={{ width: '100%' }}
                   type='number'
-                  onChange={(value) => handleFormattedPrices(parseInt(value.toString()), 'monto_neto')}
+                  onChange={(value) => handleFormattedPrices(parseInt(!!value ? value.toString() : '0'), 'monto_neto')}
                   value={newRequestData.monto_neto}
                 />
                 <Paragraph>{`$${MilesFormat(newRequestData.monto_neto)}.-`}</Paragraph>
@@ -551,7 +554,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                 <InputNumber
                   style={{ width: '100%' }}
                   type='number'
-                  onChange={(value) => handleFormattedPrices(parseInt(value.toString()), 'valor_impuesto')}
+                  onChange={(value) => handleFormattedPrices(parseInt(!!value ? value.toString() : '0'), 'valor_impuesto')}
                   value={newRequestData.valor_impuesto}
                   readOnly
                 />
@@ -565,7 +568,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                 <InputNumber
                   style={{ width: '100%' }}
                   type='number'
-                  onChange={(value) => handleFormattedPrices(parseInt(value.toString()), 'exento')}
+                  onChange={(value) => handleFormattedPrices(parseInt(!!value ? value.toString() : '0'), 'exento')}
                   value={newRequestData.exento}
                 />
                 <Paragraph>{`$${MilesFormat(newRequestData.exento)}.-`}</Paragraph>
@@ -578,7 +581,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                 <InputNumber
                   style={{ width: '100%' }}
                   type='number'
-                  onChange={(value) => handleFormattedPrices(parseInt(value.toString()), 'monto_total')}
+                  onChange={(value) => handleFormattedPrices(parseInt(!!value ? value.toString() : '0'), 'monto_total')}
                   value={newRequestData.monto_total}
                   readOnly
                 />
@@ -659,7 +662,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                   allowClear
                   enterButton
                   onChange={(e) => setNewRequestData({ ...newRequestData, rut_CP: e.currentTarget.value })}
-                  onSearch={(e) => handleSearchPrimaryClient(e.toString())}
+                  onSearch={(e) => handleSearchClient(e.toString(), 'primary')}
                   value={newRequestData.rut_CP}
                   id='error'
                 />
@@ -744,7 +747,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                   allowClear
                   enterButton
                   onChange={(e) => setNewRequestData({ ...newRequestData, rut_cs: e.currentTarget.value })}
-                  onSearch={(e) => handleSearchSecondaryClient(e.toString())}
+                  onSearch={(e) => handleSearchClient(e.toString(), 'secondary')}
                   value={newRequestData.rut_cs}
                   id='error'
                 />

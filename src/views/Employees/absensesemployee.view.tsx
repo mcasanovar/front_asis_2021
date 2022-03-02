@@ -371,13 +371,13 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
             </Col>
           </Row>
         }
+        {renderModalNewAbsense()}
         <CalendarComponent
           onSelect={(e: Moment) => handleSelectedDate(e)}
           onPanelChange={(e: Moment, type: string) => handlePanelChange(e, type)}
           dateCellRender={handleDataRenderDates}
           monthCellRender={handleDataRenderMonths}
         />
-        {renderModalNewAbsense()}
       </Spin>
     </>
   );
