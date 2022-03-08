@@ -47,6 +47,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
   const [secondaryClient, setSecondaryClient] = useState<GiModel>();
   const [faenasSelected, setFaenasSelected] = useState<IFaena[]>([]);
   const [selectionsCategories, setSelectionsCategories] = useState<ISelectedCategories>({ level_1: 0, level_2: 0, level_3: 0 });
+  const [disabledTextInput, setDisabledTextInput] = useState(true);
 
   async function handleUpdateRequest() {
     setLoading(true);
@@ -90,6 +91,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
     handleSearchClient(request.rut_CP, 'primary');
     handleSearchClient(request.rut_cs, 'secondary');
 
+    setDisabledTextInput(false)
 
     setLoading(false);
   };
@@ -215,6 +217,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                   style={{ width: '100%' }}
                   value={!!newRequestData.fecha_solicitud ? moment(newRequestData.fecha_solicitud, FORMAT_DATE) : undefined}
                   onSelect={(e: Moment) => handleSelectRequestDate(e)}
+                  disabled={disabledTextInput}
                 />
               </Form.Item>
             </Col>
@@ -225,6 +228,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                 <Input
                   readOnly
                   value={newRequestData.mes_solicitud}
+                  disabled={disabledTextInput}
                 />
               </Form.Item>
             </Col>
@@ -235,6 +239,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                 <Input
                   readOnly
                   value={newRequestData.anio_solicitud}
+                  disabled={disabledTextInput}
                 />
               </Form.Item>
             </Col>
@@ -252,6 +257,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                     option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                   }
                   value={newRequestData.categoria1}
+                  disabled={disabledTextInput}
                 >
                   {CATEGORIES_REQUESTS.map((category: ICategory1, index) => (
                     <Option key={index} value={category.id}>{category.nivel_1}</Option>
@@ -271,6 +277,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                     option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                   }
                   value={newRequestData.categoria2}
+                  disabled={disabledTextInput}
                 >
                   {selectionsCategories.level_1 > 0
                     && CATEGORIES_REQUESTS[selectionsCategories.level_1 - 1].nivel_2.map((category, index) => (
@@ -291,6 +298,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                     option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                   }
                   value={newRequestData.categoria3}
+                  disabled={disabledTextInput}
                 >
                   {selectionsCategories.level_2 > 0
                     && CATEGORIES_REQUESTS[selectionsCategories.level_1 - 1].nivel_2[selectionsCategories.level_2 - 1].nivel_3.map((category, index) => (
@@ -313,6 +321,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                     option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                   }
                   value={newRequestData.nombre_servicio}
+                  disabled={disabledTextInput}
                 >
                   {selectionsCategories.level_3 > 0
                     && CATEGORIES_REQUESTS[selectionsCategories.level_1 - 1].nivel_2[selectionsCategories.level_2 - 1].nivel_3[selectionsCategories.level_3 - 1].nivel_4.map((category, index) => (
@@ -365,6 +374,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                   type='number'
                   onChange={(value) => handleFormattedPrices(parseInt(value.toString()), 'monto_neto')}
                   value={newRequestData.monto_neto}
+                  disabled={disabledTextInput}
                 />
                 <Paragraph>{`$${MilesFormat(newRequestData.monto_neto)}.-`}</Paragraph>
               </Form.Item>
@@ -380,6 +390,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                   formatter={value => `${value}%`}
                   onChange={(value) => setNewRequestData({ ...newRequestData, porcentaje_impuesto: value })}
                   value={newRequestData.porcentaje_impuesto}
+                  disabled={disabledTextInput}
                 />
               </Form.Item>
             </Col>
@@ -392,6 +403,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                   type='number'
                   onChange={(value) => handleFormattedPrices(parseInt(value.toString()), 'valor_impuesto')}
                   value={newRequestData.valor_impuesto}
+                  disabled={disabledTextInput}
                 />
                 <Paragraph>{`$${MilesFormat(newRequestData.valor_impuesto)}.-`}</Paragraph>
               </Form.Item>
@@ -405,6 +417,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                   type='number'
                   onChange={(value) => handleFormattedPrices(parseInt(value.toString()), 'exento')}
                   value={newRequestData.exento}
+                  disabled={disabledTextInput}
                 />
                 <Paragraph>{`$${MilesFormat(newRequestData.exento)}.-`}</Paragraph>
               </Form.Item>
@@ -418,6 +431,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                   type='number'
                   onChange={(value) => handleFormattedPrices(parseInt(value.toString()), 'monto_total')}
                   value={newRequestData.monto_total}
+                  disabled={disabledTextInput}
                 />
                 <Paragraph>{`$${MilesFormat(newRequestData.monto_total)}.-`}</Paragraph>
               </Form.Item>
@@ -432,7 +446,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                   rows={2}
                   onChange={(e) => setNewRequestData({ ...newRequestData, descripcion_servicio: e.currentTarget.value })}
                   value={newRequestData.descripcion_servicio}
-                  disabled
+                  disabled={disabledTextInput}
                 />
               </Form.Item>
             </Col>
@@ -468,7 +482,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                   onSelect={(e: SelectValue) => setNewRequestData({ ...newRequestData, id_GI_PersonalAsignado: e.toString() })}
                   id='error'
                   value={newRequestData.id_GI_PersonalAsignado}
-                  disabled
+                  disabled={disabledTextInput}
                 >
                   {workers.length > 0 && workers.map((worker, index) => (
                     <Option key={index} value={worker._id}>{worker.razon_social}</Option>
@@ -541,6 +555,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                   style={{ width: '100%' }}
                   onChange={(e) => handleSetContractNumber(e.toString())}
                   value={newRequestData.nro_contrato_seleccionado_cp}
+                  disabled={disabledTextInput}
                 >
                   {primaryClient?.contrato_faenas && primaryClient.contrato_faenas.map((contract) => (
                     <Option value={contract.nro_contrato}>{contract.nro_contrato}</Option>
@@ -556,6 +571,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                   style={{ width: '100%' }}
                   onChange={(e) => setNewRequestData({ ...newRequestData, faena_seleccionada_cp: e.toString() })}
                   value={newRequestData.faena_seleccionada_cp}
+                  disabled={disabledTextInput}
                 >
                   {faenasSelected && faenasSelected.length > 0 && faenasSelected.map((faena, index) => (
                     <Option key={index} value={faena.name}>{faena.name}</Option>
@@ -675,6 +691,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                   style={{ width: '100%' }}
                   onSelect={(e: Moment) => setNewRequestData({ ...newRequestData, fecha_servicio_solicitado: e.format(FORMAT_DATE) })}
                   value={!!newRequestData.fecha_servicio_solicitado ? moment(newRequestData.fecha_servicio_solicitado, FORMAT_DATE) : undefined}
+                  disabled={disabledTextInput}
                 />
               </Form.Item>
             </Col>
@@ -689,6 +706,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                     // setNewRequestData({ ...newRequestData, hora_servicio_solicitado: e?.format('HH:mm') || '' })
                     handleWorkDay(e?.format('HH:mm') || '')
                   }}
+                  disabled={disabledTextInput}
                   value={newRequestData.hora_servicio_solicitado !== '' ? moment(`${newRequestData.fecha_servicio_solicitado} ${newRequestData.hora_servicio_solicitado}`, `${FORMAT_DATE} HH:mm`) : undefined}
                 />
               </Form.Item>
@@ -701,6 +719,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                   format={FORMAT_DATE}
                   style={{ width: '100%' }}
                   onSelect={(e: Moment) => setNewRequestData({ ...newRequestData, fecha_servicio_solicitado_termino: e.format(FORMAT_DATE) })}
+                  disabled={disabledTextInput}
                   value={newRequestData.fecha_servicio_solicitado_termino !== '' ? moment(newRequestData.fecha_servicio_solicitado_termino, FORMAT_DATE) : undefined}
                 />
               </Form.Item>
@@ -713,6 +732,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                   style={{ width: '100%' }}
                   format="HH:mm"
                   onChange={(e) => setNewRequestData({ ...newRequestData, hora_servicio_solicitado_termino: e?.format('HH:mm') || '' })}
+                  disabled={disabledTextInput}
                   value={newRequestData.hora_servicio_solicitado_termino !== '' ? moment(`${newRequestData.fecha_servicio_solicitado_termino} ${newRequestData.hora_servicio_solicitado_termino}`, `${FORMAT_DATE} HH:mm`) : undefined}
                 />
               </Form.Item>
@@ -727,6 +747,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                   style={{ width: '100%' }}
                   onSelect={(e: SelectValue) => setNewRequestData({ ...newRequestData, jornada: e.toString() })}
                   value={newRequestData.jornada}
+                  disabled={disabledTextInput}
                 >
                   <Option value='Diurna'>Diurna</Option>
                   <Option value='Vespertina'>Vespertina</Option>
@@ -744,6 +765,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
                   onChange={(e) => setNewRequestData({ ...newRequestData, observacion_solicitud: e.currentTarget.value })}
                   defaultValue={newRequestData.observacion_solicitud[newRequestData.observacion_solicitud.length - 1 || 0]}
                   value={newRequestData.observacion_solicitud}
+                  disabled={disabledTextInput}
                 />
               </Form.Item>
             </Col>
@@ -781,12 +803,6 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
     }
   }, [messageAlert]);
 
-  // useEffect(() => {
-  //   if (!!newRequestData._id) {
-  //     handleWorkDay()
-  //   }
-  // }, [newRequestData._id]);
-
   return (
     <div className="container-gi">
       <SubBarComponent title='Resultados' />
@@ -794,7 +810,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
         {messageAlert.show && <AlertComponent message={messageAlert.message} type={messageAlert.type} />}
         <Title level={4} style={{ textAlign: 'center', marginTop: '10px' }}>{`Administración de Solicitudes`}</Title>
         <br />
-        <Title level={5} style={{ textAlign: 'left', marginTop: '10px' }}>{`Código`}</Title>
+        <Title level={5} style={{ textAlign: 'left', marginTop: '10px' }}>{`Busqueda por Código de Solicitud`}</Title>
         <Search
           placeholder="Ingrese el código de la solicitud..."
           enterButton="Buscar"

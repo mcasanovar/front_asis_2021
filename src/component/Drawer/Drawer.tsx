@@ -118,11 +118,9 @@ const DrawerComponent: React.FunctionComponent<IDrawerComponentProps> = (props) 
       </SubMenu>
       {!!roles && roles.permisos.indexOf(MODULES_PERMISSION.M_ADMIN) > -1 &&
         <SubMenu key="5" icon={<ControlFilled style={{ fontSize: '20px' }} />} title="Administración">
-          <SubMenu key="sub10" title="Procesos" style={{ ...styleText }}>
-            <Menu.Item key="adminSolicitudes">
-              <Link to='/admin/solicitudes' style={{ ...styleText }}>Solicitudes</Link>
-            </Menu.Item>
-          </SubMenu>
+          <Menu.Item key="adminSolicitudes">
+            <Link to='/admin/solicitudes' style={{ ...styleText }}>Solicitudes</Link>
+          </Menu.Item>
         </SubMenu>
       }
     </Menu>
