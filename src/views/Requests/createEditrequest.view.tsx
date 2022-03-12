@@ -8,7 +8,14 @@ import AlertComponent from "../../component/Alert/Alert";
 
 import { ICategory1, ICategory2, ICategory3, ICategory4, IResponseRequest, RequestModel } from '../../models/request.models';
 import { RequestInitialization } from '../../initializations/request.initialization';
-import { CATEGORIES_REQUESTS, FORMAT_DATE, SERVICES_TYPE, SERVICES_PLACE, SUCURSAL, DEFAULT_PERCENTAGE_IVA } from '../../constants/var';
+import { 
+  CATEGORIES_REQUESTS, 
+  FORMAT_DATE, 
+  SERVICES_TYPE, 
+  SERVICES_PLACE, 
+  SUCURSAL, 
+  DEFAULT_PERCENTAGE_IVA 
+} from '../../constants/var';
 import { capitalize } from '../../libs/capitalize';
 import { MilesFormat } from "../../libs/formattedPesos";
 import { CalculateIVA } from "../../libs/calculateIVA";

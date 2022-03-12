@@ -6,7 +6,14 @@ import AlertComponent from '../../component/Alert/Alert';
 
 import { ICategory1, ICategory2, ICategory3, ICategory4, IResponseRequest, RequestModel } from '../../models/request.models';
 import { RequestInitialization } from '../../initializations/request.initialization';
-import { CATEGORIES_REQUESTS, DEFAULT_PERCENTAGE_IVA, FORMAT_DATE } from '../../constants/var';
+import {
+  CATEGORIES_REQUESTS,
+  DEFAULT_PERCENTAGE_IVA,
+  FORMAT_DATE,
+  SERVICES_TYPE,
+  SERVICES_PLACE,
+  SUCURSAL
+} from '../../constants/var';
 import moment, { Moment } from 'moment';
 import SubBarComponent from '../../component/Subbar/SubBar';
 import { GiModel, IContract, IFaena, IResponseGI } from '../../models/gi.models';
@@ -50,6 +57,9 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
   const [disabledTextInput, setDisabledTextInput] = useState(true);
 
   async function handleUpdateRequest() {
+    
+    if(!newRequestData.sucursal) return 
+    
     setLoading(true);
 
     const aux: IResponseRequest = await updateRequestAdmin(newRequestData._id, newRequestData);
@@ -85,7 +95,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
 
     const lastObservation = request.observacion_solicitud || '';
     setNewRequestData({ ...request, observacion_solicitud: lastObservation });
-    
+
     // handleWorkDay();
 
     handleSearchClient(request.rut_CP, 'primary');
@@ -183,7 +193,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
     const arrayHour = hour.split(':');
     if ((parseInt(arrayHour[0]) >= 6 && parseInt(arrayHour[0]) < 20) || (parseInt(arrayHour[0]) === 20 && parseInt(arrayHour[1]) === 0)) {
       setNewRequestData({ ...newRequestData, hora_servicio_solicitado: hour, jornada: 'Diurna' });
-    } else{
+    } else {
       setNewRequestData({ ...newRequestData, hora_servicio_solicitado: hour, jornada: 'Vespertina' });
     }
   };
@@ -196,11 +206,30 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
     setNewRequestData({ ...newRequestData, nro_contrato_seleccionado_cp: aux.nro_contrato, faena_seleccionada_cp: '' });
   };
 
-  async function getWorkers(){
+  async function getWorkers() {
     const aux: IResponseGI = await getWorkersGIService();
     aux.err === null && setWorkers(aux.res || [])
     return
   };
+
+  //---------------------------------------------------------------USEEFFECTS
+  useEffect(() => {
+    if (newRequestData.tipo_servicio === 'Online') {
+      setNewRequestData({ ...newRequestData, lugar_servicio: 'No Aplica', sucursal: 'Fuera de oficina' });
+    };
+    if (newRequestData.tipo_servicio === 'Presencial') {
+      setNewRequestData({ ...newRequestData, lugar_servicio: 'Oficina', sucursal: '' });
+    };
+  }, [newRequestData.tipo_servicio]);
+
+  useEffect(() => {
+    if (newRequestData.lugar_servicio === 'Terreno') {
+      setNewRequestData({ ...newRequestData, sucursal: 'Fuera de oficina' });
+    };
+    if (newRequestData.lugar_servicio === 'Oficina') {
+      setNewRequestData({ ...newRequestData, sucursal: '' });
+    };
+  }, [newRequestData.lugar_servicio]);
 
   //----------------------------------------------------------------RENDERS
   const renderServiceInformation = () => {
@@ -334,33 +363,57 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
               <Form.Item
                 label='Tipo servicio'
               >
-                <Input
-                  readOnly
-                  disabled
+                <Select
+                  style={{ width: '100%' }}
+                  onSelect={(e) => setNewRequestData({ ...newRequestData, tipo_servicio: e.toString() })}
                   value={newRequestData.tipo_servicio}
-                />
+                  disabled={disabledTextInput}
+                >
+                  {SERVICES_TYPE.map((service, index) => (
+                    <Option key={index} value={service}>{service}</Option>
+                  ))}
+                </Select>
               </Form.Item>
             </Col>
             <Col span={5}>
               <Form.Item
                 label='Lugar servicio'
               >
-                <Input
-                  readOnly
-                  disabled
+                <Select
+                  style={{ width: '100%' }}
+                  onSelect={(e) => setNewRequestData({ ...newRequestData, lugar_servicio: e.toString() })}
                   value={newRequestData.lugar_servicio}
-                />
+                  disabled={disabledTextInput}
+                >
+                  {newRequestData.tipo_servicio === 'Presencial' ?
+                    SERVICES_PLACE.map((service, index) => (
+                      <Option key={index} value={service}>{service}</Option>
+                    )) :
+                    <Option value='No Aplica'>No Aplica</Option>
+                  }
+                </Select>
               </Form.Item>
             </Col>
             <Col span={5}>
               <Form.Item
                 label='Sucursal'
+                validateStatus={newRequestData.sucursal !== '' ? 'success' : 'error'}
+                help={newRequestData.sucursal !== '' ? '' : 'Debe seleccionar una sucursal'}
               >
-                <Input
-                  readOnly
-                  disabled
+                <Select
+                  style={{ width: '100%' }}
+                  onChange={() => { }}
+                  onSelect={(e) => setNewRequestData({ ...newRequestData, sucursal: e.toString() })}
                   value={newRequestData.sucursal}
-                />
+                  disabled={disabledTextInput}
+                >
+                  {newRequestData.lugar_servicio === 'Oficina' ?
+                    SUCURSAL.map((sucursal, index) => (
+                      <Option key={index} value={sucursal}>{sucursal}</Option>
+                    )) :
+                    <Option value='Fuera de oficina'>Fuera de oficina</Option>
+                  }
+                </Select>
               </Form.Item>
             </Col>
           </Row>
@@ -846,7 +899,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({ au
             <Button
               onClick={() => handleUpdateRequest()}
               disabled={!!newRequestData._id ? false : true}
-              style={!!newRequestData._id ? 
+              style={!!newRequestData._id ?
                 { backgroundColor: 'green', borderColor: 'green', color: 'white' } :
                 { backgroundColor: 'grey', borderColor: 'grey', color: 'white' }}
             >
