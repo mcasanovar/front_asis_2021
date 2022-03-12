@@ -1,47 +1,47 @@
-import { SizeType } from 'antd/lib/config-provider/SizeContext';
+import { SizeType } from 'antd/lib/config-provider/SizeContext'
 
 export interface IShowButtonModals {
-  _id: string
-};
+    _id: string
+}
 
 export interface ITableDeleteObject {
-  _id: string,
-  show: boolean
+    _id: string
+    show: boolean
 }
 
 export interface IButtonsProps {
-  _id: string
-  title: string,
-  customTitle?: string,
-  customStyle?: object,
-  size: SizeType,
-  widthModal: number,
-  showButtons: IShowButtonModals[] | [],
-  permission?: string,
-  icon?: string,
-  tooltipText?: string
-};
+    _id: string
+    title: string
+    customTitle?: string
+    customStyle?: object
+    size: SizeType
+    widthModal: number
+    showButtons: IShowButtonModals[] | []
+    permission?: string
+    icon?: string
+    tooltipText?: string
+}
 
 export interface IExamPsicoExtras {
-  label: string,
-  value: string,
-  key: string,
-  name_exam: string,
-};
+    label: string
+    value: string
+    key: string
+    name_exam: string
+}
 
 export interface IAlertMessageContent {
-  message: string,
-  type: 'success' | 'error' | 'warning' | 'info',
-  show: boolean
-};
+    message: string
+    type: 'success' | 'error' | 'warning' | 'info'
+    show: boolean
+}
 
 export interface ICountries {
-  name: string,
-  alpha3Code: string
-};
+    name: string
+    alpha3Code: string
+}
 
 export interface IColumnTable {
-  title: string,
-  dataIndex: string,
-  key: string
-};
+    title: string
+    dataIndex: string
+    key: string
+}

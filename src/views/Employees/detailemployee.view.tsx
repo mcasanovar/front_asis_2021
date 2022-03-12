@@ -1,278 +1,357 @@
-import React, { useState } from 'react';
-import { Col, Input, Row, Form, Table, Collapse, Tooltip, Button } from "antd";
-import {
-  DownloadOutlined,
-} from "@ant-design/icons";
+import React, { useState } from 'react'
+import { Col, Input, Row, Form, Table, Collapse, Tooltip, Button } from 'antd'
+import { DownloadOutlined } from '@ant-design/icons'
 
-import { GiModel } from '../../models/gi.models';
-import { MilesFormat } from '../../libs/formattedPesos';
-import TextArea from 'antd/lib/input/TextArea';
-import { IResponseExpenses } from '../../models/expenses.models';
-import { downloadFileEmployeeService } from '../../services';
-import { IAlertMessageContent } from '../../models/index.models';
+import { GiModel } from '../../models/gi.models'
+import { MilesFormat } from '../../libs/formattedPesos'
+import TextArea from 'antd/lib/input/TextArea'
+import { IResponseExpenses } from '../../models/expenses.models'
+import { downloadFileEmployeeService } from '../../services'
+import { IAlertMessageContent } from '../../models/index.models'
 
 interface IDetailsEmployeeProps {
-  onCloseModal: (value: string, message: string) => string | void
-  employeesSelected: GiModel | undefined
+    onCloseModal: (value: string, message: string) => string | void
+    employeesSelected: GiModel | undefined
 }
 
 const DetailsEmployee: React.FunctionComponent<IDetailsEmployeeProps> = ({
-  onCloseModal,
-  employeesSelected
+    onCloseModal,
+    employeesSelected,
 }) => {
-  const { Panel } = Collapse;
-  const { Column } = Table;
+    const { Panel } = Collapse
+    const { Column } = Table
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({ message: '', type: 'success', show: false });
+    const [loading, setLoading] = useState<boolean>(false)
+    const [messageAlert, setMessageAlert] = useState<IAlertMessageContent>({
+        message: '',
+        type: 'success',
+        show: false,
+    })
 
-  const handleDownloadFile = async (filestring: string) => {
-    setLoading(true)
-    const aux: IResponseExpenses = await downloadFileEmployeeService(filestring);
-    if (aux.err === null) {
-      const arr = new Uint8Array(aux.res.data);
-      const blob = new Blob([arr], { type: "application/pdf" });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      const fileName = aux?.filename || 'examen';
+    const handleDownloadFile = async (filestring: string) => {
+        setLoading(true)
+        const aux: IResponseExpenses = await downloadFileEmployeeService(
+            filestring
+        )
+        if (aux.err === null) {
+            const arr = new Uint8Array(aux.res.data)
+            const blob = new Blob([arr], { type: 'application/pdf' })
+            const url = window.URL.createObjectURL(blob)
+            const link = document.createElement('a')
+            const fileName = aux?.filename || 'examen'
 
-      link.setAttribute('href', url);
-      link.setAttribute('download', fileName);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setLoading(false)
-      return
+            link.setAttribute('href', url)
+            link.setAttribute('download', fileName)
+            link.style.visibility = 'hidden'
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+            setLoading(false)
+            return
+        }
+        if (aux.err !== '') {
+            setMessageAlert({ message: aux.msg, type: 'error', show: true })
+            setLoading(false)
+            return
+        }
     }
-    if (aux.err !== '') {
-      setMessageAlert({ message: aux.msg, type: 'error', show: true });
-      setLoading(false)
-      return
+
+    //-----------RENDERS
+    const renderEmployeeInformation = () => {
+        return (
+            <Form layout="vertical">
+                <Input.Group>
+                    <Row gutter={8}>
+                        <Col span={6}>
+                            <Form.Item label="Rut">
+                                <Input
+                                    readOnly
+                                    value={employeesSelected?.rut}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={9}>
+                            <Form.Item label="Nombre">
+                                <Input
+                                    readOnly
+                                    value={employeesSelected?.razon_social}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={9}>
+                            <Form.Item label="Cargo">
+                                <Input
+                                    readOnly
+                                    value={employeesSelected?.cargo}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={8}>
+                        <Col span={10}>
+                            <Form.Item label="Tipo de contrato">
+                                <Input
+                                    readOnly
+                                    value={employeesSelected?.tipo_contrato}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={5}>
+                            <Form.Item label="Fecha inicio contrato">
+                                <Input
+                                    readOnly
+                                    value={
+                                        employeesSelected?.fecha_inicio_contrato
+                                    }
+                                />
+                            </Form.Item>
+                        </Col>
+                        {employeesSelected?.tipo_contrato !==
+                            'Contrato Indefinido' && (
+                            <Col span={5}>
+                                <Form.Item label="Fecha término contrato">
+                                    <Input
+                                        readOnly
+                                        value={
+                                            employeesSelected?.fecha_fin_contrato
+                                        }
+                                    />
+                                </Form.Item>
+                            </Col>
+                        )}
+                        <Col span={4}>
+                            <Form.Item label="Estado">
+                                <Input
+                                    readOnly
+                                    value={employeesSelected?.estado_contrato}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={8}>
+                        <Col span={6}>
+                            <Form.Item label="Sueldo bruto">
+                                <Input
+                                    readOnly
+                                    value={`$ ${MilesFormat(
+                                        employeesSelected?.sueldo_bruto || 0
+                                    )}`}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={9}>
+                            <Form.Item label="AFP">
+                                <Input
+                                    readOnly
+                                    value={employeesSelected?.afp}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={9}>
+                            <Form.Item label="ISAPRE">
+                                <Input
+                                    readOnly
+                                    value={employeesSelected?.isapre}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={8}>
+                        <Col span={8}>
+                            <Form.Item label="Seguridad laboral">
+                                <Input
+                                    readOnly
+                                    value={employeesSelected?.seguridad_laboral}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={16}>
+                            <Form.Item label="Comentarios">
+                                <TextArea
+                                    rows={3}
+                                    readOnly
+                                    value={employeesSelected?.comentarios}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                </Input.Group>
+            </Form>
+        )
     }
-  };
 
-  //-----------RENDERS
-  const renderEmployeeInformation = () => {
+    const renderListInvoices = () => {
+        return (
+            <Table
+                style={{ width: '100%' }}
+                showHeader={true}
+                loading={loading}
+                dataSource={employeesSelected?.detalle_pagos || []}
+                // columns={columns}
+                pagination={{ position: ['bottomCenter'] }}
+            >
+                <Column
+                    className="column-money"
+                    title="Código"
+                    dataIndex="codigo"
+                    key="codigo"
+                />
+                <Column
+                    className="column-money"
+                    title="Fecha"
+                    dataIndex="fecha"
+                    key="fecha"
+                />
+                <Column
+                    className="column-money"
+                    title="Subcategoria"
+                    dataIndex="subcategoria_dos"
+                    key="subcategoria_dos"
+                />
+                <Column
+                    className="column-money"
+                    title="Medio de pago"
+                    dataIndex="medio_pago"
+                    key="medio_pago"
+                />
+                <Column
+                    className="column-money"
+                    title="Institución bancaria"
+                    dataIndex="institucion_bancaria"
+                    key="institucion_bancaria"
+                />
+                <Column
+                    className="column-money"
+                    title="Monto Total"
+                    dataIndex="monto_total"
+                    key="monto_total"
+                    render={text => `$${MilesFormat(text)}`}
+                />
+                <Column
+                    className="column-money"
+                    title="Action"
+                    render={(_: string, record: any) => (
+                        <Tooltip
+                            title="Descargar liquidación"
+                            color={'#1A9D02'}
+                        >
+                            <Button
+                                onClick={() =>
+                                    handleDownloadFile(record.archivo_adjunto)
+                                }
+                                style={{ backgroundColor: '#39AE16' }}
+                                icon={
+                                    <DownloadOutlined
+                                        style={{
+                                            fontSize: '1.1rem',
+                                            color: 'white',
+                                        }}
+                                    />
+                                }
+                            />
+                        </Tooltip>
+                    )}
+                />
+            </Table>
+        )
+    }
+
+    const renderDetailsEmployee = () => {
+        return (
+            <Table
+                style={{ width: '100%' }}
+                showHeader={true}
+                loading={loading}
+                dataSource={[{ ...employeesSelected?.detalle_empleado }] || []}
+                pagination={false}
+            >
+                <Column
+                    className="column-money"
+                    title="Dias Recuperados"
+                    dataIndex="dias_recuperados"
+                    key="dias_recuperados"
+                />
+                <Column
+                    className="column-money"
+                    title="Dias Acumulados"
+                    dataIndex="dias_acumulados"
+                    key="dias_acumulados"
+                />
+                <Column
+                    className="column-money"
+                    title="Total Ausencias"
+                    dataIndex="dias_total_ausencias"
+                    key="dias_total_ausencias"
+                />
+                <Column
+                    className="column-money"
+                    title="Dias Pendientes"
+                    dataIndex="dias_pendientes"
+                    key="dias_pendientes"
+                />
+                <Column
+                    className="column-money"
+                    title="Dias Recuperados"
+                    dataIndex="recuperados_cant"
+                    key="recuperados_cant"
+                />
+                <Column
+                    className="column-money"
+                    title="Medio-Dia Recuperados"
+                    dataIndex="mediodia_recuperados_cant"
+                    key="mediodia_recuperados_cant"
+                />
+                <Column
+                    className="column-money"
+                    title="Enfermedad"
+                    dataIndex="enfermedad_cant"
+                    key="enfermedad_cant"
+                />
+                <Column
+                    className="column-money"
+                    title="Maternidad"
+                    dataIndex="maternidad_cant"
+                    key="maternidad_cant"
+                />
+                <Column
+                    className="column-money"
+                    title="Medio-Dia"
+                    dataIndex="mediodia_cant"
+                    key="mediodia_cant"
+                />
+                <Column
+                    className="column-money"
+                    title="Trámites"
+                    dataIndex="tramites_cant"
+                    key="tramites_cant"
+                />
+                <Column
+                    className="column-money"
+                    title="Vacaciones"
+                    dataIndex="vacaciones_cant"
+                    key="vacaciones_cant"
+                />
+            </Table>
+        )
+    }
+
+    console.log('EMPLOYYED SELECTES', employeesSelected)
+
     return (
-      <Form layout='vertical'>
-        <Input.Group>
-          <Row gutter={8}>
-            <Col span={6}>
-              <Form.Item
-                label='Rut'
-              >
-                <Input
-                  readOnly
-                  value={employeesSelected?.rut}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={9}>
-              <Form.Item
-                label='Nombre'
-              >
-                <Input
-                  readOnly
-                  value={employeesSelected?.razon_social}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={9}>
-              <Form.Item
-                label='Cargo'
-              >
-                <Input
-                  readOnly
-                  value={employeesSelected?.cargo}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={8}>
-            <Col span={10}>
-              <Form.Item
-                label='Tipo de contrato'
-              >
-                <Input
-                  readOnly
-                  value={employeesSelected?.tipo_contrato}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={5}>
-              <Form.Item
-                label='Fecha inicio contrato'
-              >
-                <Input
-                  readOnly
-                  value={employeesSelected?.fecha_inicio_contrato}
-                />
-              </Form.Item>
-            </Col>
-            {employeesSelected?.tipo_contrato !== 'Contrato Indefinido' &&
-              <Col span={5}>
-                <Form.Item
-                  label='Fecha término contrato'
-                >
-                  <Input
-                    readOnly
-                    value={employeesSelected?.fecha_fin_contrato}
-                  />
-                </Form.Item>
-              </Col>
-            }
-            <Col span={4}>
-              <Form.Item
-                label='Estado'
-              >
-                <Input
-                  readOnly
-                  value={employeesSelected?.estado_contrato}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={8}>
-            <Col span={6}>
-              <Form.Item
-                label='Sueldo bruto'
-              >
-                <Input
-                  readOnly
-                  value={`$ ${MilesFormat(employeesSelected?.sueldo_bruto || 0)}`}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={9}>
-              <Form.Item
-                label='AFP'
-              >
-                <Input
-                  readOnly
-                  value={employeesSelected?.afp}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={9}>
-              <Form.Item
-                label='ISAPRE'
-              >
-                <Input
-                  readOnly
-                  value={employeesSelected?.isapre}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={8}>
-            <Col span={8}>
-              <Form.Item
-                label='Seguridad laboral'
-              >
-                <Input
-                  readOnly
-                  value={employeesSelected?.seguridad_laboral}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={16}>
-              <Form.Item
-                label='Comentarios'
-              >
-                <TextArea
-                  rows={3}
-                  readOnly
-                  value={employeesSelected?.comentarios}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Input.Group>
-      </Form>
-    );
-  };
+        <Collapse accordion defaultActiveKey={['1']}>
+            <Panel header="Empleado" key="1">
+                {renderEmployeeInformation()}
+            </Panel>
+            <Panel header="Pagos" key="2">
+                {renderListInvoices()}
+            </Panel>
+            <Panel header="Detalle" key="3">
+                {renderDetailsEmployee()}
+            </Panel>
+        </Collapse>
+    )
+}
 
-  const renderListInvoices = () => {
-    return (
-      <Table
-        style={{ width: '100%' }}
-        showHeader={true}
-        loading={loading}
-        dataSource={employeesSelected?.detalle_pagos || []}
-        // columns={columns}
-        pagination={{ position: ['bottomCenter'] }}
-      >
-        <Column className='column-money' title="Código" dataIndex="codigo" key="codigo" />
-        <Column className='column-money' title="Fecha" dataIndex="fecha" key="fecha" />
-        <Column className='column-money' title="Subcategoria" dataIndex="subcategoria_dos" key="subcategoria_dos" />
-        <Column className='column-money' title="Medio de pago" dataIndex="medio_pago" key="medio_pago" />
-        <Column className='column-money' title="Institución bancaria" dataIndex="institucion_bancaria" key="institucion_bancaria" />
-        <Column
-          className='column-money'
-          title="Monto Total"
-          dataIndex="monto_total"
-          key="monto_total"
-          render={(text) => `$${MilesFormat(text)}`}
-        />
-        <Column
-          className='column-money'
-          title="Action"
-          render={(_:string, record: any) => (
-            <Tooltip title='Descargar liquidación' color={'#1A9D02'}>
-              <Button
-                onClick={() => handleDownloadFile(record.archivo_adjunto)}
-                style={{ backgroundColor: '#39AE16' }}
-                icon={<DownloadOutlined style={{ fontSize: '1.1rem', color: 'white' }} />} />
-            </Tooltip>
-          )}
-        />
-      </Table>
-    );
-  };
-
-  const renderDetailsEmployee = () => {
-    return (
-      <Table
-        style={{ width: '100%' }}
-        showHeader={true}
-        loading={loading}
-        dataSource={[{...employeesSelected?.detalle_empleado}]|| []}
-        
-        pagination={false}
-      >
-        <Column className='column-money' title="Dias Recuperados" dataIndex="dias_recuperados" key="dias_recuperados" />
-        <Column className='column-money' title="Dias Acumulados" dataIndex="dias_acumulados" key="dias_acumulados" />
-        <Column className='column-money' title="Total Ausencias" dataIndex="dias_total_ausencias" key="dias_total_ausencias" />
-        <Column className='column-money' title="Dias Pendientes" dataIndex="dias_pendientes" key="dias_pendientes" />
-        <Column className='column-money' title="Dias Recuperados" dataIndex="recuperados_cant" key="recuperados_cant" />
-        <Column className='column-money' title="Medio-Dia Recuperados" dataIndex="mediodia_recuperados_cant" key="mediodia_recuperados_cant" />
-        <Column className='column-money' title="Enfermedad" dataIndex="enfermedad_cant" key="enfermedad_cant" />
-        <Column className='column-money' title="Maternidad" dataIndex="maternidad_cant" key="maternidad_cant" />
-        <Column className='column-money' title="Medio-Dia" dataIndex="mediodia_cant" key="mediodia_cant" />
-        <Column className='column-money' title="Trámites" dataIndex="tramites_cant" key="tramites_cant" />
-        <Column className='column-money' title="Vacaciones" dataIndex="vacaciones_cant" key="vacaciones_cant" />
-      </Table>
-    );
-  };
-
-  console.log("EMPLOYYED SELECTES", employeesSelected)
-
-  return (
-    <Collapse accordion defaultActiveKey={['1']}>
-      <Panel header="Empleado" key="1">
-        {renderEmployeeInformation()}
-      </Panel>
-      <Panel header="Pagos" key="2">
-        {renderListInvoices()}
-      </Panel>
-      <Panel header="Detalle" key="3">
-        {renderDetailsEmployee()}
-      </Panel>
-    </Collapse>
-  );
-};
-
-export default DetailsEmployee;
+export default DetailsEmployee

@@ -1,99 +1,120 @@
-import { ICompanyInfo, IGroupConfirmInvoices, IGroupConfirmOC, IGroupUploadInvoices, IGroupUploadOC, InvoicesModel } from "../../models/invoices.models";
+import {
+    ICompanyInfo,
+    IGroupConfirmInvoices,
+    IGroupConfirmOC,
+    IGroupUploadInvoices,
+    IGroupUploadOC,
+    InvoicesModel,
+} from '../../models/invoices.models'
 
 const MapOcToUpload = (invoice: InvoicesModel, obs_oc: string) => {
-  return {
-    ...invoice,
-    observacion_oc: obs_oc
-  }
-};
+    return {
+        ...invoice,
+        observacion_oc: obs_oc,
+    }
+}
 
-const MapInvoiceToGenerate = (invoice: InvoicesModel, observation: string, companyBussinesName: string, company: ICompanyInfo | undefined) => {
-  return {
-    ...invoice,
-    observacion_factura: observation,
-    representante: company?.nombre,
-    razon_social_empresa: companyBussinesName,
-    email_empresa: company?.email,
-  }
-};
+const MapInvoiceToGenerate = (
+    invoice: InvoicesModel,
+    observation: string,
+    companyBussinesName: string,
+    company: ICompanyInfo | undefined
+) => {
+    return {
+        ...invoice,
+        observacion_factura: observation,
+        representante: company?.nombre,
+        razon_social_empresa: companyBussinesName,
+        email_empresa: company?.email,
+    }
+}
 
 const MapInvoiceToConfirm = (invoice: InvoicesModel, observation: string) => {
-  return {
-    estado_archivo: invoice.estado_archivo,
-    observaciones: observation,
-    nro_nota_credito: invoice.nro_nota_credito,
-    fecha_nota_credito: invoice.fecha_nota_credito,
-    monto_nota_credito: invoice.monto_nota_credito,
-    factura_anular: invoice.factura_anular
-  }
-};
-
-const MapGroupInvoiceToUploadOC = (data: IGroupUploadOC, selectedKeyInvoices: React.Key[]) => {
-  const aux = [
-    {
-      ...data
-    },
-    {
-      ids: selectedKeyInvoices
+    return {
+        estado_archivo: invoice.estado_archivo,
+        observaciones: observation,
+        nro_nota_credito: invoice.nro_nota_credito,
+        fecha_nota_credito: invoice.fecha_nota_credito,
+        monto_nota_credito: invoice.monto_nota_credito,
+        factura_anular: invoice.factura_anular,
     }
-  ];
+}
 
-  return aux;
-};
+const MapGroupInvoiceToUploadOC = (
+    data: IGroupUploadOC,
+    selectedKeyInvoices: React.Key[]
+) => {
+    const aux = [
+        {
+            ...data,
+        },
+        {
+            ids: selectedKeyInvoices,
+        },
+    ]
 
-const MapGroupInvoiceToConfirmOC = (data: IGroupConfirmOC, selectedKeyInvoices: React.Key[]) => {
-  const aux = [
-    {
-      ...data
-    },
-    {
-      ids: selectedKeyInvoices
-    }
-  ];
+    return aux
+}
 
-  return aux;
-};
+const MapGroupInvoiceToConfirmOC = (
+    data: IGroupConfirmOC,
+    selectedKeyInvoices: React.Key[]
+) => {
+    const aux = [
+        {
+            ...data,
+        },
+        {
+            ids: selectedKeyInvoices,
+        },
+    ]
+
+    return aux
+}
 
 const MapGroupInvoiceToUpload = (
-  data: IGroupUploadInvoices, 
-  selectedKeyInvoices: React.Key[], 
-  company: ICompanyInfo | undefined, 
-  companyBussinesName: string
+    data: IGroupUploadInvoices,
+    selectedKeyInvoices: React.Key[],
+    company: ICompanyInfo | undefined,
+    companyBussinesName: string
 ) => {
-  const aux = [
-    {
-      ...data,
-      representante: company?.nombre,
-      razon_social_empresa: companyBussinesName,
-      email_empresa: company?.email
-    },
-    {
-      codes: selectedKeyInvoices
-    }
-  ];
+    const aux = [
+        {
+            ...data,
+            representante: company?.nombre,
+            razon_social_empresa: companyBussinesName,
+            email_empresa: company?.email,
+        },
+        {
+            codes: selectedKeyInvoices,
+        },
+    ]
 
-  return aux;
-};
+    return aux
+}
 
-const MapGroupConfirmInvoices= (data: IGroupConfirmInvoices, selectedKeyInvoices: React.Key[]) => {
-  const aux = [
-    {
-      ...data
-    },
-    {
-      ids: selectedKeyInvoices
-    }
-  ];
+const MapGroupConfirmInvoices = (
+    data: IGroupConfirmInvoices,
+    selectedKeyInvoices: React.Key[]
+) => {
+    const aux = [
+        {
+            ...data,
+        },
+        {
+            ids: selectedKeyInvoices,
+        },
+    ]
 
-  return aux;
-};
+    return aux
+}
 
-export { 
-  MapOcToUpload, 
-  MapInvoiceToGenerate, 
-  MapInvoiceToConfirm, 
-  MapGroupInvoiceToUploadOC,
-  MapGroupInvoiceToConfirmOC,
-  MapGroupInvoiceToUpload,
-  MapGroupConfirmInvoices
+export {
+    MapOcToUpload,
+    MapInvoiceToGenerate,
+    MapInvoiceToConfirm,
+    MapGroupInvoiceToUploadOC,
+    MapGroupInvoiceToConfirmOC,
+    MapGroupInvoiceToUpload,
+    MapGroupConfirmInvoices,
 }
