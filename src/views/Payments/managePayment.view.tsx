@@ -27,7 +27,7 @@ import {
 import { DeleteOutlined } from '@ant-design/icons'
 import { deletePaymentService } from '../../services'
 
-interface IManagePaymentViewProps {
+type IManagePaymentViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     paymentSelected: PaymentModel | undefined
 }

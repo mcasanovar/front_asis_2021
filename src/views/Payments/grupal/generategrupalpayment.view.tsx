@@ -14,7 +14,7 @@ import {
     Table,
     Button,
 } from 'antd'
-import { DollarOutlined, InboxOutlined } from '@ant-design/icons'
+import { InboxOutlined } from '@ant-design/icons'
 import {
     IGroupConfirmPayment,
     IResponsePayment,
@@ -27,7 +27,7 @@ import {
     PAYMENT_METHODS,
     SUCURSAL,
 } from '../../../constants/var'
-import moment, { Moment } from 'moment'
+import moment from 'moment'
 import { IAlertMessageContent } from '../../../models/index.models'
 import AlertComponent from '../../../component/Alert/Alert'
 import { MilesFormat } from '../../../libs/formattedPesos'
@@ -38,8 +38,9 @@ import {
 import { MapGroupConfirmPayments } from '../../../functions/mappers'
 import { FormatingRut } from '../../../functions/validators/index.validators'
 import sortingObjects from '../../../functions/sortingObjects'
+import { SelectValue } from 'antd/lib/select'
 
-interface IGenerateGroupPaymentViewProps {
+type IGenerateGroupPaymentViewProps = {
     onCloseModal: (value: string, message: string) => string | void
 }
 
@@ -96,7 +97,7 @@ const GenerateGroupPaymentView: React.FunctionComponent<
 
     const handleGroupConfirmPayments = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         const dataMapped = MapGroupConfirmPayments(
             dataConfirmation,
             selectedPayments,
@@ -133,7 +134,7 @@ const GenerateGroupPaymentView: React.FunctionComponent<
     }
 
     const handleSearchInput = () => {
-        let aux: PaymentModel[] | undefined = payments?.filter(
+        const aux: PaymentModel[] | undefined = payments?.filter(
             payment => payment.rut_cp === rutSearchInput
         )
 
@@ -336,7 +337,7 @@ const GenerateGroupPaymentView: React.FunctionComponent<
                         >
                             <Select
                                 style={{ width: '100%' }}
-                                onSelect={e =>
+                                onSelect={(e: SelectValue) =>
                                     setDataConfirmation({
                                         ...dataConfirmation,
                                         sucursal: e.toString(),
@@ -367,7 +368,7 @@ const GenerateGroupPaymentView: React.FunctionComponent<
                         >
                             <Select
                                 style={{ width: '100%' }}
-                                onSelect={e =>
+                                onSelect={(e: SelectValue) =>
                                     setDataConfirmation({
                                         ...dataConfirmation,
                                         tipo_pago: e.toString(),
@@ -398,7 +399,7 @@ const GenerateGroupPaymentView: React.FunctionComponent<
                         >
                             <Select
                                 style={{ width: '100%' }}
-                                onSelect={e =>
+                                onSelect={(e: SelectValue) =>
                                     setDataConfirmation({
                                         ...dataConfirmation,
                                         institucion_bancaria: e.toString(),

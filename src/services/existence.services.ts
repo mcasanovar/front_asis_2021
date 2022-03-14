@@ -12,7 +12,7 @@ const getAllExistencesService = async (
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -34,7 +34,7 @@ const filterExistencesService = async (
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }

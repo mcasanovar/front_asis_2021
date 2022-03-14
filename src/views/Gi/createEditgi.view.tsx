@@ -60,7 +60,7 @@ import {
 } from '../../services'
 import { MapGIToInsert } from '../../functions/mappers'
 
-interface ICreateGiViewProps {
+type ICreateGiViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     type: string
     _id?: string
@@ -193,7 +193,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
         if (!aux) return
         setNewGiData({
             ...newGiData,
-            comuna: e.toString(),
+            comuna: !!e ? e.toString() : '',
             provincia: aux.provincia,
             region: aux.region,
         })
@@ -288,7 +288,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
     }
 
     const handleSetContractNumber = (e: SelectValue) => {
-        setNewGiData({ ...newGiData, nro_contrato: e.toString() })
+        setNewGiData({ ...newGiData, nro_contrato: !!e ? e.toString() : '' })
         const aux = organizationBelongingSelected.contrato_faenas.find(
             (contract: IContract) => contract.nro_contrato === e
         )
@@ -298,7 +298,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
 
     const handleInsertGI = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         const giToInsert = MapGIToInsert(newGiData)
         formData.append('data', JSON.stringify(giToInsert))
         file !== null && formData.append('archivo', file)
@@ -317,7 +317,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
 
     const handleSaveGI = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         const giToEdit = MapGIToInsert(newGiData)
         formData.append('data', JSON.stringify(giToEdit))
         file !== null && formData.append('archivo', file)
@@ -532,7 +532,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                                     style={{ width: '100%' }}
                                     optionFilterProp="children"
                                     showSearch
-                                    filterOption={(input, option) =>
+                                    filterOption={(input, option: any) =>
                                         option?.children
                                             .toLowerCase()
                                             .indexOf(input.toLowerCase()) >= 0
@@ -568,7 +568,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                                     style={{ width: '100%' }}
                                     optionFilterProp="children"
                                     showSearch
-                                    filterOption={(input, option) =>
+                                    filterOption={(input, option: any) =>
                                         option?.children
                                             .toLowerCase()
                                             .indexOf(input.toLowerCase()) >= 0
@@ -977,7 +977,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                                     style={{ width: '100%' }}
                                     optionFilterProp="children"
                                     showSearch
-                                    filterOption={(input, option) =>
+                                    filterOption={(input, option: any) =>
                                         option?.children
                                             .toLowerCase()
                                             .indexOf(input.toLowerCase()) >= 0
@@ -1057,7 +1057,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                                     style={{ width: '100%' }}
                                     optionFilterProp="children"
                                     showSearch
-                                    filterOption={(input, option) =>
+                                    filterOption={(input, option: any) =>
                                         option?.children
                                             .toLowerCase()
                                             .indexOf(input.toLowerCase()) >= 0
@@ -1099,7 +1099,7 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                                             optionFilterProp="children"
                                             filterOption={(
                                                 input,
-                                                optionOrgPert
+                                                optionOrgPert: any
                                             ) =>
                                                 optionOrgPert?.children
                                                     .toLowerCase()
@@ -1137,7 +1137,10 @@ const CreateGiView: FunctionComponent<ICreateGiViewProps> = ({
                                     <Form.Item label="Profesión u oficio">
                                         <Select
                                             showSearch
-                                            filterOption={(input, option) =>
+                                            filterOption={(
+                                                input,
+                                                option: any
+                                            ) =>
                                                 option?.children
                                                     .toLowerCase()
                                                     .indexOf(

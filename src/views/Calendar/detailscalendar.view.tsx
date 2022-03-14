@@ -12,10 +12,10 @@ import {
 } from 'antd'
 import { RequestModel } from '../../models/request.models'
 import { ReservationModel } from '../../models/reservation.models'
-import moment, { Moment } from 'moment'
+import { Moment } from 'moment'
 import { GiModel } from '../../models/gi.models'
 
-interface IDetailsCalendarScreenProps {
+type IDetailsCalendarScreenProps = {
     requests: RequestModel[]
     reservations: ReservationModel[]
     workers: GiModel[]
@@ -76,12 +76,12 @@ const DetailsCalendarScreen: React.FunctionComponent<
                                     style={{ width: '100%' }}
                                     optionFilterProp="children"
                                     showSearch
-                                    filterOption={(input, option) =>
-                                        option?.children
+                                    filterOption={(input, option: any) =>
+                                        option.children
                                             .toLowerCase()
                                             .indexOf(input.toLowerCase()) >= 0
                                     }
-                                    onSelect={e =>
+                                    onSelect={(e: any) =>
                                         handleSelectRequest(e.toString())
                                     }
                                 >
@@ -259,12 +259,12 @@ const DetailsCalendarScreen: React.FunctionComponent<
                                     style={{ width: '100%' }}
                                     optionFilterProp="children"
                                     showSearch
-                                    filterOption={(input, option) =>
+                                    filterOption={(input, option: any) =>
                                         option?.children
                                             .toLowerCase()
                                             .indexOf(input.toLowerCase()) >= 0
                                     }
-                                    onSelect={e =>
+                                    onSelect={(e: any) =>
                                         handleSelectReservation(e.toString())
                                     }
                                 >

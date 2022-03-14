@@ -38,11 +38,11 @@ import AlertComponent from '../../component/Alert/Alert'
 import { MilesFormat } from '../../libs/formattedPesos'
 import { getUserFromLocalStorage } from '../../functions/getLocalStorage'
 
-interface IPaymentsViewProps {
+type IPaymentsViewProps = {
     authorized: boolean
 }
 
-interface IFilterSelected {
+type IFilterSelected = {
     headerFilter: string
     filter: string
 }
@@ -218,7 +218,7 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({
     async function filterPayments(
         date: string,
         headFilter: string,
-        pageNumber: number = 1
+        pageNumber = 1
     ) {
         const aux: IResponseAllPayments = await filterPaymentsService(
             2,
@@ -323,8 +323,6 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({
                 buttons={buttons || []}
                 dataFilter={FILTERS_PAYMENTS}
                 onClick={button => handleClickButton(button)}
-                onClickGrupal={() => {}}
-                onClickDateFilter={() => {}}
                 filterText={filterText}
                 setFilterText={setFilterText}
                 onClickSearch={() => handleClickSearch()}
@@ -363,8 +361,6 @@ const PaymentsView: React.FunctionComponent<IPaymentsViewProps> = ({
                     title={ActualModal.title}
                     width={ActualModal.widthModal || 500}
                     onClose={() => setOpenModal(false)}
-                    onClickConfirm={id => {}}
-                    showButtons={ActualModal.showButtons || []}
                 >
                     {ActualModal._id === 'details' && (
                         <DetailsPaymentView

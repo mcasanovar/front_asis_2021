@@ -10,16 +10,16 @@ import { FORMAT_DATE, PERMISSIONS } from '../../constants/var'
 import { IFiltersEvaluation } from '../../models/evaluations.models'
 import { IFiltersResults } from '../../models/results.model'
 
-interface IHeaderTableProps {
+type IHeaderTableProps = {
     title: string
     subtitle: string
     buttons?: IButtonsProps[]
     showDateFilter?: boolean
-    onClick: (button: IButtonsProps) => IButtonsProps | void
-    onClickSearch: () => void
-    onClickDateFilter: (date: string) => string | void
+    onClick?: (button: IButtonsProps) => IButtonsProps | void
+    onClickSearch?: () => void
+    onClickDateFilter?: (date: string) => string | void
     showInvoicesOptions?: boolean
-    onClickGrupal: (value: string) => void
+    onClickGrupal?: (value: string) => void
     dataFilter?: IFiltersGI[] | IFiltersEvaluation[] | IFiltersResults[]
     filterText?: string
     setFilterText: React.Dispatch<React.SetStateAction<string>>
@@ -27,7 +27,7 @@ interface IHeaderTableProps {
     notFIlter?: boolean
     notSearch?: boolean
     notClean?: boolean
-    onClickClean: () => void
+    onClickClean?: () => void
     userPermissions?: string[]
     icon?: string
 }
@@ -68,7 +68,9 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
                     title={button.title}
                     size={button.size}
                     ghost={true}
-                    onClick={() => onClick(button)}
+                    onClick={() => {
+                        if (onClick) onClick(button)
+                    }}
                     icon={button.icon}
                     customStyle={button.customStyle}
                     tooltipText={button.tooltipText}
@@ -91,9 +93,10 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
                     {showDateFilter && (
                         <DatePicker
                             style={{ width: 150, marginRight: '10px' }}
-                            onSelect={e =>
-                                onClickDateFilter(e.format(FORMAT_DATE))
-                            }
+                            onSelect={e => {
+                                if (onClickDateFilter)
+                                    onClickDateFilter(e.format(FORMAT_DATE))
+                            }}
                         />
                     )}
                     {!notFIlter && (
@@ -102,7 +105,7 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
                             style={{ width: 160, paddingRight: 5 }}
                             placeholder="Filtro"
                             optionFilterProp="children"
-                            onSelect={e =>
+                            onSelect={(e: any) =>
                                 setOptionFilter(parseInt(e.toString()))
                             }
                         >
@@ -126,7 +129,9 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
                                 marginLeft: 0,
                             }}
                             onChange={e => setFilterText(e.currentTarget.value)}
-                            onSearch={() => onClickSearch()}
+                            onSearch={() => {
+                                if (onClickSearch) onClickSearch()
+                            }}
                             value={filterText}
                         />
                     )}
@@ -140,7 +145,9 @@ const HeaderTableComponent: React.FunctionComponent<IHeaderTableProps> = ({
                                 height: '2rem',
                                 width: '3rem',
                             }}
-                            onClick={() => onClickClean()}
+                            onClick={() => {
+                                if (onClickClean) onClickClean()
+                            }}
                         />
                     )}
                 </div>

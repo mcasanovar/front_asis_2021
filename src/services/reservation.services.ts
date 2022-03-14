@@ -12,7 +12,7 @@ const getAllReservationsService = async (
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -22,7 +22,7 @@ const getGroupReservationsService = async () => {
     try {
         const response = await httpClient.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -35,7 +35,7 @@ const getReservationsByDateService = async (
     try {
         const response = await httpClient.post(extension, { month, year })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -57,7 +57,7 @@ const filterReservationsService = async (
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -67,7 +67,7 @@ const getOneReservationService = async (id: string) => {
     try {
         const response = await httpClient.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -77,7 +77,7 @@ const confirmReservationService = async (id: string, data: FormData) => {
     try {
         const response = await httpClientFormData.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -87,7 +87,7 @@ const confirmGroupReservationsService = async (data: FormData) => {
     try {
         const response = await httpClientFormData.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -97,7 +97,7 @@ const editReservationService = async (id: string, data: FormData) => {
     try {
         const response = await httpClientFormData.put(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -107,7 +107,7 @@ const deleteReservationService = async (id: string) => {
     try {
         const response = await httpClient.delete(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -117,7 +117,7 @@ const sendMailsTemplateReservationsService = async (data: any) => {
     try {
         const response = await httpClient.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }

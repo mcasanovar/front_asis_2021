@@ -7,10 +7,10 @@ import {
     SnippetsOutlined,
 } from '@ant-design/icons'
 
-interface IButtonProps {
+type IButtonProps = {
     title: string
     size?: SizeType
-    customStyle?: object
+    customStyle?: any
     ghost?: boolean
     onClick: () => void
     icon?: string | undefined
@@ -67,31 +67,6 @@ const ButtonComponent: React.FunctionComponent<IButtonProps> = ({
             {title}
         </Button>
     )
-
-    // return (
-    //   <Button
-    //     size={size}
-    //     style={{
-    //       paddingInline: '15px',
-    //       height: '2rem',
-    //       ...customStyle
-    //     }}
-    //     ghost={ghost}
-    //     onClick={() => onClick()}
-    //     icon={!!icon ? handleShowIconButton(icon) : null}
-    //   >
-    //     {title}
-    //   </Button>
-    //   <Button
-    //     icon={<DownloadOutlined />}
-    //     style={{
-    //       padding: '5px',
-    //       height: '2rem',
-    //       ...customStyle
-    //     }}
-    //     size={size}
-    //   />
-    // );
 }
 
 export default ButtonComponent

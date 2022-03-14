@@ -40,11 +40,11 @@ import AlertComponent from '../../component/Alert/Alert'
 import { getUserFromLocalStorage } from '../../functions/getLocalStorage'
 import ConsolidateResultsView from './consolidateResults'
 
-interface IResultsViewProps {
+type IResultsViewProps = {
     authorized: boolean
 }
 
-interface IFilterSelected {
+type IFilterSelected = {
     headerFilter: string
     filter: string
 }
@@ -95,10 +95,8 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({
     const [totalItems, setTotalItems] = useState<number>(1)
     const [filterMode, setFilterMode] = useState<boolean>(false)
     const [filterSelected, setFilterSelected] = useState<string>('')
-    const [
-        filterObjectSelected,
-        setFilterObjectSelected,
-    ] = useState<IFilterSelected | null>()
+    const [filterObjectSelected, setFilterObjectSelected] =
+        useState<IFilterSelected | null>()
 
     const handleClickButton = (button: IButtonsProps) => {
         setActualModal(button)
@@ -281,7 +279,7 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({
     async function filterResults(
         date: string,
         headFilter: string,
-        pageNumber: number = 1
+        pageNumber = 1
     ) {
         const aux: IResponseAllResults = await filterResultsService(
             2,
@@ -429,7 +427,6 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({
                 buttons={buttons}
                 showDateFilter
                 onClick={button => handleClickButton(button)}
-                onClickGrupal={() => {}}
                 onClickDateFilter={date => handleFilterByDate(date)}
                 dataFilter={FILTERS_RESULT}
                 filterText={filterText}
@@ -477,8 +474,6 @@ const ResultsView: React.FunctionComponent<IResultsViewProps> = ({
                     title={ActualModal.title}
                     width={ActualModal.widthModal || 500}
                     onClose={() => setOpenModal(false)}
-                    onClickConfirm={id => {}}
-                    showButtons={ActualModal.showButtons || []}
                 >
                     {ActualModal._id === 'uploadresult' && (
                         <UploadResultView

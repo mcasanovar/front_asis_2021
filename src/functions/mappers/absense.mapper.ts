@@ -1,4 +1,4 @@
-import moment, { Moment } from 'moment'
+import { Moment } from 'moment'
 import { FORMAT_DATE } from '../../constants/var'
 import { AusencesModel } from '../../models/ausences.models'
 

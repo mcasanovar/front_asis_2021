@@ -44,11 +44,11 @@ import PaginationComponent from '../../component/Pagination/Pagination'
 import { MilesFormat } from '../../libs/formattedPesos'
 import { getUserFromLocalStorage } from '../../functions/getLocalStorage'
 
-interface IInvoicesViewProps {
+type IInvoicesViewProps = {
     authorized: boolean
 }
 
-interface IFilterSelected {
+type IFilterSelected = {
     headerFilter: string
     filter: string
 }
@@ -317,7 +317,7 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({
     async function filterInvoices(
         date: string,
         headFilter: string,
-        pageNumber: number = 1
+        pageNumber = 1
     ) {
         const aux: IResponseAllInvoices = await filterInvoicesService(
             2,
@@ -458,7 +458,6 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({
                 filterText={filterText}
                 setFilterText={setFilterText}
                 onClickSearch={() => handleClickSearch()}
-                onClickDateFilter={() => {}}
                 setOptionFilter={setOptionFilter}
                 onClickClean={() => handleClickClean()}
                 userPermissions={permissions}
@@ -499,8 +498,6 @@ const InvoicesView: React.FunctionComponent<IInvoicesViewProps> = ({
                     title={ActualModal.title}
                     width={ActualModal.widthModal || 500}
                     onClose={() => setOpenModal(false)}
-                    onClickConfirm={id => {}}
-                    showButtons={ActualModal.showButtons || []}
                 >
                     {ActualModal._id === 'details' && (
                         <DetailsInvoceView

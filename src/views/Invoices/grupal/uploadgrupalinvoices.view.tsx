@@ -43,8 +43,9 @@ import { FormatingRut } from '../../../functions/validators/index.validators'
 import { IResponseResults, ResultModel } from '../../../models/results.model'
 import getFilteredInvoicesByResults from '../../../functions/getFilteredInvoicesByResults'
 import sortingObjects from '../../../functions/sortingObjects'
+import { SelectValue } from 'antd/lib/select'
 
-interface IUploadGroupInvoicesViewProps {
+type IUploadGroupInvoicesViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     company: ICompanyInfo | undefined
 }
@@ -116,7 +117,7 @@ const UploadGroupInvoicesView: React.FunctionComponent<
 
     const handleGroupUploadInvoices = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         const dataMapped = MapGroupInvoiceToUpload(
             dataConfirmation,
             selectedInvoices,
@@ -141,7 +142,7 @@ const UploadGroupInvoicesView: React.FunctionComponent<
     }
 
     const handleSearchInput = () => {
-        let aux: InvoicesModel[] | undefined = invoices?.filter(
+        const aux: InvoicesModel[] | undefined = invoices?.filter(
             invoice => invoice.rut_cp === rutSearchInput
         )
 
@@ -206,7 +207,7 @@ const UploadGroupInvoicesView: React.FunctionComponent<
         setLoading(true)
         setDateResultFilter(date)
 
-        let aux: IResponseResults = await getResultsByDateService(
+        const aux: IResponseResults = await getResultsByDateService(
             moment(date[0]).format(FORMAT_DATE),
             moment(date[1]).format(FORMAT_DATE)
         )
@@ -238,8 +239,15 @@ const UploadGroupInvoicesView: React.FunctionComponent<
             }
         })
 
-        let invoicesRes = getFilteredInvoicesByResults(aux.res, invoices || [])
-        let invoicesResFiltered = sortingObjects(invoicesRes, 'codigo', 'desc')
+        const invoicesRes = getFilteredInvoicesByResults(
+            aux.res,
+            invoices || []
+        )
+        const invoicesResFiltered = sortingObjects(
+            invoicesRes,
+            'codigo',
+            'desc'
+        )
 
         if (!checkRutFilter) {
             setInvoicesFiltered(invoicesResFiltered)
@@ -413,8 +421,10 @@ const UploadGroupInvoicesView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
-                                        setCompanyBusinessName(e.toString())
+                                    onSelect={(e: SelectValue) =>
+                                        setCompanyBusinessName(
+                                            !!e ? e.toString() : ''
+                                        )
                                     }
                                 >
                                     {company?.razon_social.map(
@@ -687,7 +697,6 @@ const UploadGroupInvoicesView: React.FunctionComponent<
                                                 ''
                                         )
                                     }
-                                    onChange={e => {}}
                                     value={dataConfirmation.total}
                                 />
                             </Form.Item>

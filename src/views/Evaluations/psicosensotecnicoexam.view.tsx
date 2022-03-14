@@ -32,8 +32,9 @@ import {
 import { DRIVER_LICENSE } from '../../constants/var'
 import { MapPsicoToCreateExam } from '../../functions/mappers'
 import { createExamPsicoService } from '../../services'
+import { SelectValue } from 'antd/lib/select'
 
-interface IPsicosensotecnicoExamViewProps {
+type IPsicosensotecnicoExamViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     evaluationSelected: EvaluationModel | undefined
 }
@@ -160,7 +161,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             resultado: e.toString(),
@@ -235,7 +236,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             tiempo_reaccion: e.toString(),
@@ -402,7 +403,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             precision_coordinacion_visomotriz:
@@ -544,7 +545,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             monocular_derecha: e.toString(),
@@ -626,7 +627,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             monocular_izquierda: e.toString(),
@@ -709,7 +710,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             vision_binocular: e.toString(),
@@ -791,7 +792,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             perimetria: e.toString(),
@@ -856,7 +857,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             profundidad: e.toString(),
@@ -922,7 +923,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             discriminacion_colores:
@@ -988,7 +989,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             vision_nocturna: e.toString(),
@@ -1054,7 +1055,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             phoria_vertical: e.toString(),
@@ -1118,7 +1119,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             phoria_horizontal: e.toString(),
@@ -1183,7 +1184,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             recuperacion_encandilamiento:
@@ -1249,7 +1250,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             audiometria: e.toString(),
@@ -1365,7 +1366,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             test_velocidad_anticipacion:
@@ -1437,7 +1438,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             probabilidad_somnolencia:
@@ -1669,7 +1670,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             test_tolerancia_monotonia:
@@ -1872,7 +1873,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             test_reacciones_multiples:
@@ -1995,7 +1996,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewExamData({
                                             ...newExamData,
                                             test_estado_ley_transito:
@@ -2317,7 +2318,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                                 >
                                     <Select
                                         style={{ width: '100%' }}
-                                        onSelect={e =>
+                                        onSelect={(e: SelectValue) =>
                                             setNewExamData({
                                                 ...newExamData,
                                                 examen_psicotecnico:
@@ -2356,7 +2357,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                                 >
                                     <Select
                                         style={{ width: '100%' }}
-                                        onSelect={e =>
+                                        onSelect={(e: SelectValue) =>
                                             setNewExamData({
                                                 ...newExamData,
                                                 examen_sensometrico:
@@ -2389,7 +2390,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                                     >
                                         <Select
                                             style={{ width: '100%' }}
-                                            onSelect={e =>
+                                            onSelect={(e: SelectValue) =>
                                                 setNewExamData({
                                                     ...newExamData,
                                                     test_velocidad_anticipacion:
@@ -2424,7 +2425,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                                     >
                                         <Select
                                             style={{ width: '100%' }}
-                                            onSelect={e =>
+                                            onSelect={(e: SelectValue) =>
                                                 setNewExamData({
                                                     ...newExamData,
                                                     evaluacion_somnolencia:
@@ -2459,7 +2460,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                                     >
                                         <Select
                                             style={{ width: '100%' }}
-                                            onSelect={e =>
+                                            onSelect={(e: SelectValue) =>
                                                 setNewExamData({
                                                     ...newExamData,
                                                     evaluacion_psicologica:
@@ -2494,7 +2495,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                                     >
                                         <Select
                                             style={{ width: '100%' }}
-                                            onSelect={e =>
+                                            onSelect={(e: SelectValue) =>
                                                 setNewExamData({
                                                     ...newExamData,
                                                     test_tolerancia_monotonia:
@@ -2534,7 +2535,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                                         >
                                             <Select
                                                 style={{ width: '100%' }}
-                                                onSelect={e =>
+                                                onSelect={(e: SelectValue) =>
                                                     setNewExamData({
                                                         ...newExamData,
                                                         test_reacciones_multiples:
@@ -2569,7 +2570,7 @@ const PsicosensotecnicoExamView: React.FunctionComponent<
                                         >
                                             <Select
                                                 style={{ width: '100%' }}
-                                                onSelect={e =>
+                                                onSelect={(e: SelectValue) =>
                                                     setNewExamData({
                                                         ...newExamData,
                                                         evaluacion_transito_nacional:

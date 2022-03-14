@@ -12,7 +12,7 @@ const getAllEvaluationsService = async (
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -22,7 +22,7 @@ const getOneEvaluationService = async (id: string) => {
     try {
         const response = await httpClient.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -32,7 +32,7 @@ const uploadExamService = async (id: string, data: FormData) => {
     try {
         const response = await httpClientFormData.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -42,7 +42,7 @@ const downloadExamService = async (id: string) => {
     try {
         const response = await httpClientFormData.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -63,7 +63,7 @@ const confirmExamService = async (
             observaciones,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -73,7 +73,7 @@ const deleteEvaluationService = async (id: string) => {
     try {
         const response = await httpClient.delete(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -95,7 +95,7 @@ const filterEvaluationsService = async (
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -105,7 +105,7 @@ const createExamPsicoService = async (data: any) => {
     try {
         const response = await httpClient.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -115,7 +115,7 @@ const createExamAversionService = async (data: any) => {
     try {
         const response = await httpClient.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }

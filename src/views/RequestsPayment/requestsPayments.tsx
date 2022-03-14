@@ -3,8 +3,6 @@ import { IAlertMessageContent, IButtonsProps } from '../../models/index.models'
 import { Redirect } from 'react-router-dom'
 
 import {
-    CANCEL,
-    CONFIRM,
     FILTERS_REQUEST_PAYMENT,
     N_PER_PAGE,
     OK,
@@ -35,11 +33,11 @@ import DetailsRequestPaymentView from './detailsrequestpayment.view'
 import SendMailsTemplateView from '../Requests/sendEmailsTemplate.view'
 import ConsolidatedReportView from './consolidatedreport.view'
 
-interface IRequestsPaymentViewProps {
+type IRequestsPaymentViewProps = {
     authorized: boolean
 }
 
-interface IFilterSelected {
+type IFilterSelected = {
     headerFilter: string
     filter: string
 }
@@ -188,7 +186,7 @@ const RequestsPaymentView: React.FunctionComponent<
     async function filterRequestPayment(
         date: string,
         headFilter: string,
-        pageNumber: number = 1
+        pageNumber = 1
     ) {
         const aux: IResponseAllRequestPayment =
             await filterRequestPaymentService(
@@ -284,8 +282,6 @@ const RequestsPaymentView: React.FunctionComponent<
                 buttons={buttons}
                 dataFilter={FILTERS_REQUEST_PAYMENT}
                 onClick={button => handleClickButton(button)}
-                onClickGrupal={() => {}}
-                onClickDateFilter={() => {}}
                 filterText={filterText}
                 setFilterText={setFilterText}
                 onClickSearch={() => handleClickSearch()}
@@ -297,7 +293,6 @@ const RequestsPaymentView: React.FunctionComponent<
                 onClickAction={(id: string, _id?: string) =>
                     handleCLickActionTable(id, _id)
                 }
-                onClickDelete={() => {}}
                 loading={loading}
                 columns={REQUESTPAYMENT_COLUMNS_TABLE}
                 data={handleTransformPrice(requestpayment)}
@@ -322,8 +317,6 @@ const RequestsPaymentView: React.FunctionComponent<
                     title={ActualModal.title}
                     width={ActualModal.widthModal || 500}
                     onClose={() => setOpenModal(false)}
-                    onClickConfirm={id => {}}
-                    showButtons={ActualModal.showButtons || []}
                 >
                     {ActualModal._id === 'details' && (
                         <DetailsRequestPaymentView

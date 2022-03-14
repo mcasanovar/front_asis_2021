@@ -21,7 +21,12 @@ export const ReservationInitialization = {
     lugar_servicio: '',
     sucursal: '',
     url_file_adjunto: {},
-    observacion: [],
+    observacion: [
+        {
+            obs: '',
+            fecha: '',
+        },
+    ],
     estado: '',
     isActive: true,
 }

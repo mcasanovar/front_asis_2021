@@ -31,14 +31,13 @@ import { EntriesInitialization } from '../../initializations/expenses.initializa
 import { CATEGORIES_EXPENSES } from '../../constants/var'
 import { MilesFormat } from '../../libs/formattedPesos'
 import { CalculateIVA } from '../../libs/calculateIVA'
-import { parse } from 'node:path'
 import TextArea from 'antd/lib/input/TextArea'
-import { stringify } from 'node:querystring'
 
 import { v4 as uuidv4 } from 'uuid'
 import { insertEntriesService } from '../../services'
+import { SelectValue } from 'antd/lib/select'
 
-interface IEntriesViewProps {
+type IEntriesViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     expenseSelected: ExpensesModel | undefined
 }
@@ -142,11 +141,7 @@ const EntriesView: React.FunctionComponent<IEntriesViewProps> = ({
         return total - payed
     }
 
-    const handleCalculateTotal = (
-        cant: number = 0,
-        price: number = 0,
-        percentage: number = 0
-    ) => {
+    const handleCalculateTotal = (cant = 0, price = 0, percentage = 0) => {
         const primaryValue = cant * price
         const IVA = CalculateIVA(primaryValue, percentage)
 
@@ -268,8 +263,10 @@ const EntriesView: React.FunctionComponent<IEntriesViewProps> = ({
                         >
                             <Select
                                 style={{ width: '100%' }}
-                                onSelect={e =>
-                                    handleAssignSubcategoryThree(e.toString())
+                                onSelect={(e: SelectValue) =>
+                                    handleAssignSubcategoryThree(
+                                        !!e ? e.toString() : ''
+                                    )
                                 }
                                 value={`${subCategoryThree?.codigo} - ${subCategoryThree?.subcategoria_tres}`}
                             >
@@ -721,7 +718,6 @@ const EntriesView: React.FunctionComponent<IEntriesViewProps> = ({
                                                 }
                                             >
                                                 <Button
-                                                    onClick={() => {}}
                                                     style={{
                                                         backgroundColor:
                                                             '#E6100D',

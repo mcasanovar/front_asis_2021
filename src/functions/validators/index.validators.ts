@@ -24,13 +24,13 @@ export const FormatingRut = (rut: string) => {
 
 export const ValidateRut = (rut: string) => {
     // Despejar Puntos
-    var valor: any = rut.replace('.', '')
+    let valor: any = rut.replace('.', '')
     // Despejar Guión
     valor = valor.replace('-', '')
 
     // Aislar Cuerpo y Dígito Verificador
-    var cuerpo = valor.slice(0, -1)
-    var dv = valor.slice(-1).toUpperCase()
+    const cuerpo = valor.slice(0, -1)
+    let dv = valor.slice(-1).toUpperCase()
 
     // Formatear RUN
     rut = cuerpo + '-' + dv
@@ -39,13 +39,13 @@ export const ValidateRut = (rut: string) => {
     if (cuerpo.length < 7) return false
 
     // Calcular Dígito Verificador
-    var suma = 0
-    var multiplo = 2
+    let suma = 0
+    let multiplo = 2
 
     // Para cada dígito del Cuerpo
-    for (var i = 1; i <= cuerpo.length; i++) {
+    for (let i = 1; i <= cuerpo.length; i++) {
         // Obtener su Producto con el Múltiplo Correspondiente
-        var index = multiplo * valor.charAt(cuerpo.length - i)
+        const index = multiplo * valor.charAt(cuerpo.length - i)
 
         // Sumar al Contador General
         suma = suma + index
@@ -59,7 +59,7 @@ export const ValidateRut = (rut: string) => {
     }
 
     // Calcular Dígito Verificador en base al Módulo 11
-    var dvEsperado: number = 11 - (suma % 11)
+    const dvEsperado: number = 11 - (suma % 11)
 
     // Casos Especiales (0 y K)
     dv = dv === 'K' || dv === 'k' ? 10 : dv

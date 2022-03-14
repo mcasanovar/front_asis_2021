@@ -36,11 +36,11 @@ import { getUserFromLocalStorage } from '../../functions/getLocalStorage'
 
 const buttons: IButtonsProps[] = []
 
-interface IEmployeesProps {
+type IEmployeesProps = {
     authorized: boolean
 }
 
-interface IFilterSelected {
+type IFilterSelected = {
     headerFilter: string
     filter: string
 }
@@ -306,8 +306,6 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({
                 buttons={buttons}
                 dataFilter={FILTERS_EMPLOYEES}
                 onClick={button => handleClickButton(button)}
-                onClickGrupal={() => {}}
-                onClickDateFilter={() => {}}
                 filterText={filterText}
                 setFilterText={setFilterText}
                 onClickSearch={() => handleClickSearch()}
@@ -348,8 +346,6 @@ const Employees: React.FunctionComponent<IEmployeesProps> = ({
                         setOpenModal(false)
                         ActualModal._id === 'absense' && getEmployees(1)
                     }}
-                    onClickConfirm={id => {}}
-                    showButtons={ActualModal.showButtons || []}
                 >
                     {ActualModal._id === 'edit' && (
                         <EditEmployeeView

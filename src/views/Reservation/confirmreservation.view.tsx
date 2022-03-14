@@ -33,7 +33,7 @@ import moment, { Moment } from 'moment'
 import { MapReservation } from '../../functions/mappers'
 import { validateEmail } from '../../functions/validators/index.validators'
 
-interface IEditReservationViewProps {
+type IEditReservationViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     _id?: string
 }
@@ -63,7 +63,7 @@ const EditReservationView: React.FunctionComponent<
 
     const handleConfirmReservation = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         let arrayEmails = []
         if (checkSendMail && !emails.includes(',')) {
             arrayEmails.push({
@@ -253,8 +253,9 @@ const EditReservationView: React.FunctionComponent<
                                     onSelect={(e: SelectValue) =>
                                         setNewReservationData({
                                             ...newReservationData,
-                                            id_GI_personalAsignado:
-                                                e.toString(),
+                                            id_GI_personalAsignado: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     id="error"
@@ -394,7 +395,9 @@ const EditReservationView: React.FunctionComponent<
                                     onSelect={(e: SelectValue) =>
                                         setNewReservationData({
                                             ...newReservationData,
-                                            reqEvaluacion: e.toString(),
+                                            reqEvaluacion: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     id="error"

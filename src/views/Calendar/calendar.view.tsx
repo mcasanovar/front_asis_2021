@@ -23,7 +23,7 @@ import {
 import AlertComponent from '../../component/Alert/Alert'
 import { GiModel, IResponseGI } from '../../models/gi.models'
 
-interface ICalendarScreenProps {
+type ICalendarScreenProps = {
     authorized: boolean
 }
 
@@ -256,16 +256,16 @@ const CalendarScreen: React.FunctionComponent<ICalendarScreenProps> = ({
             <HeaderTableComponent
                 title="Calendario Solicitudes y Reservas"
                 subtitle="Calendario"
-                onClick={button => {}}
-                onClickGrupal={() => {}}
-                onClickDateFilter={() => {}}
+                // onClick={() => {}}
+                // onClickGrupal={() => {}}
+                // onClickDateFilter={() => {}}
                 setFilterText={setFilterText}
-                onClickSearch={() => {}}
+                // onClickSearch={() => {}}
                 setOptionFilter={setOptionFilter}
                 notFIlter
                 notSearch
                 notClean
-                onClickClean={() => {}}
+                // onClickClean={() => {}}
             />
             <br />
             <br />
@@ -356,7 +356,6 @@ const CalendarScreen: React.FunctionComponent<ICalendarScreenProps> = ({
                 title="Detalle Calendario"
                 width={1200}
                 onClose={() => setOpenModal(false)}
-                onClickConfirm={() => {}}
             >
                 <DetailsCalendarView
                     requests={selectedRequests}

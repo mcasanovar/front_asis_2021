@@ -34,10 +34,10 @@ import { MapParcialPaymentToGenerate } from '../../functions/mappers'
 import { generateParcialPaymentService } from '../../services'
 import { IAlertMessageContent } from '../../models/index.models'
 import AlertComponent from '../../component/Alert/Alert'
-import { setInterval } from 'node:timers'
 import moment from 'moment'
+import { SelectValue } from 'antd/lib/select'
 
-interface IGeneratePaymentViewProps {
+type IGeneratePaymentViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     paymentSelected: PaymentModel | undefined
 }
@@ -73,10 +73,7 @@ const GeneratePaymentView: React.FunctionComponent<
         return aux
     }
 
-    const handleCalculateTotal = (
-        discount: number = 0,
-        ammount: number = 0
-    ) => {
+    const handleCalculateTotal = (discount = 0, ammount = 0) => {
         setNewDataParcialPayment({
             ...newDataParcialPayment,
             descuento: discount,
@@ -96,7 +93,7 @@ const GeneratePaymentView: React.FunctionComponent<
 
     const handleGenerateParcialPayment = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         const partialPaymentMapped = MapParcialPaymentToGenerate(
             paymentSelected || PaymentInitialization,
             newDataParcialPayment
@@ -330,10 +327,10 @@ const GeneratePaymentView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataParcialPayment({
                                             ...newDataParcialPayment,
-                                            tipo_pago: e.toString(),
+                                            tipo_pago: !!e ? e.toString() : '',
                                         })
                                     }
                                     id="error"
@@ -366,11 +363,12 @@ const GeneratePaymentView: React.FunctionComponent<
                                 'Efectivo' ? (
                                     <Select
                                         style={{ width: '100%' }}
-                                        onSelect={e =>
+                                        onSelect={(e: SelectValue) =>
                                             setNewDataParcialPayment({
                                                 ...newDataParcialPayment,
-                                                institucion_bancaria:
-                                                    e.toString(),
+                                                institucion_bancaria: !!e
+                                                    ? e.toString()
+                                                    : '',
                                             })
                                         }
                                         id="error_2"

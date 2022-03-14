@@ -10,7 +10,7 @@ const getAllPaymentsService = async (pageNumber: number, nPerPage: number) => {
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -20,7 +20,7 @@ const getAllPendingPaymentsService = async () => {
     try {
         const response = await httpClient.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -30,7 +30,7 @@ const generateParcialPaymentService = async (id: string, data: FormData) => {
     try {
         const response = await httpClientFormData.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -40,7 +40,7 @@ const generateGroupPaymentsService = async (data: FormData) => {
     try {
         const response = await httpClientFormData.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -62,7 +62,7 @@ const filterPaymentsService = async (
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -72,7 +72,7 @@ const deleteGeneralPaymentService = async (id: string) => {
     try {
         const response = await httpClient.delete(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -82,7 +82,7 @@ const deletePaymentService = async (id: string, payment: IPayment) => {
     try {
         const response = await httpClient.post(extension, payment)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }

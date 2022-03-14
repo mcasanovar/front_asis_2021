@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { Redirect } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import './App.css'
 
@@ -57,7 +56,7 @@ function App(): JSX.Element {
         <Router>
             {localStorage.getItem('authorizated') !== null ? (
                 <>
-                    <TopBarComponent onClick={() => {}} />
+                    <TopBarComponent />
                     <div className="mainContainer-modules">
                         <DrawerComponent />
                         <Switch>

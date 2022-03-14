@@ -26,8 +26,9 @@ import moment, { Moment } from 'moment'
 import AlertComponent from '../../component/Alert/Alert'
 import { validateEmail } from '../../functions/validators/index.validators'
 import { MapRequestToConfirm } from '../../functions/mappers'
+import { SelectValue } from 'antd/lib/select'
 
-interface IConfirmRequestViewProps {
+type IConfirmRequestViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     _id?: string
 }
@@ -80,7 +81,7 @@ const ConfirmRequestView: React.FunctionComponent<IConfirmRequestViewProps> = ({
 
     const handleConfirmRequest = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         let arrayEmails = []
         if (checkSendMail && !emails.includes(',')) {
             arrayEmails.push({
@@ -315,10 +316,12 @@ const ConfirmRequestView: React.FunctionComponent<IConfirmRequestViewProps> = ({
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setConfirmRequest({
                                             ...confirmRequest,
-                                            medio_confirmacion: e.toString(),
+                                            medio_confirmacion: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     id="error"

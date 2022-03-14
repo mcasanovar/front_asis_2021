@@ -1,7 +1,7 @@
-import * as React from 'react'
+import React from 'react'
 import { Pagination } from 'antd'
 
-interface IPaginationComponentProps {
+type IPaginationComponentProps = {
     actualPage: number
     onChange: (newPage: number) => number | void
     totalItems: number

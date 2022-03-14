@@ -3,7 +3,7 @@ import { Form, Row, Col, Input, Button, Typography } from 'antd'
 import { ExistenceModel } from '../../models/existence.models'
 import { MilesFormat } from '../../libs/formattedPesos'
 
-interface IDetailsExistenceViewProps {
+type IDetailsExistenceViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     existenceSelected: ExistenceModel | undefined
 }

@@ -8,7 +8,7 @@ import { IAlertMessageContent } from '../../models/index.models'
 
 import AlertComponent from '../../component/Alert/Alert'
 
-interface ILoginViewProps {
+type ILoginViewProps = {
     authorized: boolean
 }
 

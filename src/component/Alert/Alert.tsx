@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Alert } from 'antd'
 
-interface IAlertComponentProps {
+type IAlertComponentProps = {
     message: string
     type: 'success' | 'error' | 'warning' | 'info'
     showIcon?: boolean
@@ -17,6 +17,7 @@ const AlertComponent: React.FunctionComponent<IAlertComponentProps> = ({
 }) => {
     return (
         <Alert
+            data-testid="alert-id-test"
             message={message}
             type={type}
             showIcon={showIcon}

@@ -20,7 +20,7 @@ import {
 } from '../../models/evaluations.models'
 import { EvaluationInitialization } from '../../initializations/evaluation.initialization'
 
-interface IDetailsEvaluationViewProps {
+type IDetailsEvaluationViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     _id?: string
 }

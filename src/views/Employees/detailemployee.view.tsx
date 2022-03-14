@@ -9,7 +9,7 @@ import { IResponseExpenses } from '../../models/expenses.models'
 import { downloadFileEmployeeService } from '../../services'
 import { IAlertMessageContent } from '../../models/index.models'
 
-interface IDetailsEmployeeProps {
+type IDetailsEmployeeProps = {
     onCloseModal: (value: string, message: string) => string | void
     employeesSelected: GiModel | undefined
 }

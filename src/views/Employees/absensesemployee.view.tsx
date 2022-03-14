@@ -37,23 +37,22 @@ import {
 import { IAlertMessageContent } from '../../models/index.models'
 import { GiModel } from '../../models/gi.models'
 import ButtonComponent from '../../component/Button/Button'
+import { SelectValue } from 'antd/lib/select'
 
-interface IAbsensesEmployeeViewProps {
+type IAbsensesEmployeeViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     idEmployee: string
     employeeSelected: GiModel | undefined
 }
 
-interface CurrentDateProps {
+type CurrentDateProps = {
     month: string
     year: string
 }
 
-const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> = ({
-    onCloseModal,
-    idEmployee,
-    employeeSelected,
-}) => {
+const AbsensesEmployeeView: React.FunctionComponent<
+    IAbsensesEmployeeViewProps
+> = ({ onCloseModal, idEmployee, employeeSelected }) => {
     const { Option } = Select
     const { TextArea } = Input
     const { RangePicker } = DatePicker
@@ -136,7 +135,7 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
 
     const handleInsertAbsense = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         const absenseMapped = MapAbsenseToInsert(
             newDataAusence,
             idEmployee,
@@ -285,8 +284,7 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
                 title="Ingreso de Ausencias"
                 width={800}
                 onClose={() => setOpenNewAbsense(false)}
-                onClickConfirm={id => {}}
-                showButtons={[{ _id: CANCEL }, { _id: CONFIRM }]}
+                // showButtons={[{ _id: CANCEL }, { _id: CONFIRM }]}
             >
                 <Spin spinning={loading} size="large" tip="Cargando...">
                     <Form layout="vertical">
@@ -308,9 +306,9 @@ const AbsensesEmployeeView: React.FunctionComponent<IAbsensesEmployeeViewProps> 
                                     >
                                         <Select
                                             style={{ width: '100%' }}
-                                            onSelect={e =>
+                                            onSelect={(e: SelectValue) =>
                                                 handleSelectedHours(
-                                                    e.toString()
+                                                    !!e ? e.toString() : ''
                                                 )
                                             }
                                         >

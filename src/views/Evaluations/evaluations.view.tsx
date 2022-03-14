@@ -39,11 +39,11 @@ import { getUserFromLocalStorage } from '../../functions/getLocalStorage'
 import removeAccents from '../../functions/removeAccents'
 import removeUidName from '../../functions/removeUidName'
 
-interface IEvaluationsViewProps {
+type IEvaluationsViewProps = {
     authorized: boolean
 }
 
-interface IFilterSelected {
+type IFilterSelected = {
     headerFilter: string
     filter: string
 }
@@ -240,7 +240,7 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({
     async function filterEvaluations(
         date: string,
         headFilter: string,
-        pageNumber: number = 1
+        pageNumber = 1
     ) {
         const aux: IResponseAllEvaluations = await filterEvaluationsService(
             2,
@@ -393,7 +393,6 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({
                 dataFilter={FILTERS_EVALUATION}
                 showDateFilter
                 onClick={button => handleClickButton(button)}
-                onClickGrupal={() => {}}
                 filterText={filterText}
                 setFilterText={setFilterText}
                 onClickSearch={() => handleClickSearch()}
@@ -437,8 +436,6 @@ const EvaluationsView: React.FunctionComponent<IEvaluationsViewProps> = ({
                     title={ActualModal.title}
                     width={ActualModal.widthModal || 500}
                     onClose={() => setOpenModal(false)}
-                    onClickConfirm={id => {}}
-                    showButtons={ActualModal.showButtons || []}
                 >
                     {ActualModal._id === 'details' && (
                         <DetailsEvaluationView

@@ -26,11 +26,12 @@ import { IAlertMessageContent } from '../../models/index.models'
 import AlertComponent from '../../component/Alert/Alert'
 
 import { IDataConfirmationInitialization } from '../../initializations/request.initialization'
-import moment, { Moment } from 'moment'
+import moment from 'moment'
 import { CONFIRMATION_DATA, FORMAT_DATE } from '../../constants/var'
 import { MapGroupRequestsToConfirm } from '../../functions/mappers'
+import { SelectValue } from 'antd/lib/select'
 
-interface IGroupConfirmationViewProps {
+type IGroupConfirmationViewProps = {
     onCloseModal: (value: string, message: string) => string | void
 }
 
@@ -79,7 +80,7 @@ const GroupConfirmationView: React.FunctionComponent<
 
     const handleGroupConfirmRequests = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         const dataMapped = MapGroupRequestsToConfirm(
             dataConfirmation,
             selectedRequests
@@ -159,10 +160,12 @@ const GroupConfirmationView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setDataConfirmation({
                                             ...dataConfirmation,
-                                            medio_confirmacion: e.toString(),
+                                            medio_confirmacion: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     id="error"

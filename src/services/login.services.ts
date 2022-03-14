@@ -6,7 +6,7 @@ const loginService = async (rut: string, password: string) => {
     try {
         const response = await httpClient.post(extension, { rut, password })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }

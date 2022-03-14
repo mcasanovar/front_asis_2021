@@ -1,59 +1,64 @@
+import { ChartData } from 'chart.js'
 import * as React from 'react'
 import { Bar, Line, Pie } from 'react-chartjs-2'
 // import { ChartOptions } from 'chart.js';
 
-interface IChartComponentProps {
-    width: number
-    height: number
-    data: IDataChart
-    options: IOptionsChart
-    type?: string
-}
+// type IDataSetsInfo = {
+//     label?: string
+//     data: string | number[]
+//     backgroundColor: string | string[]
+//     borderColor: string | string[]
+//     borderWidth?: number
+// }
 
-interface IDataSetsInfo {
-    label?: string
-    data: string | number[]
-    backgroundColor: string | string[]
-    borderColor: string | string[]
-    borderWidth?: number
-}
+// type IDataChart = {
+//     labels: string | string[]
+//     datasets: IDataSetsInfo[]
+// }
 
-interface IDataChart {
-    labels: string | string[]
-    datasets: IDataSetsInfo[]
-}
+// type IChartComponentProps = {
+//     width: number
+//     height: number
+//     data:
+//         | ChartData<'bar', string | number[], string>
+//         | ((
+//               canvas: HTMLCanvasElement
+//           ) => ChartData<'bar', string | number[], string>)
+//     options: IOptionsChart
+//     type?: string
+// }
 
-interface IScalesOptions {
-    y: {
-        beginAtZero: boolean
-        callback?: any
-    }
-}
+// type IScalesOptions = {
+//     y: {
+//         beginAtZero: boolean
+//         callback?: any
+//     }
+// }
 
-interface ILabelsLegend {
-    fontSize: number
-}
+// type ILabelsLegend = {
+//     fontSize: number
+// }
 
-interface ILegend {
-    display: boolean
-    labels?: ILabelsLegend
-}
+// type ILegend = {
+//     display: boolean
+//     labels?: ILabelsLegend
+// }
 
-interface ITitle {
-    display: boolean
-    text: ''
-}
+// type ITitle = {
+//     display: boolean
+//     text: ''
+// }
 
-interface IOptionsChart {
-    responsive?: boolean
-    maintainAspectRatio: boolean
-    scales?: IScalesOptions
-    legend?: ILegend
-    title?: ITitle
-    tooltips?: any
-}
+// type IOptionsChart = {
+//     responsive?: boolean
+//     maintainAspectRatio: boolean
+//     scales?: IScalesOptions
+//     legend?: ILegend
+//     title?: ITitle
+//     tooltips?: any
+// }
 
-const ChartComponent: React.FunctionComponent<IChartComponentProps> = ({
+const ChartComponent: React.FunctionComponent<any> = ({
     width,
     height,
     data,
@@ -64,7 +69,6 @@ const ChartComponent: React.FunctionComponent<IChartComponentProps> = ({
         <div>
             {type === 'bar' && (
                 <Bar
-                    type
                     width={width}
                     height={height}
                     data={data}
@@ -73,7 +77,6 @@ const ChartComponent: React.FunctionComponent<IChartComponentProps> = ({
             )}
             {type === 'line' && (
                 <Line
-                    type
                     width={width}
                     height={height}
                     data={data}
@@ -82,7 +85,6 @@ const ChartComponent: React.FunctionComponent<IChartComponentProps> = ({
             )}
             {type === 'pie' && (
                 <Pie
-                    type
                     width={width}
                     height={height}
                     data={data}

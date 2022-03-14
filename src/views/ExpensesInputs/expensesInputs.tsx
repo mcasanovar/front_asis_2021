@@ -36,11 +36,11 @@ import { MilesFormat } from '../../libs/formattedPesos'
 import PaginationComponent from '../../component/Pagination/Pagination'
 import { getUserFromLocalStorage } from '../../functions/getLocalStorage'
 
-interface IExpensesInputsViewProps {
+type IExpensesInputsViewProps = {
     authorized: boolean
 }
 
-interface IFilterSelected {
+type IFilterSelected = {
     headerFilter: string
     filter: string
 }
@@ -208,7 +208,7 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
     async function filterExpenses(
         date: string,
         headFilter: string,
-        pageNumber: number = 1
+        pageNumber = 1
     ) {
         const aux: IResponseAllExpenses = await filterExpensesService(
             2,
@@ -354,8 +354,6 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
                 buttons={buttons}
                 dataFilter={FILTERS_EXPENSES}
                 onClick={button => handleClickButton(button)}
-                onClickGrupal={() => {}}
-                onClickDateFilter={() => {}}
                 filterText={filterText}
                 setFilterText={setFilterText}
                 onClickSearch={() => handleClickSearch()}
@@ -393,8 +391,6 @@ const ExpensesInputsView: React.FunctionComponent<IExpensesInputsViewProps> = ({
                     title={ActualModal.title}
                     width={1200}
                     onClose={() => setOpenModal(false)}
-                    onClickConfirm={id => {}}
-                    showButtons={[]}
                 >
                     {ActualModal._id === 'newexpense' && (
                         <NewEditExpenseView

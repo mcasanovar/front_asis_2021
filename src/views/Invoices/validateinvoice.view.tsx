@@ -25,8 +25,9 @@ import { FORMAT_DATE } from '../../constants/var'
 import { MapInvoiceToConfirm } from '../../functions/mappers'
 import { confirmInvoiceService } from '../../services'
 import moment from 'moment'
+import { SelectValue } from 'antd/lib/select'
 
-interface IValidateInvoiceViewProps {
+type IValidateInvoiceViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     invoiceSelected: InvoicesModel | undefined
 }
@@ -120,11 +121,12 @@ const ValidateInvoiceView: React.FunctionComponent<
                                         >
                                             <Select
                                                 style={{ width: '100%' }}
-                                                onSelect={e =>
+                                                onSelect={(e: SelectValue) =>
                                                     setNewDataInvoice({
                                                         ...newDataInvoice,
-                                                        estado_archivo:
-                                                            e.toString(),
+                                                        estado_archivo: !!e
+                                                            ? e.toString()
+                                                            : '',
                                                     })
                                                 }
                                             >

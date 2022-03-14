@@ -26,7 +26,7 @@ import { EvaluationInitialization } from '../../initializations/evaluation.initi
 import { MapEvaluationToSend } from '../../functions/mappers'
 import { RcFile } from 'antd/lib/upload'
 
-interface IUploadExamViewProps {
+type IUploadExamViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     evaluationSelected: EvaluationModel | undefined
 }
@@ -55,7 +55,7 @@ const UploadExamView: React.FunctionComponent<IUploadExamViewProps> = ({
 
     const handleLoadExam = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         const evaluationMapped = MapEvaluationToSend(
             evaluationSelected || EvaluationInitialization,
             observation

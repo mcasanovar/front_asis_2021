@@ -6,7 +6,7 @@ const getAllRequestsNoPaginationService = async () => {
     try {
         const response = await httpClient.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -16,7 +16,7 @@ const getAllRequestToConfirmService = async () => {
     try {
         const response = await httpClient.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -29,7 +29,7 @@ const getAllRequestsService = async (pageNumber: number, nPerPage: number) => {
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -42,7 +42,7 @@ const getRequestsByDateService = async (
     try {
         const response = await httpClient.post(extension, { month, year })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -52,7 +52,7 @@ const getOneRequestService = async (id: string) => {
     try {
         const response = await httpClient.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -62,7 +62,7 @@ const getRequestToConfirmService = async (id: string) => {
     try {
         const response = await httpClient.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -72,7 +72,7 @@ const insertRequestService = async (data: FormData) => {
     try {
         const response = await httpClientFormData.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -81,7 +81,7 @@ const editRequestService = async (id: string, data: FormData) => {
     try {
         const response = await httpClientFormData.put(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -91,7 +91,7 @@ const deleteOneRequestService = async (id: string) => {
     try {
         const response = await httpClient.delete(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -101,7 +101,7 @@ const confirmRequestService = async (id: string, data: FormData) => {
     try {
         const response = await httpClientFormData.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -111,7 +111,7 @@ const confirmGroupRequestsService = async (data: FormData) => {
     try {
         const response = await httpClientFormData.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -133,7 +133,7 @@ const filterRequestsService = async (
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -143,7 +143,7 @@ const sendMailsTemplateService = async (data: any) => {
     try {
         const response = await httpClient.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -157,7 +157,7 @@ const consolidateResquestService = async (
     try {
         const response = await httpClient.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }

@@ -25,26 +25,11 @@ import { RequestInitialization } from '../../initializations/request.initializat
 import { MilesFormat } from '../../libs/formattedPesos'
 import { CalculateIVA } from '../../libs/calculateIVA'
 
-import { GiModel, IFaena, IResponseGI } from '../../models/gi.models'
-import { getUserFromLocalStorage } from '../../functions/getLocalStorage'
-import { COLABORATION_ROL } from '../../constants/var'
+import { GiModel, IResponseGI } from '../../models/gi.models'
 
-interface ICreateRequestViewProps {
+type ICreateRequestViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     _id?: string
-}
-
-interface IPricesFormatter {
-    montoNeto: string
-    valorImpuesto: string
-    exento: string
-    montoTotal: string
-}
-
-interface ISelectedCategories {
-    level_1: number
-    level_2: number
-    level_3: number
 }
 
 const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({

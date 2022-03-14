@@ -29,23 +29,20 @@ import {
     PAYMENT_METHODS,
     REGISTER_TYPE,
 } from '../../constants/var'
-import { GiModel, IReponseAllGIs, IResponseGI } from '../../models/gi.models'
+import { GiModel, IReponseAllGIs } from '../../models/gi.models'
 import {
     getAllGIWithoutPaginationService,
     getAllRequestsNoPaginationService,
     insertExpenseService,
 } from '../../services'
-import {
-    IResponseAllRequests,
-    IResponseRequest,
-    RequestModel,
-} from '../../models/request.models'
+import { IResponseRequest, RequestModel } from '../../models/request.models'
 
 import moment, { Moment } from 'moment'
 import { CalculateIVA } from '../../libs/calculateIVA'
 import { MapExpenseToInsert } from '../../functions/mappers'
+import { SelectValue } from 'antd/lib/select'
 
-interface IExpensesProps {
+type IExpensesProps = {
     onCloseModal: (value: string, message: string) => string | void
     expenseSelected: ExpensesModel | undefined
 }
@@ -83,7 +80,7 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
 
     const handleInsertExpense = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         const expenseMapped = MapExpenseToInsert(newDataExpense)
         formData.append('data', JSON.stringify(expenseMapped))
         file !== null && formData.append('archivo', file)
@@ -216,9 +213,9 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         handleSelectedMainCategory(
-                                            parseInt(e.toString())
+                                            parseInt(!!e ? e.toString() : '')
                                         )
                                     }
                                 >
@@ -248,9 +245,9 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         handleSelectedSubcagoryOne(
-                                            parseInt(e.toString())
+                                            parseInt(!!e ? e.toString() : '')
                                         )
                                     }
                                     value={newDataExpense.subcategoria_uno}
@@ -287,9 +284,9 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         handleSelectedSubcagoryTwo(
-                                            parseInt(e.toString())
+                                            parseInt(!!e ? e.toString() : '')
                                         )
                                     }
                                     value={newDataExpense.subcategoria_dos}
@@ -330,15 +327,17 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
                             >
                                 <Select
                                     showSearch
-                                    filterOption={(input, optionProvee) =>
+                                    filterOption={(input, optionProvee: any) =>
                                         optionProvee?.children
                                             .toLowerCase()
                                             .indexOf(input.toLowerCase()) >= 0
                                     }
                                     optionFilterProp="children"
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
-                                        handleAssingSupplier(e.toString())
+                                    onSelect={(e: SelectValue) =>
+                                        handleAssingSupplier(
+                                            !!e ? e.toString() : ''
+                                        )
                                     }
                                     value={`${newDataExpense.rut_proveedor} - ${newDataExpense.razon_social_proveedor}`}
                                 >
@@ -357,10 +356,12 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
                             <Form.Item label="Tipo registro">
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataExpense({
                                             ...newDataExpense,
-                                            tipo_registro: e.toString(),
+                                            tipo_registro: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={newDataExpense.tipo_registro}
@@ -377,10 +378,12 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
                             <Form.Item label="Requiere servicio">
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataExpense({
                                             ...newDataExpense,
-                                            requiere_servicio: e.toString(),
+                                            requiere_servicio: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={newDataExpense.requiere_servicio}
@@ -394,10 +397,12 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
                             <Form.Item label="Documento">
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataExpense({
                                             ...newDataExpense,
-                                            tipo_documento: e.toString(),
+                                            tipo_documento: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={newDataExpense.tipo_documento}
@@ -432,15 +437,17 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
                                     <Select
                                         showSearch
                                         optionFilterProp="children"
-                                        filterOption={(input, optionA) =>
+                                        filterOption={(input, optionA: any) =>
                                             optionA?.children
                                                 .toLowerCase()
                                                 .indexOf(input.toLowerCase()) >=
                                             0
                                         }
                                         style={{ width: '100%' }}
-                                        onSelect={e =>
-                                            handleAssignRequest(e.toString())
+                                        onSelect={(e: SelectValue) =>
+                                            handleAssignRequest(
+                                                !!e ? e.toString() : ''
+                                            )
                                         }
                                     >
                                         {requests.map(request => (
@@ -526,10 +533,10 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataExpense({
                                             ...newDataExpense,
-                                            medio_pago: e.toString(),
+                                            medio_pago: !!e ? e.toString() : '',
                                         })
                                     }
                                     value={newDataExpense.medio_pago}
@@ -559,11 +566,12 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
                                 {newDataExpense.medio_pago !== 'Efectivo' ? (
                                     <Select
                                         style={{ width: '100%' }}
-                                        onSelect={e =>
+                                        onSelect={(e: SelectValue) =>
                                             setNewDataExpense({
                                                 ...newDataExpense,
-                                                institucion_bancaria:
-                                                    e.toString(),
+                                                institucion_bancaria: !!e
+                                                    ? e.toString()
+                                                    : '',
                                             })
                                         }
                                         value={

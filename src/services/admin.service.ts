@@ -6,7 +6,7 @@ const getRequestsByCode = async (code: string) => {
     try {
         const response = await httpClient.post(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -16,7 +16,7 @@ const updateRequestAdmin = async (id: string, data: any) => {
     try {
         const response = await httpClient.put(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }

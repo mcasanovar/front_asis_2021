@@ -8,7 +8,7 @@ import AlertComponent from '../../component/Alert/Alert'
 
 import { MilesFormat } from '../../libs/formattedPesos'
 
-interface IDetailsPaymentViewProps {
+type IDetailsPaymentViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     paymentSelected: PaymentModel | undefined
 }

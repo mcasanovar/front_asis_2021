@@ -16,7 +16,7 @@ import {
 import { IAlertMessageContent } from '../../models/index.models'
 import AlertComponent from '../../component/Alert/Alert'
 import { SelectValue } from 'antd/lib/select'
-import { GiModel, IResponseGI, IContract, IFaena } from '../../models/gi.models'
+import { GiModel, IResponseGI, IContract } from '../../models/gi.models'
 import {
     generateConsolidatedReportService,
     getCompanyGIService,
@@ -27,13 +27,12 @@ import {
     IResponseRequestPayment,
     RequestPaymentModel,
 } from '../../models/requestpayment.models'
-import moment, { Moment } from 'moment'
+import moment from 'moment'
 import { FORMAT_DATE } from '../../constants/var'
-import { parse } from 'node:url'
 import { MapDataToConsolidatedReport } from '../../functions/mappers/requestsPayment.mapper'
 import { validateEmail } from '../../functions/validators/index.validators'
 
-interface IConsolidatedReportViewProps {
+type IConsolidatedReportViewProps = {
     onCloseModal: (value: string, message: string) => string | void
 }
 
@@ -285,7 +284,7 @@ const ConsolidatedReportView: React.FunctionComponent<
                                 style={{ width: '50%' }}
                                 onSelect={(e: SelectValue) => {
                                     setFaenaSelected(null)
-                                    handleGetFaenas(e.toString())
+                                    handleGetFaenas(!!e ? e.toString() : '')
                                 }}
                                 placeholder="Contrato"
                                 disabled={!showContractFilter}
@@ -306,7 +305,7 @@ const ConsolidatedReportView: React.FunctionComponent<
                             <Select
                                 style={{ width: '40%' }}
                                 onSelect={(e: SelectValue) =>
-                                    setFaenaSelected(e.toString())
+                                    setFaenaSelected(!!e ? e.toString() : '')
                                 }
                                 placeholder="Faena"
                                 disabled={!showContractFilter}
@@ -340,7 +339,7 @@ const ConsolidatedReportView: React.FunctionComponent<
                             <Select
                                 style={{ width: '90%' }}
                                 onSelect={(e: SelectValue) =>
-                                    setServiceSelected(e.toString())
+                                    setServiceSelected(!!e ? e.toString() : '')
                                 }
                                 placeholder="Nombre Servicio"
                                 disabled={!showServiceNameFilter}
@@ -538,14 +537,16 @@ const ConsolidatedReportView: React.FunctionComponent<
                                 <Select
                                     showSearch
                                     optionFilterProp="children"
-                                    filterOption={(input, optionOrgPert) =>
+                                    filterOption={(input, optionOrgPert: any) =>
                                         optionOrgPert?.children
                                             .toLowerCase()
                                             .indexOf(input.toLowerCase()) >= 0
                                     }
                                     style={{ width: '100%' }}
                                     onSelect={(e: SelectValue) =>
-                                        handleGetCompanySelected(e.toString())
+                                        handleGetCompanySelected(
+                                            !!e ? e.toString() : ''
+                                        )
                                     }
                                 >
                                     {!!companies &&

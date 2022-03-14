@@ -5,7 +5,7 @@ export default function getFilteredInvoicesByResults(
     results: ResultModel[],
     invoices: InvoicesModel[]
 ) {
-    let invoicesFiltered: InvoicesModel[] = []
+    const invoicesFiltered: InvoicesModel[] = []
     if (!results.length) return []
     results.forEach((result: ResultModel) => {
         const aux: InvoicesModel | undefined = invoices.find(

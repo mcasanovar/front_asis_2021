@@ -40,7 +40,7 @@ const MapPsicoToCreateExam = (
     psico: ExamPsicosensotecnicoModel,
     options: IExamPsicoExtras[]
 ) => {
-    let psicoMapped: ExamPsicosensotecnicoModel = psico
+    const psicoMapped: ExamPsicosensotecnicoModel = psico
 
     options.forEach((element: IExamPsicoExtras) => {
         switch (element.name_exam) {

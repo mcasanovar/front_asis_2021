@@ -21,8 +21,9 @@ import AlertComponent from '../../component/Alert/Alert'
 import { InvoicesInitialization } from '../../initializations/invoices.initialization'
 import { confirmOCService } from '../../services'
 import { MapOcToUpload } from '../../functions/mappers'
+import { SelectValue } from 'antd/lib/select'
 
-interface IConfirmOCViewProps {
+type IConfirmOCViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     invoiceSelected: InvoicesModel | undefined
 }
@@ -104,11 +105,12 @@ const ConfirmOCView: React.FunctionComponent<IConfirmOCViewProps> = ({
                                         >
                                             <Select
                                                 style={{ width: '100%' }}
-                                                onSelect={e =>
+                                                onSelect={(e: SelectValue) =>
                                                     setNewDataInvoice({
                                                         ...newDataInvoice,
-                                                        estado_archivo:
-                                                            e.toString(),
+                                                        estado_archivo: !!e
+                                                            ? e.toString()
+                                                            : '',
                                                     })
                                                 }
                                             >

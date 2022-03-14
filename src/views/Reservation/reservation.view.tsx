@@ -39,11 +39,11 @@ import ConfirmReservationView from './confirmreservation.view'
 import SendMailsTemplateView from '../Requests/sendEmailsTemplate.view'
 import { getUserFromLocalStorage } from '../../functions/getLocalStorage'
 
-interface IReservationViewProps {
+type IReservationViewProps = {
     authorized: boolean
 }
 
-interface IFilterSelected {
+type IFilterSelected = {
     headerFilter: string
     filter: string
 }
@@ -245,7 +245,7 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({
     async function filterReservation(
         date: string,
         headFilter: string,
-        pageNumber: number = 1
+        pageNumber = 1
     ) {
         const aux: IResponseAllReservations = await filterReservationsService(
             2,
@@ -353,7 +353,6 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({
                 filterText={filterText}
                 showDateFilter
                 onClick={button => handleClickButton(button)}
-                onClickGrupal={() => {}}
                 onClickDateFilter={date => handleFilterByDate(date)}
                 setFilterText={setFilterText}
                 onClickSearch={() => handleClickSearch()}
@@ -392,8 +391,6 @@ const ReservationView: React.FunctionComponent<IReservationViewProps> = ({
                 title={ActualModal.title}
                 width={ActualModal.widthModal || 500}
                 onClose={() => setOpenModal(false)}
-                onClickConfirm={id => {}}
-                showButtons={ActualModal.showButtons || []}
             >
                 {ActualModal._id === 'confirm' && (
                     <GroupConfirmReservationView

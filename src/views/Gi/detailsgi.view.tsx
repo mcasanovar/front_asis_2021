@@ -30,7 +30,7 @@ import { IAlertMessageContent } from '../../models/index.models'
 
 import AlertComponent from '../../component/Alert/Alert'
 
-interface IDetailsGIViewProps {
+type IDetailsGIViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     _id?: string
 }

@@ -42,11 +42,11 @@ import SendMailsTemplateView from './sendEmailsTemplate.view'
 import consolidateRequestsView from './consolidateRequests.view'
 import ConsolidateRequestsView from './consolidateRequests.view'
 
-interface IRequestViewProps {
+type IRequestViewProps = {
     authorized: boolean
 }
 
-interface IFilterSelected {
+type IFilterSelected = {
     headerFilter: string
     filter: string
 }
@@ -277,7 +277,7 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({
     async function filterRequests(
         date: string,
         headFilter: string,
-        pageNumber: number = 1
+        pageNumber = 1
     ) {
         const aux: IResponseAllRequests = await filterRequestsService(
             2,
@@ -369,7 +369,6 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({
                 buttons={buttons}
                 showDateFilter
                 onClick={button => handleClickButton(button)}
-                onClickGrupal={() => {}}
                 dataFilter={FILTERS_REQUEST}
                 filterText={filterText}
                 setFilterText={setFilterText}
@@ -411,8 +410,6 @@ const RequestView: React.FunctionComponent<IRequestViewProps> = ({
                 customTitle={ActualModal.customTitle || ''}
                 width={ActualModal.widthModal || 500}
                 onClose={() => setOpenModal(false)}
-                onClickConfirm={id => {}}
-                showButtons={ActualModal.showButtons || []}
             >
                 {ActualModal._id === 'newrequest' && (
                     <CreateEditRequestView

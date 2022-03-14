@@ -13,7 +13,7 @@ import { ReservationInitialization } from '../../initializations/reservation.ini
 
 import AlertComponent from '../../component/Alert/Alert'
 
-interface IEditReservationViewProps {
+type IEditReservationViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     _id?: string
 }

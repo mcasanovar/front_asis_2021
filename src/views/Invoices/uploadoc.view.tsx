@@ -25,7 +25,7 @@ import { MapOcToUpload } from '../../functions/mappers'
 import { uploadOCService } from '../../services'
 import moment from 'moment'
 
-interface IUploadOCViewProps {
+type IUploadOCViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     invoiceSelected: InvoicesModel | undefined
 }
@@ -58,7 +58,7 @@ const UploadOCView: React.FunctionComponent<IUploadOCViewProps> = ({
 
     const handleUploadOC = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         const invoiceMapped = MapOcToUpload(newDataInvoice, observationOC)
         formData.append('data', JSON.stringify(invoiceMapped))
         file !== null && formData.append('archivo', file)

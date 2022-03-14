@@ -23,8 +23,9 @@ import { confirmExamService } from '../../services'
 import { IAlertMessageContent } from '../../models/index.models'
 
 import AlertComponent from '../../component/Alert/Alert'
+import { SelectValue } from 'antd/lib/select'
 
-interface IConfirmExamViewProps {
+type IConfirmExamViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     evaluationSelected: EvaluationModel | undefined
 }
@@ -106,10 +107,12 @@ const ConfirmExamView: React.FunctionComponent<IConfirmExamViewProps> = ({
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataEvaluation({
                                             ...newDataEvaluation,
-                                            estado_archivo: e.toString(),
+                                            estado_archivo: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     id="error"

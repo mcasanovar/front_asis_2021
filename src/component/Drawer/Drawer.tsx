@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Menu, Tooltip } from 'antd'
+import React from 'react'
+import { Menu } from 'antd'
 import { Link } from 'react-router-dom'
 import {
     PieChartOutlined,
@@ -11,11 +11,9 @@ import {
 import { getUserFromLocalStorage } from '../../functions/getLocalStorage'
 import { MODULES_PERMISSION } from '../../constants/var'
 
-interface IDrawerComponentProps {}
+type IDrawerComponentProps = any
 
-const DrawerComponent: React.FunctionComponent<
-    IDrawerComponentProps
-> = props => {
+const DrawerComponent: React.FunctionComponent<IDrawerComponentProps> = () => {
     const { SubMenu } = Menu
 
     const styleText: React.CSSProperties = {
@@ -33,7 +31,7 @@ const DrawerComponent: React.FunctionComponent<
             theme="dark"
             inlineCollapsed={true}
             style={{ height: 'auto', width: 130 }}
-            onClick={e => {}}
+            // onClick={() => {}}
         >
             {!!roles &&
                 roles.permisos.indexOf(MODULES_PERMISSION.M_DASHBOARD) > -1 && (

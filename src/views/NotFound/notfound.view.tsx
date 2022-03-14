@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react'
 
-interface NotFoundProps {}
+type NotFoundProps = any
 
 const NotFoundView: FunctionComponent<NotFoundProps> = ({}) => {
     return (

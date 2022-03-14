@@ -8,7 +8,7 @@ import { IAlertMessageContent } from '../../models/index.models'
 import AlertComponent from '../../component/Alert/Alert'
 import { MilesFormat } from '../../libs/formattedPesos'
 
-interface IDetailsOutputViewProps {
+type IDetailsOutputViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     outputSelected: OutputModel | undefined
 }

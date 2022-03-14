@@ -7,7 +7,7 @@ const getAllGIWithoutPaginationService = async () => {
     try {
         const response = await httpClient.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -20,7 +20,7 @@ const getAllGIService = async (pageNumber: number, nPerPage: number) => {
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -30,7 +30,7 @@ const getCompanyGIService = async () => {
     try {
         const response = await httpClient.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -40,7 +40,7 @@ const getWorkersGIService = async () => {
     try {
         const response = await httpClient.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -50,7 +50,7 @@ const insertGIService = async (data: FormData) => {
     try {
         const response = await httpClientFormData.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -70,7 +70,7 @@ const filterGisService = async (
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -80,7 +80,7 @@ const getOneGIService = async (id: string) => {
     try {
         const response = await httpClient.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -90,7 +90,7 @@ const editOneGIService = async (id: string, data: FormData) => {
     try {
         const response = await httpClientFormData.put(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -100,7 +100,7 @@ const deleteOneGiService = async (id: string) => {
     try {
         const response = await httpClient.delete(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -110,7 +110,7 @@ const getGIByRutService = async (rut: string, selector: number) => {
     try {
         const response = await httpClient.post(extension, { rut, selector })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -120,7 +120,7 @@ const editPasswordService = async (id: string, data: ConfigurationGIModel) => {
     try {
         const response = await httpClient.put(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -130,7 +130,7 @@ const downloadGIFilesService = async (id: string) => {
     try {
         const response = await httpClientFormData.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }

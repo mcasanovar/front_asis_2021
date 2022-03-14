@@ -1,14 +1,14 @@
-import React, { FunctionComponent, useState, useEffect } from 'react'
+import { FunctionComponent, useState, useEffect } from 'react'
 import { Typography, Popover } from 'antd'
 
 import { Button } from 'antd'
-import { MenuUnfoldOutlined, PoweroffOutlined } from '@ant-design/icons'
+import { PoweroffOutlined } from '@ant-design/icons'
 
-interface TopBarProps {
-    onClick: () => void
+type TopBarProps = {
+    onClick?: () => void
 }
 
-const TopBarComponent: FunctionComponent<TopBarProps> = ({ onClick }) => {
+const TopBarComponent: FunctionComponent<TopBarProps> = () => {
     const { Text } = Typography
 
     const [giName, setgiName] = useState<string>('')
@@ -33,10 +33,6 @@ const TopBarComponent: FunctionComponent<TopBarProps> = ({ onClick }) => {
 
     return (
         <div className="mainContainer-topbar">
-            {/* <Button
-        onClick={() => onClick()}
-        icon={<MenuUnfoldOutlined style={{ fontSize: '1.2rem' }} />}
-      /> */}
             <div></div>
             <div>
                 <Text>Usuario activo : </Text>
@@ -68,7 +64,6 @@ const TopBarComponent: FunctionComponent<TopBarProps> = ({ onClick }) => {
                 onVisibleChange={() => setDeleteConfirmation(true)}
             >
                 <Button
-                    onClick={() => {}}
                     type="default"
                     icon={
                         <PoweroffOutlined

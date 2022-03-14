@@ -13,8 +13,9 @@ import { editPasswordService } from '../../services'
 import { IAlertMessageContent } from '../../models/index.models'
 
 import AlertComponent from '../../component/Alert/Alert'
+import { SelectValue } from 'antd/lib/select'
 
-interface IConfigurationGiProps {
+type IConfigurationGiProps = {
     onCloseModal: (value: string, message: string) => string | void
     giSelected: GiModel | undefined
 }
@@ -88,10 +89,10 @@ const ConfigurationGi: React.FunctionComponent<IConfigurationGiProps> = ({
                         <Form.Item label="Rol">
                             <Select
                                 style={{ width: '100%' }}
-                                onSelect={e =>
+                                onSelect={(e: SelectValue) =>
                                     setnewDataConfiguracionGI({
                                         ...newDataConfiguracionGI,
-                                        rol: e.toString(),
+                                        rol: !!e ? e.toString() : '',
                                     })
                                 }
                                 value={newDataConfiguracionGI.rol}
@@ -108,13 +109,14 @@ const ConfigurationGi: React.FunctionComponent<IConfigurationGiProps> = ({
                         <Form.Item label="¿Cambiar contraseña?">
                             <Select
                                 style={{ width: '100%' }}
-                                onSelect={e =>
+                                onSelect={(e: SelectValue) =>
                                     setnewDataConfiguracionGI({
                                         ...newDataConfiguracionGI,
-                                        isEditPassword:
-                                            e.toString() === 'Si'
+                                        isEditPassword: !!e
+                                            ? e.toString() === 'Si'
                                                 ? true
-                                                : false,
+                                                : false
+                                            : false,
                                     })
                                 }
                             >

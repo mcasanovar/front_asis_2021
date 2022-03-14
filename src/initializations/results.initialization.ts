@@ -11,9 +11,15 @@ export const ResultsInitalization = {
     razon_social_cs: '',
     lugar_servicio: '',
     sucursal: '',
-    condicionantes: [],
+    condicionantes: [''],
     vigencia_examen: 0,
-    observaciones: [],
+    observaciones: [
+        {
+            obs: '',
+            fecha: '',
+            estado: '',
+        },
+    ],
     fecha_confirmacion_examen: '',
     hora_confirmacion_examen: '',
     estado: '',

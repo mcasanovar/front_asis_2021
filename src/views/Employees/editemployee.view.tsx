@@ -24,8 +24,9 @@ import moment, { Moment } from 'moment'
 import { editEmployeeService } from '../../services'
 import { IAlertMessageContent } from '../../models/index.models'
 import { MapEmployeeToEdit } from '../../functions/mappers'
+import { SelectValue } from 'antd/lib/select'
 
-interface IEditEmployeeViewProps {
+type IEditEmployeeViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     employeesSelected: GiModel
 }
@@ -178,10 +179,12 @@ const EditEmployeeView: React.FunctionComponent<IEditEmployeeViewProps> = ({
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataEmployee({
                                             ...newDataEmployee,
-                                            tipo_contrato: e.toString(),
+                                            tipo_contrato: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={newDataEmployee.tipo_contrato}
@@ -301,10 +304,10 @@ const EditEmployeeView: React.FunctionComponent<IEditEmployeeViewProps> = ({
                             <Form.Item label="AFP">
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataEmployee({
                                             ...newDataEmployee,
-                                            afp: e.toString(),
+                                            afp: !!e ? e.toString() : '',
                                         })
                                     }
                                     value={newDataEmployee.afp}
@@ -321,10 +324,10 @@ const EditEmployeeView: React.FunctionComponent<IEditEmployeeViewProps> = ({
                             <Form.Item label="ISAPRE">
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataEmployee({
                                             ...newDataEmployee,
-                                            isapre: e.toString(),
+                                            isapre: !!e ? e.toString() : '',
                                         })
                                     }
                                     value={newDataEmployee.isapre}
@@ -343,10 +346,12 @@ const EditEmployeeView: React.FunctionComponent<IEditEmployeeViewProps> = ({
                             <Form.Item label="Seguridad laboral">
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataEmployee({
                                             ...newDataEmployee,
-                                            seguridad_laboral: e.toString(),
+                                            seguridad_laboral: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={newDataEmployee.seguridad_laboral}

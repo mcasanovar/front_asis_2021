@@ -32,11 +32,11 @@ import {
 import { MilesFormat } from '../../libs/formattedPesos'
 import { OutputsInitialization } from '../../initializations/output.initializations'
 
-interface IOutputsViewProps {
+type IOutputsViewProps = {
     authorized: boolean
 }
 
-interface IFilterSelected {
+type IFilterSelected = {
     headerFilter: string
     filter: string
 }
@@ -181,7 +181,7 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({
     async function filterOutputs(
         date: string,
         headFilter: string,
-        pageNumber: number = 1
+        pageNumber = 1
     ) {
         const aux: IResponseAllOutputs = await filterOutputsService(
             2,
@@ -290,8 +290,6 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({
                 subtitle="Tabla de información"
                 buttons={buttons}
                 onClick={button => handleClickButton(button)}
-                onClickGrupal={() => {}}
-                onClickDateFilter={() => {}}
                 dataFilter={FILTERS_OUTPUT}
                 filterText={filterText}
                 setFilterText={setFilterText}
@@ -324,8 +322,6 @@ const OutputsView: React.FunctionComponent<IOutputsViewProps> = ({
                     title={ActualModal.title}
                     width={ActualModal.widthModal || 500}
                     onClose={() => setOpenModal(false)}
-                    onClickConfirm={id => {}}
-                    showButtons={[]}
                 >
                     {ActualModal._id === 'newoutput' && (
                         <CreateOutputView

@@ -21,7 +21,7 @@ import {
     RequestPaymentModel,
 } from '../../models/requestpayment.models'
 
-interface ISendEmailsTemplateViewProps {
+type ISendEmailsTemplateViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     request:
         | RequestModel

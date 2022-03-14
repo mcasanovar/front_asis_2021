@@ -22,7 +22,7 @@ export const EvaluationInitialization = {
     razon_social_cs: '',
     lugar_servicio: '',
     sucursal: '',
-    observaciones: [],
+    observaciones: [{ obs: '', fecha: '', estado: '' }],
     estado_archivo: '',
     estado: '',
     isActive: true,

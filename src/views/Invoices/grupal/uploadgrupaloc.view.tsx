@@ -36,7 +36,7 @@ import { IResponseResults, ResultModel } from '../../../models/results.model'
 import getFilteredInvoicesByResults from '../../../functions/getFilteredInvoicesByResults'
 import sortingObjects from '../../../functions/sortingObjects'
 
-interface IUploadGrupalOCViewProps {
+type IUploadGrupalOCViewProps = {
     onCloseModal: (value: string, message: string) => string | void
 }
 
@@ -82,7 +82,7 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
 
     const handleGroupUploadOC = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         const dataMapped = MapGroupInvoiceToUploadOC(
             dataConfirmation,
             selectedInvoices
@@ -103,7 +103,7 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
     }
 
     const handleSearchInput = () => {
-        let aux: InvoicesModel[] | undefined = invoices?.filter(
+        const aux: InvoicesModel[] | undefined = invoices?.filter(
             invoice => invoice.rut_cp === rutSearchInput
         )
 
@@ -143,7 +143,7 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
         setLoading(true)
         setDateResultFilter(date)
 
-        let aux: IResponseResults = await getResultsByDateService(
+        const aux: IResponseResults = await getResultsByDateService(
             moment(date[0]).format(FORMAT_DATE),
             moment(date[1]).format(FORMAT_DATE)
         )
@@ -175,8 +175,15 @@ const UploadGrupalOCView: React.FunctionComponent<IUploadGrupalOCViewProps> = ({
             }
         })
 
-        let invoicesRes = getFilteredInvoicesByResults(aux.res, invoices || [])
-        let invoicesResFiltered = sortingObjects(invoicesRes, 'codigo', 'desc')
+        const invoicesRes = getFilteredInvoicesByResults(
+            aux.res,
+            invoices || []
+        )
+        const invoicesResFiltered = sortingObjects(
+            invoicesRes,
+            'codigo',
+            'desc'
+        )
 
         if (!checkRutFilter) {
             setInvoicesFiltered(invoicesResFiltered)

@@ -36,8 +36,9 @@ import { CalculateIVA } from '../../libs/calculateIVA'
 import { MapInvoiceToGenerate } from '../../functions/mappers'
 import { generateInvoiceService } from '../../services'
 import moment from 'moment'
+import { SelectValue } from 'antd/lib/select'
 
-interface IGenerateInvoiceProps {
+type IGenerateInvoiceProps = {
     onCloseModal: (value: string, message: string) => string | void
     invoiceSelected: InvoicesModel | undefined
     company: ICompanyInfo | undefined
@@ -70,7 +71,7 @@ const GenerateInvoice: React.FunctionComponent<IGenerateInvoiceProps> = ({
 
     const handleGenerateInvoice = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         const invoiceMapped = MapInvoiceToGenerate(
             newDataInvoice,
             observation,
@@ -252,8 +253,10 @@ const GenerateInvoice: React.FunctionComponent<IGenerateInvoiceProps> = ({
                         >
                             <Select
                                 style={{ width: '100%' }}
-                                onSelect={e =>
-                                    setCompanyBusinessName(e.toString())
+                                onSelect={(e: SelectValue) =>
+                                    setCompanyBusinessName(
+                                        !!e ? e.toString() : ''
+                                    )
                                 }
                             >
                                 {company?.razon_social.map((razon, index) => (
@@ -520,7 +523,6 @@ const GenerateInvoice: React.FunctionComponent<IGenerateInvoiceProps> = ({
                                                     ) || ''
                                                 )
                                             }
-                                            onChange={e => {}}
                                             value={newDataInvoice.total}
                                         />
                                     </Form.Item>

@@ -27,8 +27,9 @@ import AlertComponent from '../../component/Alert/Alert'
 import { ExamAversionInitialization } from '../../initializations/evaluation.initialization'
 import { createExamAversionService } from '../../services'
 import { MapAversionToCreateExam } from '../../functions/mappers'
+import { SelectValue } from 'antd/lib/select'
 
-interface IAversionRiesgoExamViewProps {
+type IAversionRiesgoExamViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     evaluationSelected: EvaluationModel | undefined
 }
@@ -122,11 +123,12 @@ const AversionRiesgoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataAversion({
                                             ...newDataAversion,
-                                            razonamiento_abstracto:
-                                                e.toString(),
+                                            razonamiento_abstracto: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={
@@ -146,11 +148,12 @@ const AversionRiesgoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataAversion({
                                             ...newDataAversion,
-                                            percepcion_concentracion:
-                                                e.toString(),
+                                            percepcion_concentracion: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={
@@ -170,11 +173,12 @@ const AversionRiesgoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataAversion({
                                             ...newDataAversion,
-                                            comprension_instrucciones:
-                                                e.toString(),
+                                            comprension_instrucciones: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={
@@ -203,10 +207,12 @@ const AversionRiesgoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataAversion({
                                             ...newDataAversion,
-                                            acato_autoridad: e.toString(),
+                                            acato_autoridad: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={newDataAversion.acato_autoridad}
@@ -224,10 +230,12 @@ const AversionRiesgoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataAversion({
                                             ...newDataAversion,
-                                            relacion_grupo_pares: e.toString(),
+                                            relacion_grupo_pares: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={newDataAversion.relacion_grupo_pares}
@@ -245,10 +253,12 @@ const AversionRiesgoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataAversion({
                                             ...newDataAversion,
-                                            comportamiento_social: e.toString(),
+                                            comportamiento_social: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={
@@ -277,11 +287,12 @@ const AversionRiesgoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataAversion({
                                             ...newDataAversion,
-                                            locus_control_impulsividad:
-                                                e.toString(),
+                                            locus_control_impulsividad: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={
@@ -301,10 +312,12 @@ const AversionRiesgoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataAversion({
                                             ...newDataAversion,
-                                            manejo_frustracion: e.toString(),
+                                            manejo_frustracion: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={newDataAversion.manejo_frustracion}
@@ -322,10 +335,10 @@ const AversionRiesgoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataAversion({
                                             ...newDataAversion,
-                                            empatia: e.toString(),
+                                            empatia: !!e ? e.toString() : '',
                                         })
                                     }
                                     value={newDataAversion.empatia}
@@ -343,10 +356,12 @@ const AversionRiesgoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataAversion({
                                             ...newDataAversion,
-                                            grado_ansiedad: e.toString(),
+                                            grado_ansiedad: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={newDataAversion.grado_ansiedad}
@@ -373,11 +388,12 @@ const AversionRiesgoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataAversion({
                                             ...newDataAversion,
-                                            actitud_prevencion_accidentes:
-                                                e.toString(),
+                                            actitud_prevencion_accidentes: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={
@@ -397,11 +413,12 @@ const AversionRiesgoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataAversion({
                                             ...newDataAversion,
-                                            confianza_acciones_realizadas:
-                                                e.toString(),
+                                            confianza_acciones_realizadas: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={
@@ -421,11 +438,11 @@ const AversionRiesgoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataAversion({
                                             ...newDataAversion,
                                             capacidad_modificar_ambiente_seguridad:
-                                                e.toString(),
+                                                !!e ? e.toString() : '',
                                         })
                                     }
                                     value={
@@ -454,10 +471,12 @@ const AversionRiesgoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataAversion({
                                             ...newDataAversion,
-                                            orientacion_tarea: e.toString(),
+                                            orientacion_tarea: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={newDataAversion.orientacion_tarea}
@@ -475,10 +494,12 @@ const AversionRiesgoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewDataAversion({
                                             ...newDataAversion,
-                                            energia_vital: e.toString(),
+                                            energia_vital: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={newDataAversion.energia_vital}
@@ -539,9 +560,9 @@ const AversionRiesgoExamView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         handleChangeSelectionConclusion(
-                                            e.toString()
+                                            !!e ? e.toString() : ''
                                         )
                                     }
                                 >

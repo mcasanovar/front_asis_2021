@@ -22,7 +22,7 @@ import { MapResult } from '../../functions/mappers'
 import { ResultsInitalization } from '../../initializations/results.initialization'
 import { uploadResultService } from '../../services'
 
-interface IUploadResultsViewProps {
+type IUploadResultsViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     resultSelected: ResultModel | undefined
 }
@@ -51,7 +51,7 @@ const UploadResultsView: FunctionComponent<IUploadResultsViewProps> = ({
 
     const handleLoadResult = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         const resultMapped = MapResult(
             resultSelected || ResultsInitalization,
             observation

@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { Calendar, Row, Col, Select } from 'antd'
-import moment, { Moment } from 'moment'
+import { Calendar } from 'antd'
+import { Moment } from 'moment'
 
-interface ICalendarComponentProps {
+type ICalendarComponentProps = {
     onSelect: (e: Moment) => void | Moment
     onPanelChange: (e: Moment, mode: string) => void | Moment
     dateCellRender: (date: Moment) => React.ReactNode
@@ -17,8 +17,6 @@ const CalendarComponent: React.FunctionComponent<ICalendarComponentProps> = ({
     monthCellRender,
     customStyle,
 }) => {
-    const { Option } = Select
-
     return (
         <Calendar
             onSelect={e => onSelect(e)}

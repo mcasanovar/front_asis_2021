@@ -24,10 +24,10 @@ import { IAlertMessageContent } from '../../models/index.models'
 
 import AlertComponent from '../../component/Alert/Alert'
 import moment, { Moment } from 'moment'
-import { parse } from 'node:path';
 import { MapOutputToInsert } from '../../functions/mappers'
+import { SelectValue } from 'antd/lib/select'
 
-interface ICreateOutputViewProps {
+type ICreateOutputViewProps = {
     onCloseModal: (value: string, message: string) => string | void
 }
 
@@ -208,10 +208,10 @@ const CreateOutputView: React.FunctionComponent<ICreateOutputViewProps> = ({
                         >
                             <Select
                                 style={{ width: '100%' }}
-                                onSelect={e =>
+                                onSelect={(e: SelectValue) =>
                                     setNewDataOutput({
                                         ...newDataOutput,
-                                        tipo_salida: e.toString(),
+                                        tipo_salida: !!e ? e.toString() : '',
                                     })
                                 }
                             >
@@ -256,9 +256,9 @@ const CreateOutputView: React.FunctionComponent<ICreateOutputViewProps> = ({
                         >
                             <Select
                                 style={{ width: '100%' }}
-                                onSelect={e =>
+                                onSelect={(e: SelectValue) =>
                                     handleSelectedMainCategory(
-                                        parseInt(e.toString())
+                                        parseInt(!!e ? e.toString() : '')
                                     )
                                 }
                             >
@@ -286,9 +286,9 @@ const CreateOutputView: React.FunctionComponent<ICreateOutputViewProps> = ({
                         >
                             <Select
                                 style={{ width: '100%' }}
-                                onSelect={e =>
+                                onSelect={(e: SelectValue) =>
                                     handleSelectedSubcagoryOne(
-                                        parseInt(e.toString())
+                                        parseInt(!!e ? e.toString() : '')
                                     )
                                 }
                                 value={newDataOutput.subcategoria_uno}
@@ -320,9 +320,9 @@ const CreateOutputView: React.FunctionComponent<ICreateOutputViewProps> = ({
                         >
                             <Select
                                 style={{ width: '100%' }}
-                                onSelect={e =>
+                                onSelect={(e: SelectValue) =>
                                     handleSelectedSubcagoryTwo(
-                                        parseInt(e.toString())
+                                        parseInt(!!e ? e.toString() : '')
                                     )
                                 }
                                 value={newDataOutput.subcategoria_dos}
@@ -359,9 +359,9 @@ const CreateOutputView: React.FunctionComponent<ICreateOutputViewProps> = ({
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         handleSelectedSubcategoryThree(
-                                            parseInt(e.toString())
+                                            parseInt(!!e ? e.toString() : '')
                                         )
                                     }
                                     value={`${newDataOutput.codigo} - ${newDataOutput.subcategoria_tres}`}

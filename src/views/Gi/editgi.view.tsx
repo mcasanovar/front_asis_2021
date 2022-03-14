@@ -5,7 +5,7 @@ import { IAlertMessageContent } from '../../models/index.models'
 
 import AlertComponent from '../../component/Alert/Alert'
 
-interface IEditGiViewProps {
+type IEditGiViewProps = {
     onCloseModal: (atrr: string) => string | void
 }
 

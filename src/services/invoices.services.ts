@@ -9,7 +9,7 @@ const getAllInvoicesService = async (pageNumber: number, nPerPage: number) => {
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -20,7 +20,7 @@ const getGroupOCService = async () => {
     try {
         const response = await httpClient.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -30,7 +30,7 @@ const uploadGroupOCService = async (data: FormData) => {
     try {
         const response = await httpClientFormData.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -40,7 +40,7 @@ const getGroupOCConfirmService = async () => {
     try {
         const response = await httpClient.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -50,7 +50,7 @@ const confirmGroupOCService = async (data: any) => {
     try {
         const response = await httpClient.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -60,7 +60,7 @@ const getGroupInvoiceToUploadService = async () => {
     try {
         const response = await httpClient.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -70,7 +70,7 @@ const uploadGroupInvoicesService = async (data: FormData) => {
     try {
         const response = await httpClientFormData.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -80,7 +80,7 @@ const confirmGroupInvoicesService = async (data: any) => {
     try {
         const response = await httpClient.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -92,7 +92,7 @@ const uploadOCService = async (id: string, data: FormData) => {
     try {
         const response = await httpClientFormData.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -102,7 +102,7 @@ const downloadFilesService = async (id: string, type: string) => {
     try {
         const response = await httpClientFormData.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -112,7 +112,7 @@ const confirmOCService = async (id: string, data: any) => {
     try {
         const response = await httpClient.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -122,7 +122,7 @@ const generateInvoiceService = async (id: string, data: FormData) => {
     try {
         const response = await httpClientFormData.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -132,7 +132,7 @@ const confirmInvoiceService = async (id: string, data: any) => {
     try {
         const response = await httpClient.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -154,7 +154,7 @@ const filterInvoicesService = async (
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -164,7 +164,7 @@ const deleteInvoiceService = async (id: string) => {
     try {
         const response = await httpClient.delete(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }

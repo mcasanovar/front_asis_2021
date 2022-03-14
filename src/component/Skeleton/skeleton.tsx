@@ -1,7 +1,7 @@
-import React, { FunctionComponent } from 'react'
+import { FunctionComponent } from 'react'
 import { Skeleton } from 'antd'
 
-interface SkeletonProps {
+type SkeletonProps = {
     active: boolean
     rows: number
     loading: boolean

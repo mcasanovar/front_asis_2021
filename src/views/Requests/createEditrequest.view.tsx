@@ -56,13 +56,13 @@ import {
 } from '../../functions/validators/index.validators'
 import { MapRequestToInsert, MapRequestToEdit } from '../../functions/mappers'
 
-interface ICreateRequestViewProps {
+type ICreateRequestViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     type: string
     _id?: string
 }
 
-interface ISelectedCategories {
+type ISelectedCategories = {
     level_1: number
     level_2: number
     level_3: number
@@ -150,10 +150,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
         setLoading(false)
     }
 
-    const handleSelectRequestDate = (
-        e: Moment,
-        ownSelected: boolean = false
-    ) => {
+    const handleSelectRequestDate = (e: Moment, ownSelected = false) => {
         if (type === 'edit' && !ownSelected) {
             setNewRequestData({
                 ...newRequestData,
@@ -258,7 +255,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
 
     const handleInsertRequest = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         let arrayEmails = []
         if (checkSendMail && !emails.includes(',')) {
             arrayEmails.push({
@@ -298,7 +295,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
 
     const handleSaveRequest = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         const requestToInsert = MapRequestToEdit(newRequestData)
         formData.append('data', JSON.stringify(requestToInsert))
         const result: IResponseRequest = await editRequestService(
@@ -533,13 +530,13 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                                 <Select
                                     style={{ width: '100%' }}
                                     optionFilterProp="children"
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         handleSelectCategory(
-                                            parseInt(e.toString()),
+                                            parseInt(!!e ? e.toString() : ''),
                                             1
                                         )
                                     }
-                                    filterOption={(input, option) =>
+                                    filterOption={(input, option: any) =>
                                         option?.children
                                             .toLowerCase()
                                             .indexOf(input.toLowerCase()) >= 0
@@ -564,13 +561,13 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                                 <Select
                                     style={{ width: '100%' }}
                                     optionFilterProp="children"
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         handleSelectCategory(
-                                            parseInt(e.toString()),
+                                            parseInt(!!e ? e.toString() : ''),
                                             2
                                         )
                                     }
-                                    filterOption={(input, option) =>
+                                    filterOption={(input, option: any) =>
                                         option?.children
                                             .toLowerCase()
                                             .indexOf(input.toLowerCase()) >= 0
@@ -596,13 +593,13 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                                 <Select
                                     style={{ width: '100%' }}
                                     optionFilterProp="children"
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         handleSelectCategory(
-                                            parseInt(e.toString()),
+                                            parseInt(!!e ? e.toString() : ''),
                                             3
                                         )
                                     }
-                                    filterOption={(input, option) =>
+                                    filterOption={(input, option: any) =>
                                         option?.children
                                             .toLowerCase()
                                             .indexOf(input.toLowerCase()) >= 0
@@ -632,10 +629,12 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                                 <Select
                                     style={{ width: '100%' }}
                                     optionFilterProp="children"
-                                    onSelect={e =>
-                                        handleSelectServiceName(e.toString())
+                                    onSelect={(e: SelectValue) =>
+                                        handleSelectServiceName(
+                                            !!e ? e.toString() : ''
+                                        )
                                     }
-                                    filterOption={(input, option) =>
+                                    filterOption={(input, option: any) =>
                                         option?.children
                                             .toLowerCase()
                                             .indexOf(input.toLowerCase()) >= 0
@@ -664,10 +663,12 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                             <Form.Item label="Tipo servicio">
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewRequestData({
                                             ...newRequestData,
-                                            tipo_servicio: e.toString(),
+                                            tipo_servicio: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={newRequestData.tipo_servicio}
@@ -684,10 +685,12 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                             <Form.Item label="Lugar servicio">
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewRequestData({
                                             ...newRequestData,
-                                            lugar_servicio: e.toString(),
+                                            lugar_servicio: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={newRequestData.lugar_servicio}
@@ -711,11 +714,10 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                             <Form.Item label="Sucursal">
                                 <Select
                                     style={{ width: '100%' }}
-                                    onChange={() => {}}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewRequestData({
                                             ...newRequestData,
-                                            sucursal: e.toString(),
+                                            sucursal: !!e ? e.toString() : '',
                                         })
                                     }
                                     value={newRequestData.sucursal}
@@ -893,8 +895,9 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                                     onSelect={(e: SelectValue) =>
                                         setNewRequestData({
                                             ...newRequestData,
-                                            id_GI_PersonalAsignado:
-                                                e.toString(),
+                                            id_GI_PersonalAsignado: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     id="error"
@@ -1236,7 +1239,7 @@ const CreateRequestView: React.FunctionComponent<ICreateRequestViewProps> = ({
                                     onSelect={(e: SelectValue) =>
                                         setNewRequestData({
                                             ...newRequestData,
-                                            jornada: e.toString(),
+                                            jornada: !!e ? e.toString() : '',
                                         })
                                     }
                                     value={newRequestData.jornada}

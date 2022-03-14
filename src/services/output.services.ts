@@ -10,7 +10,7 @@ const getAllOutputsService = async (pageNumber: number, nPerPage: number) => {
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -20,7 +20,7 @@ const insertOutputService = async (data: any) => {
     try {
         const response = await httpClient.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -30,7 +30,7 @@ const editOutputService = async (id: string, data: any) => {
     try {
         const response = await httpClient.put(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -40,7 +40,7 @@ const deleteOutputService = async (id: string) => {
     try {
         const response = await httpClient.delete(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -62,7 +62,7 @@ const filterOutputsService = async (
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }

@@ -12,7 +12,6 @@ import {
     Form,
     InputNumber,
     TimePicker,
-    Checkbox,
 } from 'antd'
 import { IAlertMessageContent } from '../../models/index.models'
 
@@ -50,16 +49,16 @@ import { capitalize } from '../../libs/capitalize'
 import { MilesFormat } from '../../libs/formattedPesos'
 import { CalculateIVA } from '../../libs/calculateIVA'
 
-interface IRequestAdminViewProps {
+type IRequestAdminViewProps = {
     authorized: boolean
 }
 
-interface IFilterSelected {
+type IFilterSelected = {
     headerFilter: string
     filter: string
 }
 
-interface ISelectedCategories {
+type ISelectedCategories = {
     level_1: number
     level_2: number
     level_3: number
@@ -380,17 +379,17 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({
                                 <Select
                                     style={{ width: '100%' }}
                                     optionFilterProp="children"
-                                    onSelect={e =>
+                                    onSelect={(e: any) =>
                                         handleSelectCategory(
                                             parseInt(e.toString()),
                                             1
                                         )
                                     }
-                                    filterOption={(input, option) =>
-                                        option?.children
-                                            .toLowerCase()
-                                            .indexOf(input.toLowerCase()) >= 0
-                                    }
+                                    // filterOption={(input, option) =>
+                                    //     option.children
+                                    //         .toLowerCase()
+                                    //         .indexOf(input.toLowerCase()) >= 0
+                                    // }
                                     value={newRequestData.categoria1}
                                     disabled={disabledTextInput}
                                 >
@@ -412,17 +411,18 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({
                                 <Select
                                     style={{ width: '100%' }}
                                     optionFilterProp="children"
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         handleSelectCategory(
-                                            parseInt(e.toString()),
+                                            parseInt(!!e ? e.toString() : ''),
                                             2
                                         )
                                     }
-                                    filterOption={(input, option) =>
-                                        option?.children
-                                            .toLowerCase()
-                                            .indexOf(input.toLowerCase()) >= 0
-                                    }
+                                    // filterOption={(input, option) =>
+                                    //     /* eslint-disable */
+                                    //     option?.children
+                                    //         .toLowerCase()
+                                    //         .indexOf(input.toLowerCase()) >= 0
+                                    // }
                                     value={newRequestData.categoria2}
                                     disabled={disabledTextInput}
                                 >
@@ -445,17 +445,18 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({
                                 <Select
                                     style={{ width: '100%' }}
                                     optionFilterProp="children"
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         handleSelectCategory(
-                                            parseInt(e.toString()),
+                                            parseInt(!!e ? e.toString() : ''),
                                             3
                                         )
                                     }
-                                    filterOption={(input, option) =>
-                                        option?.children
-                                            .toLowerCase()
-                                            .indexOf(input.toLowerCase()) >= 0
-                                    }
+                                    // filterOption={(input, option) =>
+                                    //     /* eslint-disable */
+                                    //     option.children
+                                    //         .toLowerCase()
+                                    //         .indexOf(input.toLowerCase()) >= 0
+                                    // }
                                     value={newRequestData.categoria3}
                                     disabled={disabledTextInput}
                                 >
@@ -482,14 +483,16 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({
                                 <Select
                                     style={{ width: '100%' }}
                                     optionFilterProp="children"
-                                    onSelect={e =>
-                                        handleSelectServiceName(e.toString())
+                                    onSelect={(e: SelectValue) =>
+                                        handleSelectServiceName(
+                                            !!e ? e.toString() : ''
+                                        )
                                     }
-                                    filterOption={(input, option) =>
-                                        option?.children
-                                            .toLowerCase()
-                                            .indexOf(input.toLowerCase()) >= 0
-                                    }
+                                    // filterOption={(input, option) =>
+                                    //     option?.children
+                                    //         .toLowerCase()
+                                    //         .indexOf(input.toLowerCase()) >= 0
+                                    // }
                                     value={newRequestData.nombre_servicio}
                                     disabled={disabledTextInput}
                                 >
@@ -515,10 +518,12 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({
                             <Form.Item label="Tipo servicio">
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewRequestData({
                                             ...newRequestData,
-                                            tipo_servicio: e.toString(),
+                                            tipo_servicio: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={newRequestData.tipo_servicio}
@@ -536,10 +541,12 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({
                             <Form.Item label="Lugar servicio">
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setNewRequestData({
                                             ...newRequestData,
-                                            lugar_servicio: e.toString(),
+                                            lugar_servicio: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     value={newRequestData.lugar_servicio}
@@ -576,8 +583,8 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onChange={() => {}}
-                                    onSelect={e =>
+                                    // onChange={() => {}}
+                                    onSelect={(e: any) =>
                                         setNewRequestData({
                                             ...newRequestData,
                                             sucursal: e.toString(),
@@ -1086,7 +1093,7 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({
                                     onSelect={(e: SelectValue) =>
                                         setNewRequestData({
                                             ...newRequestData,
-                                            jornada: e.toString(),
+                                            jornada: !!e ? e.toString() : '',
                                         })
                                     }
                                     value={newRequestData.jornada}
@@ -1124,18 +1131,6 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({
                             </Form.Item>
                         </Col>
                     </Row>
-                    {/* <br />
-          <Row>
-            <Col span={12}>
-              <Upload.Dragger name="files" action="/upload.do">
-                <p className="ant-upload-drag-icon">
-                  <InboxOutlined />
-                </p>
-                <p className="ant-upload-text">Click o arrastra el archivo para subirlo</p>
-                <p className="ant-upload-hint">10mb max.</p>
-              </Upload.Dragger>
-            </Col>
-          </Row> */}
                 </Form>
             </Input.Group>
         )
@@ -1181,12 +1176,16 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({
                 <Title
                     level={4}
                     style={{ textAlign: 'center', marginTop: '10px' }}
-                >{`Administración de Solicitudes`}</Title>
+                >
+                    {'Administración de Solicitudes'}
+                </Title>
                 <br />
                 <Title
                     level={5}
                     style={{ textAlign: 'left', marginTop: '10px' }}
-                >{`Busqueda por Código de Solicitud`}</Title>
+                >
+                    {'Busqueda por Código de Solicitud'}
+                </Title>
                 <Search
                     placeholder="Ingrese el código de la solicitud..."
                     enterButton="Buscar"

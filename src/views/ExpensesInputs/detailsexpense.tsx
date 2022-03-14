@@ -8,7 +8,7 @@ import AlertComponent from '../../component/Alert/Alert'
 import { ExpensesModel } from '../../models/expenses.models'
 import { MilesFormat } from '../../libs/formattedPesos'
 
-interface IExpensesProps {
+type IExpensesProps = {
     onCloseModal: (value: string, message: string) => string | void
     expenseSelected: ExpensesModel | undefined
 }

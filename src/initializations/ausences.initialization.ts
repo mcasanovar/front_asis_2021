@@ -12,6 +12,6 @@ export const ausencesInitialization = {
     mes_ausencia: '',
     anio_ausencia: '',
     cantidad_dias: 0,
-    fechas: [],
+    fechas: [''],
     archivo_adjunto: '',
 }

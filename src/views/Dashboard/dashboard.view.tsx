@@ -21,7 +21,7 @@ import { getAllReportsServices } from '../../services/dashboard.services'
 import SubBarComponent from '../../component/Subbar/SubBar'
 import ChartComponent from '../../component/Charts/Chart'
 import SkeletonComponent from '../../component/Skeleton/skeleton'
-import { IAlertMessageContent, ICountries } from '../../models/index.models'
+import { IAlertMessageContent } from '../../models/index.models'
 import AlertComponent from '../../component/Alert/Alert'
 
 import { YEARS_CHARTS } from '../../constants/var'
@@ -57,7 +57,7 @@ const styleCol: CSS.Properties = {
     padding: '0.8rem',
 }
 
-interface IDashboardScreenProps {
+type IDashboardScreenProps = {
     authorized: boolean
 }
 
@@ -114,8 +114,8 @@ const DashboardScreen: React.FunctionComponent<IDashboardScreenProps> = ({
     }
 
     const calculateAcumulate = () => {
-        let auxProduction: IProduction[] = []
-        let auxCashFlow: ICashFlow[] = []
+        const auxProduction: IProduction[] = []
+        const auxCashFlow: ICashFlow[] = []
 
         dataDashboard?.production.forEach(productionData => {
             const acumArray: number[] = calculateAcumulateArray(

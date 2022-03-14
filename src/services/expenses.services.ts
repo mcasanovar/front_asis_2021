@@ -10,7 +10,7 @@ const getAllExpensesService = async (pageNumber: number, nPerPage: number) => {
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -20,7 +20,7 @@ const insertExpenseService = async (data: FormData) => {
     try {
         const response = await httpClientFormData.post(extension, data)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -30,7 +30,7 @@ const downloadFileExpenseService = async (id: string) => {
     try {
         const response = await httpClient.get(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -52,7 +52,7 @@ const filterExpensesService = async (
             nPerPage,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -62,7 +62,7 @@ const insertEntriesService = async (idExpense: string, entries: IEntries[]) => {
     try {
         const response = await httpClient.post(extension, entries)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -80,7 +80,7 @@ const getExpenseByCategory = async (
             subcategorytwo,
         })
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }
@@ -90,7 +90,7 @@ const deleteExpenseService = async (id: string) => {
     try {
         const response = await httpClient.delete(extension)
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         return error.response.data
     }
 }

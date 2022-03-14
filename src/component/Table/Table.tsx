@@ -36,7 +36,7 @@ import { OutputModel } from '../../models/outputs.models'
 import { ExistenceModel } from '../../models/existence.models'
 import { PERMISSIONS } from '../../constants/var'
 
-interface ITableComponentProps {
+type ITableComponentProps = {
     data?:
         | GiModel[]
         | RequestModel[]
@@ -55,7 +55,7 @@ interface ITableComponentProps {
         id: string,
         _id?: string
     ) => (string | void) | (string | undefined)
-    onClickDelete: (id: string, _id: string) => string | void
+    onClickDelete?: (id: string, _id: string) => string | void
     loading?: boolean
     headerWithColor?: boolean
     enableRowSelection?: boolean
@@ -142,11 +142,11 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
         useState<ITableDeleteObject>({ _id: '', show: false })
     const [selectionType] = useState<'checkbox' | 'radio'>('checkbox')
 
-    const handleShowPermission = (selectedPermission: string) => {
-        if (!userPermissions.length || !selectedPermission) return false
-        if (userPermissions.indexOf(selectedPermission) > -1) return true
-        return false
-    }
+    // const handleShowPermission = (selectedPermission: string) => {
+    //     if (!userPermissions.length || !selectedPermission) return false
+    //     if (userPermissions.indexOf(selectedPermission) > -1) return true
+    //     return false
+    // }
 
     const handleShowDeletePermission = (type: string) => {
         switch (type) {
@@ -548,7 +548,7 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
             dataIndex: 'actions',
             key: 'actions',
             className: headerWithColor ? 'column-money' : '',
-            render: (text: string, record: any, index: any) => (
+            render: (text: string, record: any) => (
                 <>
                     {userPermissions.indexOf(PERMISSIONS.CONFIGURATION_GI) >
                         -1 &&
@@ -644,9 +644,10 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                                         backgroundColor: '#E6100D',
                                         color: 'white',
                                     }}
-                                    onClick={() =>
-                                        onClickDelete('nullify', record._id)
-                                    }
+                                    onClick={() => {
+                                        if (onClickDelete)
+                                            onClickDelete('nullify', record._id)
+                                    }}
                                 >
                                     Confirmar anulación
                                 </Button>
@@ -1225,9 +1226,10 @@ const TableComponent: React.FunctionComponent<ITableComponentProps> = ({
                                         backgroundColor: '#E6100D',
                                         color: 'white',
                                     }}
-                                    onClick={() =>
-                                        onClickDelete('delete', record._id)
-                                    }
+                                    onClick={() => {
+                                        if (onClickDelete)
+                                            onClickDelete('delete', record._id)
+                                    }}
                                 >
                                     Confirmar eliminación
                                 </Button>

@@ -19,19 +19,14 @@ import {
     IEntries,
     IResponseExpenses,
 } from '../../models/expenses.models'
-import {
-    editOutputService,
-    getExpenseByCategory,
-    insertOutputService,
-} from '../../services'
+import { editOutputService, getExpenseByCategory } from '../../services'
 import { IAlertMessageContent } from '../../models/index.models'
 
 import AlertComponent from '../../component/Alert/Alert'
 import moment, { Moment } from 'moment'
-import { parse } from 'node:path'
-import { MapOutputToInsert } from '../../functions/mappers'
+import { SelectValue } from 'antd/lib/select'
 
-interface IEditOuputViewProps {
+type IEditOuputViewProps = {
     outputSelected: OutputModel
     onCloseModal: (value: string, message: string) => string | void
 }
@@ -216,10 +211,10 @@ const EditOuputView: React.FunctionComponent<IEditOuputViewProps> = ({
                         >
                             <Select
                                 style={{ width: '100%' }}
-                                onSelect={e =>
+                                onSelect={(e: SelectValue) =>
                                     setNewDataOutput({
                                         ...newDataOutput,
-                                        tipo_salida: e.toString(),
+                                        tipo_salida: !!e ? e.toString() : '',
                                     })
                                 }
                                 value={newDataOutput.tipo_salida}
@@ -265,9 +260,9 @@ const EditOuputView: React.FunctionComponent<IEditOuputViewProps> = ({
                         >
                             <Select
                                 style={{ width: '100%' }}
-                                onSelect={e =>
+                                onSelect={(e: SelectValue) =>
                                     handleSelectedMainCategory(
-                                        parseInt(e.toString())
+                                        parseInt(!!e ? e.toString() : '')
                                     )
                                 }
                                 value={newDataOutput.categoria_general}
@@ -296,9 +291,9 @@ const EditOuputView: React.FunctionComponent<IEditOuputViewProps> = ({
                         >
                             <Select
                                 style={{ width: '100%' }}
-                                onSelect={e =>
+                                onSelect={(e: SelectValue) =>
                                     handleSelectedSubcagoryOne(
-                                        parseInt(e.toString())
+                                        parseInt(!!e ? e.toString() : '')
                                     )
                                 }
                                 value={newDataOutput.subcategoria_uno}
@@ -330,9 +325,9 @@ const EditOuputView: React.FunctionComponent<IEditOuputViewProps> = ({
                         >
                             <Select
                                 style={{ width: '100%' }}
-                                onSelect={e =>
+                                onSelect={(e: SelectValue) =>
                                     handleSelectedSubcagoryTwo(
-                                        parseInt(e.toString())
+                                        parseInt(!!e ? e.toString() : '')
                                     )
                                 }
                                 value={newDataOutput.subcategoria_dos}
@@ -369,9 +364,9 @@ const EditOuputView: React.FunctionComponent<IEditOuputViewProps> = ({
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         handleSelectedSubcategoryThree(
-                                            parseInt(e.toString())
+                                            parseInt(!!e ? e.toString() : '')
                                         )
                                     }
                                     value={`${newDataOutput.codigo} - ${newDataOutput.subcategoria_tres}`}

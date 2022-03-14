@@ -11,7 +11,6 @@ import {
     Spin,
     Button,
 } from 'antd'
-import { InboxOutlined } from '@ant-design/icons'
 
 import AlertComponent from '../../component/Alert/Alert'
 
@@ -33,7 +32,7 @@ import { getWorkersGIService } from '../../services'
 import { SelectValue } from 'antd/lib/select'
 import { MapGroupReservationsToConfirm } from '../../functions/mappers'
 
-interface IGroupConfirmReservationViewProps {
+type IGroupConfirmReservationViewProps = {
     onCloseModal: (value: string, message: string) => string | void
 }
 
@@ -67,7 +66,7 @@ const GroupConfirmReservationView: React.FunctionComponent<
 
     const handleGroupConfirmReservations = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         const dataMapped = MapGroupReservationsToConfirm(
             dataConfirmation,
             selectedReservation
@@ -262,8 +261,9 @@ const GroupConfirmReservationView: React.FunctionComponent<
                                     onSelect={(e: SelectValue) =>
                                         setDataConfirmation({
                                             ...dataConfirmation,
-                                            id_GI_personalAsignado:
-                                                e.toString(),
+                                            id_GI_personalAsignado: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     id="error"
@@ -299,10 +299,10 @@ const GroupConfirmReservationView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setDataConfirmation({
                                             ...dataConfirmation,
-                                            sucursal: e.toString(),
+                                            sucursal: !!e ? e.toString() : '',
                                         })
                                     }
                                     value={dataConfirmation.sucursal}
@@ -331,10 +331,12 @@ const GroupConfirmReservationView: React.FunctionComponent<
                             >
                                 <Select
                                     style={{ width: '100%' }}
-                                    onSelect={e =>
+                                    onSelect={(e: SelectValue) =>
                                         setDataConfirmation({
                                             ...dataConfirmation,
-                                            reqEvaluacion: e.toString(),
+                                            reqEvaluacion: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                 >

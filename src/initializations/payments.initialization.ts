@@ -23,7 +23,22 @@ export const PaymentInitialization = {
     valor_cancelado: 0,
     valor_cancelado_string: '',
     fecha_pago: '',
-    pagos: [],
+    pagos: [
+        {
+            id: '',
+            fecha_pago: '',
+            hora_pago: '',
+            sucursal: '',
+            tipo_pago: '',
+            monto: 0,
+            descuento: 0,
+            total: 0,
+            observaciones: '',
+            institucion_bancaria: '',
+            archivo_pago: '',
+            isActive: true,
+        },
+    ],
     isActive: true,
 }
 

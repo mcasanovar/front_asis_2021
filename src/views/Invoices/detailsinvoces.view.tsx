@@ -24,7 +24,7 @@ import { IAlertMessageContent } from '../../models/index.models'
 import AlertComponent from '../../component/Alert/Alert'
 import { MilesFormat } from '../../libs/formattedPesos'
 
-interface IDetailsInvoicesViewProps {
+type IDetailsInvoicesViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     onDownloadOC: () => void
     company: ICompanyInfo | undefined

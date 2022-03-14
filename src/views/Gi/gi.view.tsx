@@ -32,11 +32,11 @@ import DetailsGIView from './detailsgi.view'
 import ConfigurationView from './configurationGi.view'
 import { getUserFromLocalStorage } from '../../functions/getLocalStorage'
 
-interface IGiViewProps {
+type IGiViewProps = {
     authorized: boolean
 }
 
-interface IFilterSelected {
+type IFilterSelected = {
     headerFilter: number
     filter: string
 }
@@ -157,7 +157,7 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
     }
 
     async function filterGIs(
-        pageNumber: number = 1,
+        pageNumber = 1,
         option: number = optionFilter,
         textFilter: string = filterText
     ) {
@@ -295,8 +295,6 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
                 subtitle="Tabla de información"
                 buttons={buttons}
                 onClick={button => handleClickButton(button)}
-                onClickGrupal={() => {}}
-                onClickDateFilter={() => {}}
                 dataFilter={FILTERS_GI}
                 filterText={filterText}
                 setFilterText={setFilterText}
@@ -334,10 +332,6 @@ const GiView: React.FunctionComponent<IGiViewProps> = ({ authorized }) => {
                 title={ActualModal.title}
                 width={ActualModal.widthModal || 500}
                 onClose={() => setOpenModal(false)}
-                onClickConfirm={() => {}}
-                showButtons={ActualModal.showButtons || []}
-                disabledCancel={disabledCancel}
-                disabledConfirm={disabledConfirm}
             >
                 {ActualModal._id === 'newgi' && (
                     <CreateEditGiView

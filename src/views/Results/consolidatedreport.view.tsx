@@ -16,28 +16,22 @@ import {
 import { IAlertMessageContent } from '../../models/index.models'
 import AlertComponent from '../../component/Alert/Alert'
 import { SelectValue } from 'antd/lib/select'
-import { GiModel, IResponseGI, IContract, IFaena } from '../../models/gi.models'
+import { GiModel, IResponseGI, IContract } from '../../models/gi.models'
 import {
     generateConsolidatedReportResultsService,
-    generateConsolidatedReportService,
     getCompanyGIService,
-    getRequestsPaymentByRutGIService,
     getResultsByRutGIService,
 } from '../../services'
 import { MilesFormat } from '../../libs/formattedPesos'
-import {
-    IResponseRequestPayment,
-    RequestPaymentModel,
-} from '../../models/requestpayment.models'
-import moment, { Moment } from 'moment'
+import { IResponseRequestPayment } from '../../models/requestpayment.models'
+import moment from 'moment'
 import { FORMAT_DATE } from '../../constants/var'
-import { parse } from 'node:url'
 import { MapDataResultToConsolidatedReport } from '../../functions/mappers/result.mappers'
 import { validateEmail } from '../../functions/validators/index.validators'
 import { IResponseResults, ResultModel } from '../../models/results.model'
 import sortingObjects from '../../functions/sortingObjects'
 
-interface IConsolidatedReportViewProps {
+type IConsolidatedReportViewProps = {
     onCloseModal: (value: string, message: string) => string | void
 }
 
@@ -163,7 +157,7 @@ const ConsolidatedReportView: React.FunctionComponent<
             })
 
             //agregar los extremos de las fechas
-            let aux = results?.filter(
+            const aux = results?.filter(
                 element =>
                     element.fecha_resultado ===
                         moment(dateValueRange[0]).format(FORMAT_DATE) ||
@@ -176,9 +170,9 @@ const ConsolidatedReportView: React.FunctionComponent<
             }
 
             //eliminar cualquier repetido posible
-            let hash: any = {}
+            const hash: any = {}
             result = result?.filter(function (current) {
-                var exists = !hash[current.codigo]
+                const exists = !hash[current.codigo]
                 hash[current.codigo] = true
                 return exists
             })
@@ -312,7 +306,7 @@ const ConsolidatedReportView: React.FunctionComponent<
                                 style={{ width: '50%' }}
                                 onSelect={(e: SelectValue) => {
                                     setFaenaSelected(null)
-                                    handleGetFaenas(e.toString())
+                                    handleGetFaenas(!!e ? e.toString() : '')
                                 }}
                                 placeholder="Contrato"
                                 disabled={!showContractFilter}
@@ -333,7 +327,7 @@ const ConsolidatedReportView: React.FunctionComponent<
                             <Select
                                 style={{ width: '40%' }}
                                 onSelect={(e: SelectValue) =>
-                                    setFaenaSelected(e.toString())
+                                    setFaenaSelected(!!e ? e.toString() : '')
                                 }
                                 placeholder="Faena"
                                 disabled={!showContractFilter}
@@ -367,7 +361,7 @@ const ConsolidatedReportView: React.FunctionComponent<
                             <Select
                                 style={{ width: '90%' }}
                                 onSelect={(e: SelectValue) =>
-                                    setServiceSelected(e.toString())
+                                    setServiceSelected(!!e ? e.toString() : '')
                                 }
                                 placeholder="Nombre Servicio"
                                 disabled={!showServiceNameFilter}
@@ -535,14 +529,17 @@ const ConsolidatedReportView: React.FunctionComponent<
                                 <Select
                                     showSearch
                                     optionFilterProp="children"
-                                    filterOption={(input, optionOrgPert) =>
-                                        optionOrgPert?.children
+                                    filterOption={(input, optionOrgPert: any) =>
+                                        /* eslint-disable */
+                                        optionOrgPert.children
                                             .toLowerCase()
                                             .indexOf(input.toLowerCase()) >= 0
                                     }
                                     style={{ width: '100%' }}
                                     onSelect={(e: SelectValue) =>
-                                        handleGetCompanySelected(e.toString())
+                                        handleGetCompanySelected(
+                                            !!e ? e.toString() : ''
+                                        )
                                     }
                                 >
                                     {!!companies &&

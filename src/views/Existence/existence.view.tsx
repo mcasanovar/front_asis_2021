@@ -26,11 +26,11 @@ import { MilesFormat } from '../../libs/formattedPesos'
 import PaginationComponent from '../../component/Pagination/Pagination'
 import { getUserFromLocalStorage } from '../../functions/getLocalStorage'
 
-interface IExistenceViewProps {
+type IExistenceViewProps = {
     authorized: boolean
 }
 
-interface IFilterSelected {
+type IFilterSelected = {
     headerFilter: string
     filter: string
 }
@@ -145,7 +145,7 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({
     async function filterExistences(
         date: string,
         headFilter: string,
-        pageNumber: number = 1
+        pageNumber = 1
     ) {
         const aux: IResponseAllExistence = await filterExistencesService(
             2,
@@ -228,8 +228,6 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({
                 buttons={buttons}
                 dataFilter={FILTERS_EXISTENCE}
                 onClick={button => handleClickButton(button)}
-                onClickGrupal={() => {}}
-                onClickDateFilter={() => {}}
                 filterText={filterText}
                 setFilterText={setFilterText}
                 onClickSearch={() => handleClickSearch()}
@@ -240,7 +238,6 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({
                 onClickAction={(id: string, _id?: string) =>
                     handleCLickActionTable(id, _id)
                 }
-                onClickDelete={() => {}}
                 loading={loading}
                 data={handleTransformValues(existences)}
                 columns={EXISTENCE_COLUMNS_TABLE}
@@ -264,8 +261,6 @@ const ExistenceView: React.FunctionComponent<IExistenceViewProps> = ({
                     title={ActualModal.title}
                     width={ActualModal.widthModal || 500}
                     onClose={() => setOpenModal(false)}
-                    onClickConfirm={id => {}}
-                    showButtons={[]}
                 >
                     {ActualModal._id === 'details' && (
                         <DetailsExistenceView

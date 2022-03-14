@@ -8,7 +8,7 @@ import { validateEmail } from '../../functions/validators/index.validators'
 import { IResponseRequest } from '../../models/request.models'
 import { consolidateResquestService } from '../../services'
 
-interface IConsolidateRequestsViewProps {
+type IConsolidateRequestsViewProps = {
     onCloseModal: (value: string, message: string) => string | void
 }
 
@@ -116,7 +116,7 @@ const ConsolidateRequestsView: React.FunctionComponent<
                                 <Select
                                     style={{ width: '100%' }}
                                     onSelect={(e: SelectValue) =>
-                                        setmonth(e.toString())
+                                        setmonth(!!e ? e.toString() : '')
                                     }
                                 >
                                     {MONTHS.map((month, index) => (
@@ -136,7 +136,7 @@ const ConsolidateRequestsView: React.FunctionComponent<
                                 <Select
                                     style={{ width: '100%' }}
                                     onSelect={(e: SelectValue) =>
-                                        setyear(e.toString())
+                                        setyear(!!e ? e.toString() : '')
                                     }
                                 >
                                     {YEARS_CHARTS.map((year, index) => (

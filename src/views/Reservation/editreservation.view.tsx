@@ -31,7 +31,7 @@ import { FORMAT_DATE } from '../../constants/var'
 import moment, { Moment } from 'moment'
 import { MapReservation } from '../../functions/mappers'
 
-interface IEditReservationViewProps {
+type IEditReservationViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     _id?: string
 }
@@ -57,7 +57,7 @@ const EditReservationView: React.FunctionComponent<
 
     const handleSaveRequest = async () => {
         setLoading(true)
-        let formData = new FormData()
+        const formData = new FormData()
         const requestToInsert = MapReservation(
             newReservationData,
             reservationObs,
@@ -160,8 +160,9 @@ const EditReservationView: React.FunctionComponent<
                                     onSelect={(e: SelectValue) =>
                                         setNewReservationData({
                                             ...newReservationData,
-                                            id_GI_personalAsignado:
-                                                e.toString(),
+                                            id_GI_personalAsignado: !!e
+                                                ? e.toString()
+                                                : '',
                                         })
                                     }
                                     id="error"

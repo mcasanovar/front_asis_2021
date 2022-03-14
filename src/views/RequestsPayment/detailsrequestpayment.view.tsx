@@ -7,7 +7,7 @@ import AlertComponent from '../../component/Alert/Alert'
 import { RequestPaymentModel } from '../../models/requestpayment.models'
 import { MilesFormat } from '../../libs/formattedPesos'
 
-interface IDetailsRequestPaymentViewProps {
+type IDetailsRequestPaymentViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     requestpaymentSelected: RequestPaymentModel | undefined
 }

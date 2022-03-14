@@ -34,8 +34,9 @@ import moment, { Moment } from 'moment'
 import { IResponseResults, ResultModel } from '../../../models/results.model'
 import getFilteredInvoicesByResults from '../../../functions/getFilteredInvoicesByResults'
 import sortingObjects from '../../../functions/sortingObjects'
+import { SelectValue } from 'antd/lib/select'
 
-interface IConfirmGroupOCViewProps {
+type IConfirmGroupOCViewProps = {
     onCloseModal: (value: string, message: string) => string | void
 }
 
@@ -93,7 +94,7 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
     }
 
     const handleSearchInput = () => {
-        let aux: InvoicesModel[] | undefined = invoices?.filter(
+        const aux: InvoicesModel[] | undefined = invoices?.filter(
             invoice => invoice.rut_cp === rutSearchInput
         )
 
@@ -165,8 +166,15 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
             }
         })
 
-        let invoicesRes = getFilteredInvoicesByResults(aux.res, invoices || [])
-        let invoicesResFiltered = sortingObjects(invoicesRes, 'codigo', 'desc')
+        const invoicesRes = getFilteredInvoicesByResults(
+            aux.res,
+            invoices || []
+        )
+        const invoicesResFiltered = sortingObjects(
+            invoicesRes,
+            'codigo',
+            'desc'
+        )
 
         if (!checkRutFilter) {
             setInvoicesFiltered(invoicesResFiltered)
@@ -275,10 +283,10 @@ const ConfirmGroupOCView: React.FunctionComponent<IConfirmGroupOCViewProps> = ({
                         >
                             <Select
                                 style={{ width: '100%' }}
-                                onSelect={e =>
+                                onSelect={(e: SelectValue) =>
                                     setDataConfirmation({
                                         ...dataConfirmation,
-                                        estado_archivo: e.toString(),
+                                        estado_archivo: !!e ? e.toString() : '',
                                     })
                                 }
                             >

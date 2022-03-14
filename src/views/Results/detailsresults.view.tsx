@@ -22,7 +22,7 @@ import { getOneResultService } from '../../services'
 
 import AlertComponent from '../../component/Alert/Alert'
 
-interface IDetailsResultViewProps {
+type IDetailsResultViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     _id?: string
 }

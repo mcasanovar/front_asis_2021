@@ -22,9 +22,8 @@ import { ResultsInitalization } from '../../initializations/results.initializati
 import { FORMAT_DATE } from '../../constants/var'
 import { confirmResultService } from '../../services'
 import moment from 'moment'
-import { date } from 'faker'
 
-interface IConfirmResultViewProps {
+type IConfirmResultViewProps = {
     onCloseModal: (value: string, message: string) => string | void
     resultSelected?: ResultModel | undefined
 }
@@ -114,7 +113,7 @@ const ConfirmResultView: React.FunctionComponent<IConfirmResultViewProps> = ({
                                         <Form.Item label="Estado archivo">
                                             <Select
                                                 style={{ width: '100%' }}
-                                                onSelect={e =>
+                                                onSelect={(e: any) =>
                                                     setNewDataResult({
                                                         ...newDataResult,
                                                         estado_archivo:
@@ -152,7 +151,7 @@ const ConfirmResultView: React.FunctionComponent<IConfirmResultViewProps> = ({
                                             >
                                                 <Select
                                                     style={{ width: '100%' }}
-                                                    onSelect={e =>
+                                                    onSelect={(e: any) =>
                                                         setNewDataResult({
                                                             ...newDataResult,
                                                             estado_resultado:
@@ -196,7 +195,7 @@ const ConfirmResultView: React.FunctionComponent<IConfirmResultViewProps> = ({
                                             >
                                                 <Select
                                                     style={{ width: '100%' }}
-                                                    onSelect={e =>
+                                                    onSelect={(e: any) =>
                                                         setNewDataResult({
                                                             ...newDataResult,
                                                             vigencia_examen:
