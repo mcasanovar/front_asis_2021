@@ -189,10 +189,10 @@ const InvoiceAdminView: React.FunctionComponent<InvoiceAdminProps> = ({}) => {
                     level={5}
                     style={{ textAlign: 'left', marginTop: '10px' }}
                 >
-                    {'Busqueda por Código del proceso de facturación'}
+                    {'Busqueda por Código del Proceso de Facturación'}
                 </Title>
                 <Search
-                    placeholder="Ingrese el código del proceso de facturación..."
+                    placeholder="Ingrese Código del Proceso de Facturación..."
                     enterButton="Buscar"
                     size="middle"
                     loading={false}
