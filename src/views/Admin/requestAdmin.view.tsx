@@ -1194,7 +1194,6 @@ const ResquestAdminView: React.FunctionComponent<IRequestAdminViewProps> = ({
                     style={{ width: '100%', height: '2rem', marginLeft: 0 }}
                     onChange={e => setCodeRequest(e.currentTarget.value)}
                     onSearch={() => handleGetRequest()}
-                    // value={filterText}
                 />
                 <br />
                 <br />

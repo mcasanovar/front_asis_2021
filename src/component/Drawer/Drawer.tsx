@@ -203,6 +203,14 @@ const DrawerComponent: React.FunctionComponent<IDrawerComponentProps> = () => {
                                 Solicitudes
                             </Link>
                         </Menu.Item>
+                        <Menu.Item key="adminFacturaciones">
+                            <Link
+                                to="/admin/facturaciones"
+                                style={{ ...styleText }}
+                            >
+                                Facturaciones
+                            </Link>
+                        </Menu.Item>
                     </SubMenu>
                 )}
         </Menu>

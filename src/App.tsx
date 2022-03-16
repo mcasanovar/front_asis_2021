@@ -21,6 +21,7 @@ import CalendarView from './views/Calendar/calendar.view'
 import NotFoundView from './views/NotFound/notfound.view'
 //admin views
 import RequestAdminView from './views/Admin/requestAdmin.view'
+import InvoiceAdminView from './views/Admin/invoiceAdmin.view'
 
 import LoginView from './views/Login/Login'
 
@@ -449,6 +450,31 @@ function App(): JSX.Element {
                                     path="/admin/solicitudes"
                                     component={() => (
                                         <RequestAdminView
+                                            authorized={
+                                                localStorage.getItem(
+                                                    'authorizated'
+                                                ) !== null
+                                                    ? authorized
+                                                    : false
+                                            }
+                                        />
+                                    )}
+                                />
+                            ) : (
+                                <Route
+                                    exact
+                                    path="/"
+                                    component={() => <NotFoundView />}
+                                />
+                            )}
+                            {!!roles &&
+                            roles.permisos.indexOf(MODULES_PERMISSION.M_ADMIN) >
+                                -1 ? (
+                                <Route
+                                    exact
+                                    path="/admin/facturaciones"
+                                    component={() => (
+                                        <InvoiceAdminView
                                             authorized={
                                                 localStorage.getItem(
                                                     'authorizated'
