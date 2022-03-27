@@ -1,31 +1,31 @@
-export interface IProduction {
+export type IProduction = {
     type: string
     data: number[]
 }
 
-export interface ICashFlow {
+export type ICashFlow = {
     type: string
     data: number[]
 }
 
-interface IRankingInvoices {
+type IRankingInvoices = {
     rut: string
     name: string
     quantity: number
 }
 
-interface IRankingPayment {
+type IRankingPayment = {
     rut: string
     name: string
     quantity: number
 }
 
-interface IResponseTypeData {
+type IResponseTypeData = {
     type: string[]
     data: number[]
 }
 
-interface ITotalCategories {
+type ITotalCategories = {
     category1: IResponseTypeData
     category3: IResponseTypeData
     services: IResponseTypeData
@@ -34,7 +34,7 @@ interface ITotalCategories {
     workplaces: IResponseTypeData
 }
 
-export interface IResportsResponse {
+export type IResportsResponse = {
     activeGIs: number
     countRequests: number
     countResults: number
@@ -47,7 +47,7 @@ export interface IResportsResponse {
     categories: ITotalCategories
 }
 
-export interface IResponseDashboard {
+export type IResponseDashboard = {
     err: any
     msg: string
     res: IResportsResponse

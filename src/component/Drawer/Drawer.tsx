@@ -30,7 +30,7 @@ const DrawerComponent: React.FunctionComponent<IDrawerComponentProps> = () => {
             mode="inline"
             theme="dark"
             inlineCollapsed={true}
-            style={{ height: 'auto', width: 130 }}
+            style={{ height: '100vh', width: 130 }}
             // onClick={() => {}}
         >
             {!!roles &&
@@ -209,6 +209,11 @@ const DrawerComponent: React.FunctionComponent<IDrawerComponentProps> = () => {
                                 style={{ ...styleText }}
                             >
                                 Facturaciones
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="adminPermisos">
+                            <Link to="/admin/permisos" style={{ ...styleText }}>
+                                Permisos
                             </Link>
                         </Menu.Item>
                     </SubMenu>

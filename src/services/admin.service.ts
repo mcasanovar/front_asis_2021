@@ -41,9 +41,20 @@ const getInvoiceByCode = async (code: string) => {
     }
 }
 
+const getPermissionsAdmin = async () => {
+    const extension = `${PREFIX_ADMIN}/permisos`
+    try {
+        const response = await httpClient.get(extension)
+        return response.data
+    } catch (error: any) {
+        return error.response.data
+    }
+}
+
 export {
     getRequestsByCode,
     updateRequestAdmin,
     getInvoiceByCode,
     updateInvoiceAdmin,
+    getPermissionsAdmin,
 }

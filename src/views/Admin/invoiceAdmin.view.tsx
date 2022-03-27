@@ -166,8 +166,6 @@ const InvoiceAdminView: React.FunctionComponent<InvoiceAdminProps> = ({}) => {
         }
     }, [messageAlert])
 
-    console.log(newInvoiceData)
-
     return (
         <div className="container-gi">
             <SubBarComponent title="Facturaciones" />
