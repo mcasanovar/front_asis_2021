@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import SubBarComponent from '../../component/Subbar/SubBar'
 import { IAlertMessageContent } from '../../models/index.models'
-import { Spin, Typography, Collapse, Row, Col, Switch } from 'antd'
+import { Spin, Typography, Collapse, Row, Col, Switch, Button } from 'antd'
 
 import AlertComponent from '../../component/Alert/Alert'
-import { getPermissionsAdmin } from '../../services'
+import { getPermissionsAdmin, updatePermissionsAdmin } from '../../services'
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons'
 
 type PermissionsAdminProps = {
     authorized: boolean
+}
+
+type ObjectModuleType = {
+    [key: string]: number
+}
+
+type PermissionsType = {
+    [key: string]: ObjectModuleType
 }
 
 const PermissionsView: React.FunctionComponent<
@@ -23,7 +31,7 @@ const PermissionsView: React.FunctionComponent<
         type: 'success',
         show: false,
     })
-    const [permissions, setPermissions] = useState({})
+    const [permissions, setPermissions] = useState<any>({})
 
     async function handleGetPermissions() {
         setLoading(true)
@@ -42,8 +50,43 @@ const PermissionsView: React.FunctionComponent<
         setLoading(false)
     }
 
+    async function handleUpdatePermissions() {
+        setLoading(true)
+        const aux = await updatePermissionsAdmin(permissions)
+
+        if (aux.err !== null) {
+            setLoading(false)
+            setMessageAlert({ message: aux.err, type: 'error', show: true })
+            return
+        }
+
+        setLoading(false)
+        setMessageAlert({ message: aux.msg, type: 'success', show: true })
+    }
+
+    const handleChangeModule = (
+        value: boolean,
+        moduleName: string,
+        module: string
+    ) => {
+        const aux = { ...permissions }
+        aux[module][moduleName] = Number(value)
+        setPermissions({ ...aux })
+    }
+
+    const handleActionsModule = (
+        value: boolean,
+        module: string,
+        actionSelected: string
+    ) => {
+        console.log([module, actionSelected, value])
+        const aux = { ...permissions }
+        aux[module].acciones[actionSelected] = Number(value)
+        setPermissions({ ...aux })
+    }
+
     // ----------------------------------- RENDERS
-    const renderModulePermissions = (module: any) => {
+    const renderModulePermissions = (module: any, moduleName: string) => {
         const { acciones: actions } = module
 
         return (
@@ -76,6 +119,13 @@ const PermissionsView: React.FunctionComponent<
                                             checkedChildren={<CheckOutlined />}
                                             unCheckedChildren={
                                                 <CloseOutlined />
+                                            }
+                                            onChange={value =>
+                                                handleChangeModule(
+                                                    value,
+                                                    item[0],
+                                                    moduleName
+                                                )
                                             }
                                         />
                                     </div>
@@ -110,6 +160,13 @@ const PermissionsView: React.FunctionComponent<
                                 <Switch
                                     defaultChecked
                                     checked={Boolean(action[1])}
+                                    onChange={value =>
+                                        handleActionsModule(
+                                            value,
+                                            moduleName,
+                                            action[0]
+                                        )
+                                    }
                                     checkedChildren={<CheckOutlined />}
                                     unCheckedChildren={<CloseOutlined />}
                                 />
@@ -152,6 +209,32 @@ const PermissionsView: React.FunctionComponent<
                     >
                         {'Permisos Administrativos'}
                     </Title>
+                    <Row
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            height: '50px',
+                        }}
+                    >
+                        <Col>
+                            <Button
+                                onClick={() => handleUpdatePermissions()}
+                                // disabled={disabledConfirm}
+                                style={{
+                                    backgroundColor: 'green',
+                                    borderColor: 'green',
+                                    color: 'white',
+                                    width: '200px',
+                                    height: '100%',
+                                    fontSize: '1rem',
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                Guardar
+                            </Button>
+                        </Col>
+                    </Row>
                     <br />
                     <br />
                     <Collapse
@@ -163,7 +246,7 @@ const PermissionsView: React.FunctionComponent<
                     >
                         {Object.entries(permissions).map((module, index) => (
                             <Panel header={module[0].toUpperCase()} key={index}>
-                                {renderModulePermissions(module[1])}
+                                {renderModulePermissions(module[1], module[0])}
                             </Panel>
                         ))}
                     </Collapse>

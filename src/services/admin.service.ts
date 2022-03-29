@@ -51,10 +51,22 @@ const getPermissionsAdmin = async () => {
     }
 }
 
+const updatePermissionsAdmin = async (permissions: any) => {
+    const extension = `${PREFIX_ADMIN}/permisos`
+    try {
+        console.log(permissions)
+        const response = await httpClient.put(extension, permissions)
+        return response.data
+    } catch (error: any) {
+        return error.response.data
+    }
+}
+
 export {
     getRequestsByCode,
     updateRequestAdmin,
     getInvoiceByCode,
     updateInvoiceAdmin,
     getPermissionsAdmin,
+    updatePermissionsAdmin,
 }
