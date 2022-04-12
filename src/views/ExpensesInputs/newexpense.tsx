@@ -109,6 +109,7 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
     }
 
     const handleSelectedSubcagoryOne = (index: number) => {
+        console.log('SELECCIONADO', index)
         setIndexsubtwo(index)
         setIndexsubthree(-1)
         setNewDataExpense({
@@ -215,7 +216,7 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
                                     style={{ width: '100%' }}
                                     onSelect={(e: SelectValue) =>
                                         handleSelectedMainCategory(
-                                            parseInt(!!e ? e.toString() : '')
+                                            parseInt(e.toString())
                                         )
                                     }
                                 >
@@ -247,7 +248,7 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
                                     style={{ width: '100%' }}
                                     onSelect={(e: SelectValue) =>
                                         handleSelectedSubcagoryOne(
-                                            parseInt(!!e ? e.toString() : '')
+                                            parseInt(e.toString())
                                         )
                                     }
                                     value={newDataExpense.subcategoria_uno}
@@ -286,7 +287,7 @@ const ExpensesView: React.FunctionComponent<IExpensesProps> = ({
                                     style={{ width: '100%' }}
                                     onSelect={(e: SelectValue) =>
                                         handleSelectedSubcagoryTwo(
-                                            parseInt(!!e ? e.toString() : '')
+                                            parseInt(e.toString())
                                         )
                                     }
                                     value={newDataExpense.subcategoria_dos}
